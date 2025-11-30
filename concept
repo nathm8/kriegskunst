@@ -1,0 +1,134 @@
+Pike & Shot Concept
+==========================
+
+Overall Design Philosophy
+-------------------
+    - early modern battles, with melee and ranged combat
+    - creating emergence via the interplay of small, simple quantities
+    - bottom up design
+    - real time
+    - an attempt at changing what the effective strategy is for a given scenario based on the starting conditions
+    - a fun toy to play around in
+    - minimalism, no extraneous mechanics
+
+Physics
+-------------------
+    - box2d 
+    - ball: units, projectiles
+    - rect: pikes (may not be necessary, but fun)
+
+Unit (soldier) Statisitcs
+-------------------
+    - accuracy, rate of fire, reloading time, range, physical force\density, top speed, morale, directional armour, flat armour, collision masks (have swordsmen move between units\pikes more easily), ammunition\shots till musket fouls
+        - armour as flat damage reduction, damage roll as bell curve, very low HP
+    - musketeers, how deep they can fire from without friendly fire, aiming time (especially in depth)
+    types
+        - pikeman, musketeer, cavalry, artillery
+        - infantry subtypes
+            - dopplesoldner, landsknetch, rodelo
+            - skirmishers, "commanded musketeers"
+            - caliver/arequebusier, musketeer
+        - cavalry subtypes
+            - dragoon (more logistical)
+            - lancer, gensdarmes
+            - pistolier, carabineers, arquebusiers
+            - curiassier, hussar, cossack, irregular
+        - mixed in officers, musicians, flagbearers (stretch goal)
+
+Formation (battalion) Statisitcs
+-------------------
+    - parameters
+        - rank depth\width
+        - relative distances
+        - potential order for high-skill formations, to dynamically change parameters. E.g. Form square, form line, etc. Similarly to change "stances", i.e. behaviour parameters, based on commands
+    - morale
+        - hystersis, sigmoid function
+        - slower y movement based on size of formation
+        - x axis movement based on "morale ripples" e.g. deaths, charges, breaks, volley fire, cannon fire
+    - facing, position, intended position of units, spacing between units
+    - hetergenous units, put stronger\shorter range ones in front typically. No mixing of ranged, melee; or of foot and cavalry. Or artillery and anything else.
+    - abilities.
+        - countermarch, caracole, volley fire. Bracing? Advancing\retreating fire, or countermarch in place. Change of stance\preset behaviour, as above\below
+    - preset formation behaviours, by default and triggered by orders (trumpet\drum\bagpipe calls, flag waving, no direct RTS style control)
+            - when to fire
+                - how high the hit chance on the enemy
+                - how much risk of friendly fire
+            - how quickly to advance\retreat, what distance to maintain (and against what targets), target priorities, flanking priorities, pursuit\regroup priorities
+                e.g. brace\scatter against cavalry, attempt last-minute volley fire, 
+            - volley fire, how much at once, how quickly, when
+            - charges, when
+    - more rules\behaviours causing a loss in inefficiency for all actions - especially temporal\synchronicity and morale. Veterancy offsets this
+    - rallying based on proximity of fleeing units. Possible flocking behaviour as an ability? i.e. cavalry wheels to retreat, recovers in good order. Vs infantry scattering and struggling to rally
+
+Army Organisation
+-------------------
+    - similar to formations, formations of formations
+    - relative placement, how close they should attempt to stick to their positions
+
+Graphics
+-------------------
+    - hats, weapons, flags
+    - smoke, dust, corpses
+    - elevation maps, terrain (rivers, forests, hedges), fortifications
+        - needs gameplay treatment
+    - "morale ripples"
+
+    - UI
+        https://www.haxeui.org/api/getting-started/backends/composite-backends/haxeui-heaps.html
+    - Tweens
+        https://heaps.io/documentation/demo-of-slide.html
+        https://github.com/AndreiRudenko/slide
+
+
+Command and Control
+-------------------
+    - Ubiquitary mode, usual RTS controls (will be needed for debugging anyway)
+    - Battle Plan mode, setting up initial orders, and conditions for those orders to change
+        - fog of war, lag in information
+        - map-based, need a GUI for paremeterising the conditional orders (will need one for designing units anyway)
+
+Technical
+-------------------
+    - data oriented
+        - all unit\formations be save\loadable via json or the like
+        - live save\loading from disk\string
+
+Misc
+-------------------
+    title ideas
+        Kriegskunst
+        principia belli
+        ars belli
+    scenarios
+        - pitched battle
+        - siege
+        - raid, outpost attack, divide and conquer, smash and grab
+        - skirmish against foragers
+        - forced battle (marching order particularly important here) (stretch)
+    
+    terrain
+        - simple mapgen. Have forced symmetry be an option. Stretch goal to have other "balancing" concerns in a more random generation.
+
+Stretch Goals
+-------------------
+    Officers-as-units. Generalise other "officer qualities" into stats of the formations themselves.
+
+    point buy sandbox, auto battles against other user created forces? MMR?
+        actual multiplayer lol
+
+    Historically based units in terms of hats, stats, abilities. Otherwise just point buy or randomise and draft.
+
+    Ships as artillery emplacements in siege
+
+Ideas Considered Out of Scope
+-------------------
+    Logistics, campaign mechanics. RPG mechanics for units, just have their abilities\statistics be static. Ignore regimental concerns for UI and morale, maybe just have flags\hats (can also serve as a reminder of the unit's abilities\stats)
+    - marching order, and how it deploys into battle order
+    strategic level scouting\intelligence
+    ship combat more broadly
+
+Legacy ideas
+-------------------
+    Elevation allowing easier rank-firing and range.
+
+    Morale and cohesion important. Units break and reform, maybe be able to rejoing nearby groups they were not originally part of. Orders disseminate slowly, via carrier units or rippling out from shouted commands. Have HQ group which the player's order come from. No insta death but if the group is broken, no further orders may be given.

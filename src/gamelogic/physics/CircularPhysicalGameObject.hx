@@ -23,7 +23,7 @@ class CircularPhysicalGameObject {
         circle.setRadius(radius);
         var fixture_definition = new B2FixtureDef();
         fixture_definition.shape = circle;
-        fixture_definition.friction = 0.5;
+        fixture_definition.friction = 1;
         fixture_definition.restitution = 1;
         fixture_definition.density = density;
 
@@ -34,9 +34,7 @@ class CircularPhysicalGameObject {
     }
 
     public function removePhysics() {
-        // idk why I need to check this but I do
-        if (body.getWorld() != null)
-            body.getWorld().destroyBody(body);
+        body.getWorld()?.destroyBody(body);
     }
 }
 

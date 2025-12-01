@@ -3,14 +3,11 @@
 **/
 package utilities;
 
+import gamelogic.physics.PhysicalWorld.PHYSICSCALEINVERT;
+import gamelogic.physics.PhysicalWorld.PHYSICSCALE;
 import box2D.common.math.B2Vec2;
 
 @:dox(show) private typedef Vector2DImpl = {x:Float, y:Float}
-
-// TODO
-// var PHYSICSCALE = 100;
-var PHYSICSCALE = 1;
-var PHYSICSCALEINVERT = 1/PHYSICSCALE;
 
 /**
 	Represents a two dimensional vector.

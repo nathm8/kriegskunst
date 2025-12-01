@@ -12,8 +12,8 @@ class MainMenu extends Scene {
 		// graphics
 		var visuals = new Object(this);
 		var visual = new Bitmap(hxd.Res.img.Title.toTile().center(), visuals);
-		visual.x = 1920 / 2;
-		visual.y = 1080 / 2;
+		visual.x = 1280 / 2;
+		visual.y = 720 / 2;
 
 		// title
 		var titleText = new h2d.Text(hxd.res.DefaultFont.get(), visuals);

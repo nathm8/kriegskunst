@@ -1,6 +1,7 @@
 package graphics;
 
-import h2d.Object;
+import gamelogic.physics.PhysicalWorld.PHYSICSCALE;
+import h2d.Scene;
 import h2d.Graphics;
 import box2D.dynamics.B2DebugDraw;
 import box2D.common.math.B2Vec2;
@@ -11,18 +12,19 @@ class HeapsDebugDraw extends B2DebugDraw {
     
     var graphics: Graphics;
 
-    public function new(parent: Object) {
+    public function new(parent: Scene) {
         super();
-        graphics = new Graphics(parent);
+        graphics = new Graphics();
+        parent.add(graphics, 0);
         setFlags(B2DebugDraw.e_shapeBit);
-        m_drawScale = 1000;
+        m_drawScale = PHYSICSCALE;
     }
 
     override public function clear() {
         graphics.clear();
     }
 
-/**
+    /**
 	 * Draw a closed polygon provided in CCW order.
 	 */
      override public function drawPolygon(vertices:Array<B2Vec2>, vertexCount:Int, color:B2Color):Void

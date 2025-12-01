@@ -1,5 +1,6 @@
 package;
 
+import slide.TweenManager;
 import utilities.SoundManager;
 import gamelogic.GameScene;
 import gamelogic.physics.PhysicalWorld;
@@ -11,6 +12,7 @@ import utilities.RNGManager;
 class Main extends hxd.App implements MessageListener {
 
 	var gameScene: GameScene;
+	public static var tweenManager: TweenManager;
 
 	static function main() {
 		new Main();
@@ -31,8 +33,9 @@ class Main extends hxd.App implements MessageListener {
 	}
 	
 	override function update(dt:Float) {
-		if (gameScene != null)
-			gameScene.update(dt);
+		gameScene?.update(dt);
+		tweenManager?.update(dt);
+		
 	}
 
 	function mainMenu() {
@@ -40,6 +43,8 @@ class Main extends hxd.App implements MessageListener {
 	}
 	
 	function newGame() {
+		tweenManager?.stopAll();
+		tweenManager = new TweenManager();
 		RNGManager.reset();
 		MessageManager.reset();
 		PhysicalWorld.reset();

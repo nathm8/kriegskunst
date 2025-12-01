@@ -40,7 +40,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         MessageManager.addListener(this);
 
         // tween test
-        Main.tweenManager.animateFromTo(this, {theta: 0}, {theta: Math.PI*2}, 2).repeat().start();
+        Main.tweenManager.animateFromTo(this, {theta: 0}, {theta: -Math.PI*2}, 2).repeat().start();
     }
 
     public function hashCode() : Int {

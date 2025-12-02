@@ -4,30 +4,39 @@ import utilities.Vector2D;
 import utilities.MessageManager.Message;
 import utilities.MessageManager.MessageListener;
 
+enum FormationState {
+	Standing;
+	Moving;
+}
+
+
+// facings are radians, 0 = right facing, increasing clockwise
 class Formation implements MessageListener implements Updateable {
 
-	var position= new Vector2D(); // measured from centre
-	// var facing = 0.0; // 0 = facing right
-	var facing = Math.PI/4; // 0 = facing right
+	var state = Standing;
+	var units = new Array<Unit>();
 	var rows = 1;
 	var columns = 1;
-	var rowSpacing = 80.0;
-	var columnSpacing = 60.0;
-	var units = new Array<Unit>();
+	// in metres
+	var rowSpacing = 20.0;
+	var columnSpacing = 15.0;
 
 	public function new(r:Int, c:Int) {
 		rows = r;
 		columns = c;
-		for (p in determineRectangularPositions()) {
+		for (p in determineRectangularPositions(new Vector2D(0,0), 0)) {
 			var u = new Unit(p);
 			units.push(u);
 		}
 	}
 
-	function determineRectangularPositions() : Array<Vector2D> {
+	function getRectangularCentre(): Vector2D {
+		return new Vector2D((rows-1)*rowSpacing, (columns-1)*columnSpacing)*0.5;
+	}
+
+	function determineRectangularPositions(position: Vector2D, facing: Float) : Array<Vector2D> {
 		var out = new Array<Vector2D>();
-		var centre = new Vector2D((rows-1)*rowSpacing, (columns-1)*columnSpacing)*0.5;
-		trace(centre);
+		var centre = getRectangularCentre();
 		for (r in 0...rows) {
 			for (c in 0...columns) {
 				var p = new Vector2D(r*rowSpacing, c*columnSpacing).rotateAboutPoint(facing, centre) - position - centre;
@@ -44,5 +53,16 @@ class Formation implements MessageListener implements Updateable {
 
 	public function receiveMessage(msg:Message):Bool {
 		return false;
+	}
+
+	public function setMarchingOrder(destination: Vector2D, facing: Float) {
+		if (state == Standing) {
+			var ps = determineRectangularPositions(destination, facing);
+			for (i in 0...units.length) {
+				units[i].marchTo(ps[i], facing);
+			}
+		} else {
+
+		}
 	}
 }

@@ -56,6 +56,7 @@ class DummyCircle {
         fixture_definition.filter.maskBits = 0;
 
         body = PhysicalWorld.gameWorld.createBody(body_definition);
+        body.setUserData("DO NOT DRAW");
         body.createFixture(fixture_definition);
     }
 }

@@ -9,3 +9,5 @@ Notes on dynamics
 -----------------
 If a unit is too disordered (far from where it's meant to be in formation), it should lose track of where it's meant to be. Especially if morale is impacted.
 Enough disordered units near each other should break from formation completely. Enough of these together, and not under threat, may be able to reform.
+
+Need to calculate the maximum turn rate for a formation of a given width and units of given top speed. Or, y'know, just let the player figure it out.

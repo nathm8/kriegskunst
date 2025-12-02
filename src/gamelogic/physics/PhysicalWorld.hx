@@ -3,7 +3,6 @@ package gamelogic.physics;
 import gamelogic.physics.CircularPhysicalGameObject.DummyCircle;
 import h2d.Scene;
 import utilities.Vector2D;
-import utilities.MessageManager;
 import graphics.HeapsDebugDraw;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2World;
@@ -36,6 +35,5 @@ class PhysicalWorld {
         gameWorld.clearForces();
         // trace("PWU: send");
         gameWorld.drawDebugData();
-        MessageManager.sendMessage(new PhysicsStepDoneMessage());
     }
 }

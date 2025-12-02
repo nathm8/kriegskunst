@@ -2,7 +2,6 @@ package gamelogic;
 
 import gamelogic.physics.PhysicalWorld.PHYSICSCALEINVERT;
 import utilities.MessageManager;
-import utilities.MessageManager.KeyUpMessage;
 import hxd.Key;
 import utilities.Vector2D;
 import utilities.MessageManager.Message;
@@ -25,11 +24,15 @@ class Formation implements MessageListener implements Updateable {
 	var rowSpacing = 20.0;
 	var columnSpacing = 15.0;
 
+	static var maxID = 0;
+	public var id: Int;
+
 	var destination = new Vector2D();
 	var targetFacing = 0.0;
 	var rotating = true;
 
 	public function new(r:Int, c:Int) {
+		id = maxID++;
 		rows = r;
 		columns = c;
 		for (p in determineRectangularPositions(new Vector2D(0,0), 0)) {
@@ -69,8 +72,8 @@ class Formation implements MessageListener implements Updateable {
 	}
 
 	public function receiveMessage(msg:Message):Bool {
-		if (Std.isOfType(msg, KeyUpMessage)) {
-			var params = cast(msg, KeyUpMessage);
+		if (Std.isOfType(msg, KeyUp)) {
+			var params = cast(msg, KeyUp);
 			if (params.keycode == Key.SPACE)
 				rotating = !rotating;
 			// if (params.keycode == Key.R)
@@ -93,8 +96,8 @@ class Formation implements MessageListener implements Updateable {
 			// if (params.keycode == Key.J)
 			// 	if (columnSpacing > 1)
 			// 		columnSpacing--;
-		} if (Std.isOfType(msg, MouseReleaseMessage)) {
-			var params = cast(msg, MouseReleaseMessage);
+		} if (Std.isOfType(msg, MouseRelease)) {
+			var params = cast(msg, MouseRelease);
 			if (params.event.button == 0) {
 				destination = params.worldPosition;
 				destination *= -1;

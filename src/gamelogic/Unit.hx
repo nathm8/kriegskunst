@@ -1,5 +1,6 @@
 package gamelogic;
 
+import utilities.RNGManager;
 import utilities.Constants.prettyPrintVector;
 import utilities.Constants.floatToStringPrecision;
 import utilities.MessageManager;
@@ -14,6 +15,13 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     public var id: Int;
     var mouseJoint: B2MouseJoint;
     var maxSpeed = 1.5;
+
+    // how much random variation is applied destination to noise up movement
+    var jitterMagnitude = 1;
+    var prevNoises = new Array<Vector2D>();
+    // how much top speed can fluctuate
+    var speedJitterMagnitude = 1;
+    var prevSpeedNoises = new Array<Float>();
     
     static var maxID = 0;
 
@@ -41,12 +49,38 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function update(dt:Float) {
-        mouseJoint.setTarget(destination);
+        // set destination with some noise
+        var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle());
+        prevNoises.push(noise);
+        var average_noise = new Vector2D();
+        for (n in prevNoises)
+            average_noise += n;
+        average_noise /= prevNoises.length;
+        if (prevNoises.length > 10)
+            prevNoises.shift();
+        mouseJoint.setTarget(destination + average_noise);
         // trace(prettyPrintVector(body.getPosition()), prettyPrintVector(destination));
+
+        // apply jitter
+        // might be good for showing morale, etc.
+        // body.applyForce(new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle()), body.getPosition());
+
         // impose speed limit
+        var speed_noise = RNGManager.rand.srand(speedJitterMagnitude);
+        prevSpeedNoises.push(speed_noise);
+        var average_speed_noise = 0.0;
+        for (n in prevSpeedNoises)
+            average_speed_noise += n;
+        average_speed_noise /= prevSpeedNoises.length;
+        if (prevSpeedNoises.length > 10)
+            prevSpeedNoises.shift();
         var vel: Vector2D = body.getLinearVelocity();
-        if (vel.magnitude > maxSpeed)
-            body.setLinearVelocity(maxSpeed*vel.normalize());
+        var speed = maxSpeed + average_speed_noise;
+        if (vel.magnitude > maxSpeed) {
+            body.setLinearVelocity(speed*vel.normalize());
+        }
+
+        mouseJoint.setMaxForce(10*speed);
     }
 
 

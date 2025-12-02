@@ -2,3 +2,10 @@ MVP
 -----------------
 Have units moving about in formation
 Be able to dynamically change formation
+
+
+
+Notes on dynamics
+-----------------
+If a unit is too disordered (far from where it's meant to be in formation), it should lose track of where it's meant to be. Especially if morale is impacted.
+Enough disordered units near each other should break from formation completely. Enough of these together, and not under threat, may be able to reform.

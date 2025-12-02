@@ -1,5 +1,8 @@
 package gamelogic;
 
+import utilities.MessageManager;
+import utilities.MessageManager.KeyUpMessage;
+import hxd.Key;
 import utilities.Vector2D;
 import utilities.MessageManager.Message;
 import utilities.MessageManager.MessageListener;
@@ -21,6 +24,10 @@ class Formation implements MessageListener implements Updateable {
 	var rowSpacing = 20.0;
 	var columnSpacing = 15.0;
 
+	var destination = new Vector2D();
+	var targetFacing = 0.0;
+	var rotating = true;
+
 	public function new(r:Int, c:Int) {
 		rows = r;
 		columns = c;
@@ -28,6 +35,7 @@ class Formation implements MessageListener implements Updateable {
 			var u = new Unit(p);
 			units.push(u);
 		}
+		MessageManager.addListener(this);
 	}
 
 	function getRectangularCentre(): Vector2D {
@@ -47,22 +55,35 @@ class Formation implements MessageListener implements Updateable {
 	}
 
     public function update(dt:Float) {
+		if (rotating)
+			targetFacing += 0.5*dt;
+		var ps = determineRectangularPositions(destination, targetFacing);
+		for (i in 0...units.length) {
+			if (i > ps.length) break;
+			units[i].destination = ps[i];
+		}
+
 		for (u in units)
 			u.update(dt);
 	}
 
 	public function receiveMessage(msg:Message):Bool {
+		if (Std.isOfType(msg, KeyUpMessage)) {
+			var params = cast(msg, KeyUpMessage);
+			if (params.keycode == Key.SPACE)
+				rotating = !rotating;
+		}
 		return false;
 	}
 
-	public function setMarchingOrder(destination: Vector2D, facing: Float) {
-		if (state == Standing) {
-			var ps = determineRectangularPositions(destination, facing);
-			for (i in 0...units.length) {
-				units[i].marchTo(ps[i], facing);
-			}
-		} else {
+	// public function setMarchingOrder(destination: Vector2D, facing: Float) {
+	// 	if (state == Standing) {
+	// 		var ps = determineRectangularPositions(destination, facing);
+	// 		for (i in 0...units.length) {
+	// 			units[i].marchTo(ps[i], facing);
+	// 		}
+	// 	} else {
 
-		}
-	}
+	// 	}
+	// }
 }

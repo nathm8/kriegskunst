@@ -6,5 +6,5 @@ build:
 
 push: build
 	zip -r Kriegskunst.zip *
-	butler push Kriegskunst.zip nathm8/kriegskunst:HTML
+	butler push Kriegskunst.zip nathmate/kriegskunst:HTML
 	git push

@@ -12,7 +12,6 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     public var position: Vector2D;
     public var destination: Vector2D;
     public var id: Int;
-    public var owner: Int;
     var mouseJoint: B2MouseJoint;
     public var theta = 0.0;
     
@@ -40,7 +39,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         MessageManager.addListener(this);
 
         // tween test
-        Main.tweenManager.animateFromTo(this, {theta: 0}, {theta: -Math.PI*2}, 2).repeat().start();
+        // Main.tweenManager.animateFromTo(this, {theta: 0}, {theta: -Math.PI*2}, 2).repeat().start();
     }
 
     public function hashCode() : Int {
@@ -48,10 +47,11 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function update(dt:Float) {
-        destination = new Vector2D(100, 0).rotate(theta);
+        // destination = new Vector2D(100, 0).rotate(theta);
         mouseJoint.setTarget(destination);
-        var d = PHYSICSCALEINVERT*destination;
+        // var d = PHYSICSCALEINVERT*destination;
         var p = body.getPosition();
+        // trace(floatToStringPrecision(p.x, 2), floatToStringPrecision(p.y, 2));
         // trace(floatToStringPrecision(theta/(Math.PI*2), 2));
         // trace(floatToStringPrecision(d.x, 2), floatToStringPrecision(p.x, 2), floatToStringPrecision(p.x - d.x, 2));
         // trace(floatToStringPrecision(d.y, 2), floatToStringPrecision(p.y, 2), floatToStringPrecision(p.y - d.y, 2));

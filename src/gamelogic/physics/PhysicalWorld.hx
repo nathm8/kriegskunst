@@ -1,5 +1,6 @@
 package gamelogic.physics;
 
+import gamelogic.physics.CircularPhysicalGameObject.DummyCircle;
 import h2d.Scene;
 import utilities.Vector2D;
 import utilities.MessageManager;
@@ -14,13 +15,13 @@ class PhysicalWorld {
     public static var gameWorld = new B2World(new B2Vec2(0, 0), true);
     static var debugDraw: HeapsDebugDraw;
     // used for mouse joints. Not really sure why we need it tbh
-    public static var dummyCircle: CircularPhysicalGameObject;
+    public static var dummyCircle: DummyCircle;
 
     public static function reset() {
         gameWorld = new B2World(new B2Vec2(0, 0), true);
         gameWorld.setContactListener(new ContactListener());
         gameWorld.setContactFilter(new ContactFilter());
-        dummyCircle = new CircularPhysicalGameObject(new Vector2D(), 1, 0);
+        dummyCircle = new DummyCircle(new Vector2D());
     }
 
     public static function setScene(scene: Scene) {

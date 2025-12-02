@@ -1,12 +1,9 @@
 package gamelogic;
 
-import utilities.Vector2D;
-import format.abc.Data.ABCData;
 import h2d.Camera;
 import hxd.Key;
 import h2d.Scene;
 import h2d.Text;
-import h2d.col.Point;
 import hxd.Timer;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;
@@ -36,8 +33,8 @@ class GameScene extends Scene implements MessageListener {
 
 		MessageManager.addListener(this);
 
-		var u = new Unit(new Vector2D());
-		updateables.push(u);
+		var f = new Formation(3, 6);
+		updateables.push(f);
 	}
 	
 	public function update(dt:Float) {

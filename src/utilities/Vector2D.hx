@@ -145,6 +145,16 @@ import box2D.common.math.B2Vec2;
 		return this;
 	}
 
+	public function rotateAboutPoint(angle:Float, point: Vector2D):Vector2D {
+		var x = this.x - point.x;
+		var y = this.y - point.y;
+		var c = Math.cos(angle);
+		var s = Math.sin(angle);
+		this.x = x * c - y * s + point.x;
+		this.y = x * s + y * c + point.y;
+		return this;
+	}
+
 	/** Obtains the smaller angle (radians) sandwiched from current to given vector. **/
 	public inline function moveTo(angle:Float, distance:Float):Vector2D {
 		this.x += Math.cos(angle) * distance;

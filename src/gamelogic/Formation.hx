@@ -1,5 +1,6 @@
 package gamelogic;
 
+import gamelogic.physics.PhysicalWorld.PHYSICSCALEINVERT;
 import utilities.MessageManager;
 import utilities.MessageManager.KeyUpMessage;
 import hxd.Key;
@@ -59,7 +60,7 @@ class Formation implements MessageListener implements Updateable {
 			targetFacing += 0.5*dt;
 		var ps = determineRectangularPositions(destination, targetFacing);
 		for (i in 0...units.length) {
-			if (i > ps.length) break;
+			if (i == ps.length) break;
 			units[i].destination = ps[i];
 		}
 
@@ -72,6 +73,32 @@ class Formation implements MessageListener implements Updateable {
 			var params = cast(msg, KeyUpMessage);
 			if (params.keycode == Key.SPACE)
 				rotating = !rotating;
+			// if (params.keycode == Key.R)
+			// 	rows++;
+			// if (params.keycode == Key.F)
+			// 	if (rows > 1)
+			// 		rows--;
+			// if (params.keycode == Key.T)
+			// 	columns++;
+			// if (params.keycode == Key.G)
+			// 	if (columns > 1)
+			// 		columns--;
+			// if (params.keycode == Key.Y)
+			// 	rowSpacing++;
+			// if (params.keycode == Key.H)
+			// 	if (rowSpacing > 1)
+			// 		rowSpacing--;
+			// if (params.keycode == Key.U)
+			// 	columnSpacing++;
+			// if (params.keycode == Key.J)
+			// 	if (columnSpacing > 1)
+			// 		columnSpacing--;
+		} if (Std.isOfType(msg, MouseReleaseMessage)) {
+			var params = cast(msg, MouseReleaseMessage);
+			if (params.event.button == 0) {
+				destination = params.worldPosition;
+				destination *= -1;
+			}
 		}
 		return false;
 	}

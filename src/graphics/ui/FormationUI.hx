@@ -25,11 +25,11 @@ class FormationUI extends Flow implements MessageListener {
         super(p);
         // flow boilerplate
         backgroundTile = Res.img.ui.ScaleGrid.toTile();
-        borderWidth = 2;
-        borderHeight = 2;
+        borderWidth = 8;
+        borderHeight = 8;
         minHeight = 20;
         minWidth = 60;
-        padding = 6;
+        padding = 8;
         layout = Vertical;
         verticalAlign = Top;
         horizontalAlign = Left;
@@ -38,10 +38,11 @@ class FormationUI extends Flow implements MessageListener {
 
         // initialise display of and interaction with formation stats
         var id_container = new Flow(this);
+        id_container.padding = 5;
         var id_text = new Text(DefaultFont.get(), id_container);
-        id_text.text = '${f.id}';
+        id_text.text = "id: "+'${f.id}';
         destinationText = new Text(DefaultFont.get(), id_container);
-        destinationText.text = prettyPrintVector(f.destination);
+        facingText = new Text(DefaultFont.get(), id_container);
 
         // columns
         var col_container = new Flow(this);
@@ -60,8 +61,8 @@ class FormationUI extends Flow implements MessageListener {
         row_container.padding = 5;
         new Text(DefaultFont.get(), row_container).text = StringTools.lpad("Rows:", " ", 10);
         rowText = new Text(DefaultFont.get(), row_container);
-        new TriangleButton(row_container, () -> {f.rows++;});
-        new TriangleButton(row_container, () -> {if (f.rows == 1) return; f.rows--;}, true);
+        new TriangleButton(row_container, () -> {f.rows++; updateStats(f);});
+        new TriangleButton(row_container, () -> {if (f.rows == 1) return; f.rows--; updateStats(f);}, true);
         new Text(DefaultFont.get(), row_container).text = StringTools.lpad("Spacing:", " ", 10);
         rowSpaceText = new Text(DefaultFont.get(), row_container);
         new TriangleButton(row_container, () -> {f.rowSpacing++; updateStats(f);});
@@ -75,6 +76,8 @@ class FormationUI extends Flow implements MessageListener {
     }
 
     function updateStats(f: Formation) {
+        destinationText.text = "dest:" + prettyPrintVector(f.destination);
+        facingText.text = "facing:" + floatToStringPrecision(f.targetFacing%Math.PI, 2);
         rowText.text = StringTools.lpad('${f.rows}', " ", 6);
         rowSpaceText.text = StringTools.lpad(floatToStringPrecision(f.rowSpacing, 2), " ", 6);
         columnText.text = StringTools.lpad('${f.columns}', " ", 6);

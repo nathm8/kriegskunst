@@ -26,12 +26,12 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.72291959"
-     inkscape:cx="49.106429"
-     inkscape:cy="390.77652"
-     inkscape:window-width="1920"
-     inkscape:window-height="1080"
-     inkscape:window-x="1080"
+     inkscape:zoom="0.57437447"
+     inkscape:cx="396.08307"
+     inkscape:cy="291.6216"
+     inkscape:window-width="1080"
+     inkscape:window-height="1920"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
@@ -137,7 +137,10 @@
        height="64.093239"
        x="98.649529"
        y="53.66843"
-       ry="3.8610382" />
+       ry="3.8610382"
+       inkscape:export-filename="ScaleGrid"
+       inkscape:export-xdpi="24.228968"
+       inkscape:export-ydpi="24.228968" />
     <path
        sodipodi:type="star"
        style="fill:#808080;stroke:#1a1a1a;stroke-width:3;stroke-miterlimit:3.3;stroke-dasharray:none;paint-order:markers stroke fill"
@@ -238,5 +241,9 @@
        inkscape:export-filename="Active.png"
        inkscape:export-xdpi="24.228968"
        inkscape:export-ydpi="24.228968" />
+    <path
+       id="rect2"
+       style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:3;stroke-miterlimit:3.3;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 102.51054,53.657494 c -2.13902,0 -3.861264,1.721721 -3.861264,3.860729 v 0.613394 h 64.093244 v -0.613394 c 0,-2.139008 -1.72173,-3.860729 -3.86075,-3.860729 z" />
   </g>
 </svg>

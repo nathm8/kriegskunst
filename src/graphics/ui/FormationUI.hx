@@ -46,11 +46,11 @@ class FormationUI extends Flow implements MessageListener {
         // columns
         var col_container = new Flow(this);
         col_container.padding = 5;
-        StringTools.lpad(new Text(DefaultFont.get(), col_container).text, "Columns:", 10);
+        new Text(DefaultFont.get(), col_container).text = StringTools.lpad("Columns:", " ", 10);
         columnText = new Text(DefaultFont.get(), col_container);
         new TriangleButton(col_container, () -> {f.columns++; updateStats(f);});
         new TriangleButton(col_container, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, true);
-        StringTools.lpad(new Text(DefaultFont.get(), col_container).text, "Spacing:", 10);
+        new Text(DefaultFont.get(), col_container).text = StringTools.lpad("Spacing:", " ", 10);
         columnSpaceText = new Text(DefaultFont.get(), col_container);
         new TriangleButton(col_container, () -> {f.columnSpacing++; updateStats(f);});
         new TriangleButton(col_container, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, true);
@@ -58,11 +58,11 @@ class FormationUI extends Flow implements MessageListener {
         // rows
         var row_container = new Flow(this);
         row_container.padding = 5;
-        StringTools.lpad(new Text(DefaultFont.get(), row_container).text, "Rows:", 10);
+        new Text(DefaultFont.get(), row_container).text = StringTools.lpad("Rows:", " ", 10);
         rowText = new Text(DefaultFont.get(), row_container);
         new TriangleButton(row_container, () -> {f.rows++;});
         new TriangleButton(row_container, () -> {if (f.rows == 1) return; f.rows--;}, true);
-        StringTools.lpad(new Text(DefaultFont.get(), row_container).text, "Spacing:", 10);
+        new Text(DefaultFont.get(), row_container).text = StringTools.lpad("Spacing:", " ", 10);
         rowSpaceText = new Text(DefaultFont.get(), row_container);
         new TriangleButton(row_container, () -> {f.rowSpacing++; updateStats(f);});
         new TriangleButton(row_container, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, true);
@@ -75,10 +75,10 @@ class FormationUI extends Flow implements MessageListener {
     }
 
     function updateStats(f: Formation) {
-        rowText.text = StringTools.lpad(" ", '${f.rows}', 4);
-        rowSpaceText.text = StringTools.lpad(" ", floatToStringPrecision(f.rowSpacing, 2), 4);
-        columnText.text = StringTools.lpad(" ", '${f.columns}', 4);
-        columnSpaceText.text = StringTools.lpad(" ", floatToStringPrecision(f.columnSpacing, 2), 4);
+        rowText.text = StringTools.lpad('${f.rows}', " ", 4);
+        rowSpaceText.text = StringTools.lpad(floatToStringPrecision(f.rowSpacing, 2), " ", 4);
+        columnText.text = StringTools.lpad('${f.columns}', " ", 4);
+        columnSpaceText.text = StringTools.lpad(floatToStringPrecision(f.columnSpacing, 2), " ", 4);
     }
 
 

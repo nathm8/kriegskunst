@@ -8,7 +8,7 @@ import h2d.Bitmap;
 
 class BitmapButton extends Bitmap {
 
-	public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void) {
+    public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void) {
         super(enabled, p);
 
         // I think using width\height doesn't centre the interactive bounds correctly, may need to use our own polygon

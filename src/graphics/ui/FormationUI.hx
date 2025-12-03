@@ -75,16 +75,15 @@ class FormationUI extends Flow implements MessageListener {
     }
 
     function updateStats(f: Formation) {
-        rowText.text = StringTools.lpad('${f.rows}', " ", 4);
-        rowSpaceText.text = StringTools.lpad(floatToStringPrecision(f.rowSpacing, 2), " ", 4);
-        columnText.text = StringTools.lpad('${f.columns}', " ", 4);
-        columnSpaceText.text = StringTools.lpad(floatToStringPrecision(f.columnSpacing, 2), " ", 4);
+        rowText.text = StringTools.lpad('${f.rows}', " ", 6);
+        rowSpaceText.text = StringTools.lpad(floatToStringPrecision(f.rowSpacing, 2), " ", 6);
+        columnText.text = StringTools.lpad('${f.columns}', " ", 6);
+        columnSpaceText.text = StringTools.lpad(floatToStringPrecision(f.columnSpacing, 2), " ", 6);
     }
 
-
-    public function receiveMessage(msg:Message):Bool {
+    public function receive(msg:Message):Bool {
         if (Std.isOfType(msg, FormationUpdate)) {
-			var params = cast(msg, FormationUpdate);
+            var params = cast(msg, FormationUpdate);
             if (params.formation.id == watchedFormation) {
                 updateStats(params.formation);
             }

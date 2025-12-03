@@ -27,7 +27,7 @@ class SoundManager implements MessageListener{
     //     manager.listener.syncCamera(c);
     // }
 
-	public function receiveMessage(msg:Message):Bool {
+    public function receive(msg:Message):Bool {
         return false;
-	}
+    }
 }

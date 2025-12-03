@@ -25,8 +25,8 @@ class HeapsDebugDraw extends B2DebugDraw {
     }
 
     /**
-	 * Draw a closed polygon provided in CCW order.
-	 */
+     * Draw a closed polygon provided in CCW order.
+     */
      override public function drawPolygon(vertices:Array<B2Vec2>, vertexCount:Int, color:B2Color):Void
         {
             #if heaps

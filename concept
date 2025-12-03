@@ -92,6 +92,8 @@ Technical
     - data oriented
         - all unit\formations be save\loadable via json or the like
         - live save\loading from disk\string
+    async stuff
+    https://github.com/dpomier/haxe-coroutine/
 
 Misc
 -------------------

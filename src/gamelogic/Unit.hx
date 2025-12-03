@@ -85,9 +85,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
 
 
-	public function receiveMessage(msg:Message):Bool {
+    public function receive(msg:Message):Bool {
         return false;
-	}
+    }
 
     public function marchTo(arg:Vector2D, facing:Float) {
         throw new haxe.exceptions.NotImplementedException();

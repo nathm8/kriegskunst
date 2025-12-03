@@ -21,8 +21,8 @@ class Formation implements MessageListener implements Updateable {
 	public var rows = 1;
 	public var columns = 1;
 	// in metres
-	public var rowSpacing = 20.0;
-	public var columnSpacing = 15.0;
+	public var rowSpacing = 20;
+	public var columnSpacing = 15;
 
 	static var maxID = 0;
 	public var id: Int;

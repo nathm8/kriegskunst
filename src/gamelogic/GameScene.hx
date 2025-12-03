@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.ui.FormationUI;
 import h2d.Camera;
 import hxd.Key;
 import h2d.Scene;
@@ -35,6 +36,10 @@ class GameScene extends Scene implements MessageListener {
 
 		var f = new Formation(6, 100);
 		updateables.push(f);
+
+		var ui = new FormationUI(f, this);
+		ui.x = 100;
+		ui.y = 100;
 	}
 	
 	public function update(dt:Float) {

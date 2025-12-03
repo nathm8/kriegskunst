@@ -1,5 +1,7 @@
 package graphics.ui;
 
+import utilities.Utilities.prettyPrintVector;
+import graphics.ui.BitmapButton.TriangleButton;
 import hxd.res.DefaultFont;
 import utilities.Utilities.floatToStringPrecision;
 import h2d.Text;
@@ -14,19 +16,17 @@ class FormationUI extends Flow implements MessageListener {
     var watchedFormation: Int;
     var rowText: Text;
     var rowSpaceText: Text;
-    var colText: Text;
-    var colSpaceText: Text;
-    var posText: Text;
+    var columnText: Text;
+    var columnSpaceText: Text;
+    var destinationText: Text;
     var facingText: Text;
 
     public function new(f: Formation, p: Object) {
         super(p);
         // flow boilerplate
-        watchedFormation = f.id;
+        backgroundTile = Res.img.ui.ScaleGrid.toTile();
         borderWidth = 2;
         borderHeight = 2;
-        backgroundTile = Res.img.ui.ScaleGrid.toTile();
-        enableInteractive = true;
         minHeight = 20;
         minWidth = 60;
         padding = 6;
@@ -34,34 +34,51 @@ class FormationUI extends Flow implements MessageListener {
         verticalAlign = Top;
         horizontalAlign = Left;
 
-        // initialise display of formation stats
+        watchedFormation = f.id;
+
+        // initialise display of and interaction with formation stats
         var id_container = new Flow(this);
         var id_text = new Text(DefaultFont.get(), id_container);
-        id_text.text = '$f.id';
+        id_text.text = '${f.id}';
+        destinationText = new Text(DefaultFont.get(), id_container);
+        destinationText.text = prettyPrintVector(f.destination);
 
+        // columns
         var col_container = new Flow(this);
+        col_container.padding = 5;
         StringTools.lpad(new Text(DefaultFont.get(), col_container).text, "Columns:", 10);
-        colText = new Text(DefaultFont.get(), col_container);
+        columnText = new Text(DefaultFont.get(), col_container);
+        new TriangleButton(col_container, () -> {f.columns++; updateStats(f);});
+        new TriangleButton(col_container, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, true);
         StringTools.lpad(new Text(DefaultFont.get(), col_container).text, "Spacing:", 10);
-        colSpaceText = new Text(DefaultFont.get(), col_container);
+        columnSpaceText = new Text(DefaultFont.get(), col_container);
+        new TriangleButton(col_container, () -> {f.columnSpacing++; updateStats(f);});
+        new TriangleButton(col_container, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, true);
 
+        // rows
         var row_container = new Flow(this);
+        row_container.padding = 5;
         StringTools.lpad(new Text(DefaultFont.get(), row_container).text, "Rows:", 10);
         rowText = new Text(DefaultFont.get(), row_container);
+        new TriangleButton(row_container, () -> {f.rows++;});
+        new TriangleButton(row_container, () -> {if (f.rows == 1) return; f.rows--;}, true);
         StringTools.lpad(new Text(DefaultFont.get(), row_container).text, "Spacing:", 10);
         rowSpaceText = new Text(DefaultFont.get(), row_container);
-        // set up interactivity to change stats
+        new TriangleButton(row_container, () -> {f.rowSpacing++; updateStats(f);});
+        new TriangleButton(row_container, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, true);
+        
         // interactivity to move window around
+        // enableInteractive = true;
 
         updateStats(f);
         MessageManager.addListener(this);
     }
 
     function updateStats(f: Formation) {
-        StringTools.lpad(rowText.text, '$f.rows', 4);
-        StringTools.lpad(rowSpaceText.text, floatToStringPrecision(f.rowSpacing, 2), 4);
-        StringTools.lpad(colText.text, '$f.columns', 4);
-        StringTools.lpad(colSpaceText.text, floatToStringPrecision(f.columnSpacing, 2), 4);
+        rowText.text = StringTools.lpad(" ", '${f.rows}', 4);
+        rowSpaceText.text = StringTools.lpad(" ", floatToStringPrecision(f.rowSpacing, 2), 4);
+        columnText.text = StringTools.lpad(" ", '${f.columns}', 4);
+        columnSpaceText.text = StringTools.lpad(" ", floatToStringPrecision(f.columnSpacing, 2), 4);
     }
 
 

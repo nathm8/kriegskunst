@@ -35,12 +35,13 @@ class BitmapButton extends Bitmap {
 }
 
 class TriangleButton extends BitmapButton {
-    public function new(p:Object, onClick:() -> Void) {
+    public function new(p:Object, onClick:() -> Void, y_flip=false) {
         super(hxd.Res.img.ui.TriangleButton.Enabled.toTile().center(),
               hxd.Res.img.ui.TriangleButton.Disabled.toTile().center(),
               hxd.Res.img.ui.TriangleButton.Hover.toTile().center(),
               hxd.Res.img.ui.TriangleButton.Active.toTile().center(),
               hxd.Res.img.ui.TriangleButton.Loading.toTile().center(),
               p, onClick);
+        scaleY = y_flip ? -1 : 1;
     }
 }

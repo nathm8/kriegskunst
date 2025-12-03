@@ -16,7 +16,6 @@ class BitmapButton extends Bitmap {
         var i = new h2d.Interactive(0, 0, this, new PolygonCollider(polys, true));
 
         // button states
-        var i = new h2d.Interactive(enabled.width, enabled.height, this);
         i.onClick = (event:Event) -> {
             onClick(); 
             tile = active;
@@ -36,31 +35,35 @@ class BitmapButton extends Bitmap {
 class TriangleButton extends BitmapButton {
     public function new(p:Object, onClick:() -> Void, y_flip=false) {
         var poly = [
-            new Point(-26, 0),
-            new Point(26, -13),
+            new Point(-13, 13),
+            new Point(0, -13),
             new Point(13, 13)
-            // new Point(0, 26),
-            // new Point(13, 0),
-            // new Point(26, 26)
-            // new Point(-13, 13),
-            // new Point(0, -13),
+            // new Point(-26, 0),
+            // new Point(26, -13),
             // new Point(13, 13)
         ];
         if (y_flip) poly.reverse();
         var polys = new Polygons();
         polys.push(new Polygon(poly));
 
-        // super(hxd.Res.img.ui.TriangleButton.Enabled.toTile().center(),
-        //       hxd.Res.img.ui.TriangleButton.Disabled.toTile().center(),
-        //       hxd.Res.img.ui.TriangleButton.Hover.toTile().center(),
-        //       hxd.Res.img.ui.TriangleButton.Active.toTile().center(),
-        //       hxd.Res.img.ui.TriangleButton.Loading.toTile().center(),
-        super(hxd.Res.img.ui.TriangleButton.Enabled.toTile(),
-              hxd.Res.img.ui.TriangleButton.Disabled.toTile(),
-              hxd.Res.img.ui.TriangleButton.Hover.toTile(),
-              hxd.Res.img.ui.TriangleButton.Active.toTile(),
-              hxd.Res.img.ui.TriangleButton.Loading.toTile(),
+        var enabled = hxd.Res.img.ui.TriangleButton.Enabled.toTile();
+        var disabled = hxd.Res.img.ui.TriangleButton.Disabled.toTile();
+        var hover = hxd.Res.img.ui.TriangleButton.Hover.toTile();
+        var active = hxd.Res.img.ui.TriangleButton.Active.toTile();
+        var loading = hxd.Res.img.ui.TriangleButton.Loading.toTile();
+        if (y_flip) {
+            enabled.flipY();
+            disabled.flipY();
+            hover.flipY();
+            active.flipY();
+            loading.flipY();
+        }
+
+        super(enabled,
+              disabled,
+              hover,
+              active,
+              loading,
               p, onClick, polys);
-        scaleY = y_flip ? -1 : 1;
     }
 }

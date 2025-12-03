@@ -18,6 +18,7 @@ class Formation implements MessageListener implements Updateable {
 
     public var state = Standing;
     public var units = new Array<Unit>();
+    public var positions = 0;
     public var rows = 1;
     public var columns = 1;
     // in metres
@@ -56,6 +57,7 @@ class Formation implements MessageListener implements Updateable {
                 out.push(p);
             }
         }
+        positions = out.length;
         return out;
     }
 
@@ -70,6 +72,9 @@ class Formation implements MessageListener implements Updateable {
 
         for (u in units)
             u.update(dt);
+
+        // lazy bad hacky
+        MessageManager.send(new FormationUpdate(this));
     }
 
     public function receive(msg:Message):Bool {
@@ -77,26 +82,6 @@ class Formation implements MessageListener implements Updateable {
             var params = cast(msg, KeyUp);
             if (params.keycode == Key.SPACE)
                 rotating = !rotating;
-            // if (params.keycode == Key.R)
-            //     rows++;
-            // if (params.keycode == Key.F)
-            //     if (rows > 1)
-            //         rows--;
-            // if (params.keycode == Key.T)
-            //     columns++;
-            // if (params.keycode == Key.G)
-            //     if (columns > 1)
-            //         columns--;
-            // if (params.keycode == Key.Y)
-            //     rowSpacing++;
-            // if (params.keycode == Key.H)
-            //     if (rowSpacing > 1)
-            //         rowSpacing--;
-            // if (params.keycode == Key.U)
-            //     columnSpacing++;
-            // if (params.keycode == Key.J)
-            //     if (columnSpacing > 1)
-            //         columnSpacing--;
         } if (Std.isOfType(msg, MouseRelease)) {
             // var params = cast(msg, MouseRelease);
             // if (params.event.button == 0) {

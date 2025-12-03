@@ -16,19 +16,19 @@ enum FormationState {
 // facings are radians, 0 = right facing, increasing clockwise
 class Formation implements MessageListener implements Updateable {
 
-	var state = Standing;
-	var units = new Array<Unit>();
-	var rows = 1;
-	var columns = 1;
+	public var state = Standing;
+	public var units = new Array<Unit>();
+	public var rows = 1;
+	public var columns = 1;
 	// in metres
-	var rowSpacing = 20.0;
-	var columnSpacing = 15.0;
+	public var rowSpacing = 20.0;
+	public var columnSpacing = 15.0;
 
 	static var maxID = 0;
 	public var id: Int;
 
-	var destination = new Vector2D();
-	var targetFacing = 0.0;
+	public var destination = new Vector2D();
+	public var targetFacing = 0.0;
 	var rotating = true;
 
 	public function new(r:Int, c:Int) {

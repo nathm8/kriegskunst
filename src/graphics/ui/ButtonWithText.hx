@@ -52,7 +52,7 @@ class BackgroundButtonWithText extends ButtonWithText {
             new Point(60, 22.5),
             new Point(-60, 22.5)
         ]));
-		bgTile = hxd.Res.img.ButtonBG.toTile();
+		bgTile = hxd.Res.img.ui.ButtonBG.toTile();
     }
 
 	public function new(s:String, p:Object, f:() -> Void) {

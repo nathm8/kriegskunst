@@ -1,8 +1,8 @@
 package gamelogic;
 
 import utilities.RNGManager;
-import utilities.Constants.prettyPrintVector;
-import utilities.Constants.floatToStringPrecision;
+import utilities.Utilities.prettyPrintVector;
+import utilities.Utilities.floatToStringPrecision;
 import utilities.MessageManager;
 import gamelogic.physics.CircularPhysicalGameObject;
 import gamelogic.physics.PhysicalWorld;

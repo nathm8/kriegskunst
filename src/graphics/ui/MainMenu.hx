@@ -11,7 +11,7 @@ class MainMenu extends Scene {
 
 		// graphics
 		var visuals = new Object(this);
-		var visual = new Bitmap(hxd.Res.img.Title.toTile().center(), visuals);
+		var visual = new Bitmap(hxd.Res.img.ui.Title.toTile().center(), visuals);
 		visual.x = 1280 / 2;
 		visual.y = 720 / 2;
 

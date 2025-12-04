@@ -1,8 +1,12 @@
 MVP
 -----------------
-Have units moving about in formation
-Be able to dynamically change formation
 
+
+FormationUI
+-----------------
+make whole UI draggable
+have holding down mouse repeat button activation
+make the layout pretty
 
 
 Notes on dynamics
@@ -13,3 +17,15 @@ Enough disordered units near each other should break from formation completely. 
 Need to calculate the maximum turn rate for a formation of a given width and units of given top speed. Or, y'know, just let the player figure it out.
 
 How to reorder units naturally? Feels like rows should fill from the back, and units removed from columns should form new rows at the back.
+
+
+
+
+
+
+
+
+Completed
+=======================
+Have units moving about in formation
+Be able to dynamically change formation

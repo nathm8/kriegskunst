@@ -30,10 +30,14 @@ function floatToStringPrecision(n:Float, prec:Int){
   }
 }
 
-function prettyPrintVector(v: Vector2D){
+function prettyPrintVector(v: Vector2D, truncate=false){
+  if (truncate)
+    return floatToStringPrecision(v.x, 1)+", "+floatToStringPrecision(v.y, 1);
   return "V("+floatToStringPrecision(v.x, 2)+", "+floatToStringPrecision(v.y, 2)+")";
 }
 
-function prettyPrintVectorRounded(v: Vector2D){
+function prettyPrintVectorRounded(v: Vector2D, truncate=false){
+  if (truncate)
+    return Math.round(v.x)+", "+Math.round(v.y);
   return "V("+Math.round(v.x)+", "+Math.round(v.y)+")";
 }

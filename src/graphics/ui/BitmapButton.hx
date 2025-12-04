@@ -10,6 +10,10 @@ class BitmapButton extends Bitmap {
 
     static var initialised = false;
     static var pixelsCollider: PixelsCollider;
+    
+    var repeatRate = 1.0;
+    var timeRemaining = 1.0;
+    var repeating = false;
 
     public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void) {
         super(enabled, p);
@@ -31,6 +35,10 @@ class BitmapButton extends Bitmap {
         };
         i.onOut = (e: Event) -> {
             tile = enabled;
+        };
+        // button repeating
+        i.onPush = (e: Event) -> {
+            tile = hover;
         };
 
     }

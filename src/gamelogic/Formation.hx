@@ -66,8 +66,10 @@ class Formation implements MessageListener implements Updateable {
             targetFacing += 0.5*dt;
         var ps = determineRectangularPositions(destination, targetFacing);
         for (i in 0...units.length) {
-            if (i == ps.length) break;
-            units[i].destination = ps[i];
+            if (i >= ps.length)
+                units[i].destination = new Vector2D(500, 500);
+            else
+                units[i].destination = ps[i];
         }
 
         for (u in units)

@@ -1,14 +1,23 @@
-MVP
------------------
-
+TODO
+=======================
 
 FormationUI
 -----------------
 make whole UI draggable
+    need to prevent it from being dragged off-screen
 have holding down mouse repeat button activation
-make the layout pretty
+
 
 Need to prevent clicks on UI from affecting gamescene
+    Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
+
+Automatically have minimum width\height for all flows be equal to the largest, to preserve the grid layout
+
+Direct Formation Control
+-----------------
+make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning
+
+Have a direct mouse based way to change row\column parameters?
 
 
 Notes on dynamics
@@ -22,5 +31,11 @@ How to reorder units naturally? Feels like rows should fill from the back, and u
 
 Completed
 =======================
+MVP
+-----------------
 Have units moving about in formation
 Be able to dynamically change formation
+
+FormationUI
+-----------------
+make the layout pretty (kinda)

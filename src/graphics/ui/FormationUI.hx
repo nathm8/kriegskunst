@@ -1,5 +1,6 @@
 package graphics.ui;
 
+import hxd.Event;
 import utilities.Utilities.prettyPrintVectorRounded;
 import graphics.ui.BitmapButton.TriangleButton;
 import hxd.res.DefaultFont;
@@ -64,6 +65,10 @@ class FormationUI extends Flow implements MessageListener {
     var unitNumberText: Text;
     var positionNumberText: Text;
 
+    var isMoving = false;
+    var xOffset = 0.0;
+    var yOffset = 0.0;
+
     public function new(f: Formation, p: Object) {
         super(p);
         // debug = true;
@@ -117,9 +122,16 @@ class FormationUI extends Flow implements MessageListener {
         new TriangleButton(row_spacing_controls, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, true);
         rowSpaceText = createLabelDataControlTriplet(labels, "row spacing:", data, controls, row_spacing_controls);
         
-        // TODO
         // interactivity to move window around
         enableInteractive = true;
+        interactive.onPush = (e: Event) -> {
+            isMoving = true;
+            xOffset = e.relX;
+            yOffset=e.relY;
+        }
+        interactive.onRelease = (e: Event) -> {
+            isMoving = false;
+        }
 
         updateStats(f);
         MessageManager.addListener(this);
@@ -147,6 +159,12 @@ class FormationUI extends Flow implements MessageListener {
             var params = cast(msg, FormationUpdate);
             if (params.formation.id == watchedFormation) {
                 updateStats(params.formation);
+            }
+        } if (Std.isOfType(msg, MouseMove)) {
+            var params = cast(msg, MouseMove);
+            if (isMoving) {
+                x = params.event.relX - xOffset;
+                y = params.event.relY - yOffset;
             }
         }
         return false;

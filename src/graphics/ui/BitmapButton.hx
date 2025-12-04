@@ -1,12 +1,7 @@
 package graphics.ui;
 
 import h2d.col.PixelsCollider;
-import h2d.Graphics;
-import h2d.col.Point;
-import h2d.col.Polygon;
-import h2d.col.Polygons;
 import hxd.Event;
-import h2d.col.PolygonCollider;
 import h2d.Object;
 import h2d.Tile;
 import h2d.Bitmap;
@@ -17,14 +12,12 @@ class BitmapButton extends Bitmap {
     static var pixelsCollider: PixelsCollider;
 
     public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void) {
-    // public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void, polys: Polygons) {
         super(enabled, p);
         if (!initialised) {
             initialised = true;
             pixelsCollider = new PixelsCollider(enabled.getTexture().capturePixels());
         }
         var i = new h2d.Interactive(enabled.width, enabled.height, this, pixelsCollider);
-        // var i = new h2d.Interactive(0, 0, this, new PolygonCollider(polys, true));
 
         // button states
         i.onClick = (event:Event) -> {

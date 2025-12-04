@@ -33,3 +33,7 @@ function floatToStringPrecision(n:Float, prec:Int){
 function prettyPrintVector(v: Vector2D){
   return "V("+floatToStringPrecision(v.x, 2)+", "+floatToStringPrecision(v.y, 2)+")";
 }
+
+function prettyPrintVectorRounded(v: Vector2D){
+  return "V("+Math.round(v.x)+", "+Math.round(v.y)+")";
+}

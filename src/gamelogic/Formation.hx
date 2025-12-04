@@ -83,11 +83,11 @@ class Formation implements MessageListener implements Updateable {
             if (params.keycode == Key.SPACE)
                 rotating = !rotating;
         } if (Std.isOfType(msg, MouseRelease)) {
-            // var params = cast(msg, MouseRelease);
-            // if (params.event.button == 0) {
-            //     destination = params.worldPosition;
-            //     destination *= -1;
-            // }
+            var params = cast(msg, MouseRelease);
+            if (params.event.button == 0) {
+                destination = params.worldPosition;
+                destination *= -1;
+            }
         }
         return false;
     }

@@ -8,6 +8,8 @@ make whole UI draggable
 have holding down mouse repeat button activation
 make the layout pretty
 
+Need to prevent clicks on UI from affecting gamescene
+
 
 Notes on dynamics
 -----------------
@@ -17,13 +19,6 @@ Enough disordered units near each other should break from formation completely. 
 Need to calculate the maximum turn rate for a formation of a given width and units of given top speed. Or, y'know, just let the player figure it out.
 
 How to reorder units naturally? Feels like rows should fill from the back, and units removed from columns should form new rows at the back.
-
-
-
-
-
-
-
 
 Completed
 =======================

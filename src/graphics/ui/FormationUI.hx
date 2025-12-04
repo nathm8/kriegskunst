@@ -1,6 +1,6 @@
 package graphics.ui;
 
-import utilities.Utilities.prettyPrintVector;
+import utilities.Utilities.prettyPrintVectorRounded;
 import graphics.ui.BitmapButton.TriangleButton;
 import hxd.res.DefaultFont;
 import utilities.Utilities.floatToStringPrecision;
@@ -100,6 +100,12 @@ class FormationUI extends Flow implements MessageListener {
         // new TriangleButton(row_container, () -> {f.rowSpacing++; updateStats(f);});
         // new TriangleButton(row_container, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, true);
         
+        // prettying up the flow proportions
+
+        // col_labels.minWidth = Math.round(id_labels.calculatedWidth);
+        // id_content.minWidth = Math.round(col_content.calculatedWidth);
+        // id_container.minWidth = Math.round(col_container.calculatedWidth);
+
         // TODO
         // interactivity to move window around
         // enableInteractive = true;
@@ -109,7 +115,7 @@ class FormationUI extends Flow implements MessageListener {
     }
 
     function updateStats(f: Formation) {
-        destinationText.text = prettyPrintVector(f.destination);
+        destinationText.text = prettyPrintVectorRounded(f.destination);
         facingText.text = floatToStringPrecision((f.targetFacing%2*Math.PI)/(Math.PI), 2)+" pi";
         unitNumberText.text = '${f.units.length}';
         positionNumberText.text = '${f.positions}';

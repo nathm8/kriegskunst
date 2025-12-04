@@ -11,6 +11,15 @@ import utilities.MessageManager;
 import h2d.Flow;
 import h2d.Object;
 
+function getAllChildren(o: Object) : Array<Object> {
+    var out = new Array<Object>();
+    for (c in o) {
+        out.push(c);
+        out.concat(getAllChildren(c));
+    }
+    return out;
+}
+
 function createText(parent:Object, text="") : Text {
     var t = new Text(DefaultFont.get(), parent);
     t.text = text;
@@ -26,7 +35,21 @@ function createFlow(parent:Object, layout:FlowLayout, v_align:FlowAlign, h_align
     flow.horizontalSpacing = 15;
     flow.verticalSpacing = 15;
     flow.padding = 5;
+    flow.fillWidth = true;
     return flow;
+}
+
+function createLabelTextPair(parent: Object, label: String) : Text {
+    return createLabelTextFlowTriplet(parent, label);
+}
+
+function createLabelTextFlowTriplet(parent: Object, label: String, ?flow: Flow) : Text {
+    var container = createFlow(parent, Horizontal, Middle, Left);
+    var label_container = createFlow(container, Horizontal, Top, Left);
+    createText(label_container, StringTools.rpad(label, " ", 20));
+    var text = createText(label_container);
+    if (flow != null) container.addChild(flow);
+    return text;
 }
 
 class FormationUI extends Flow implements MessageListener {
@@ -36,6 +59,7 @@ class FormationUI extends Flow implements MessageListener {
     var rowSpaceText: Text;
     var columnText: Text;
     var columnSpaceText: Text;
+
     var destinationText: Text;
     var facingText: Text;
     var unitNumberText: Text;
@@ -56,31 +80,19 @@ class FormationUI extends Flow implements MessageListener {
         watchedFormation = f.id;
 
         // initialise display of and interaction with formation stats
-        var id_container = createFlow(this, Horizontal, Middle, Left);
-        var id_labels  = createFlow(id_container, Vertical, Middle, Left);
-        var id_content  = createFlow(id_container, Vertical, Middle, Left);
-        createText(id_labels, "id:");
-        createText(id_content, '${f.id}');
-        createText(id_labels, "destination:");
-        destinationText = createText(id_content);
-        createText(id_labels, "facing:");
-        facingText = createText(id_content);
-        createText(id_labels, "units:");
-        unitNumberText = createText(id_content);
-        createText(id_labels, "posiitons:");
-        positionNumberText = createText(id_content);
+        createLabelTextPair(this, "id").text = '${f.id}';
+        destinationText = createLabelTextPair(this, "destination:");
+        facingText = createLabelTextPair(this, "facing:");
+        unitNumberText = createLabelTextPair(this, "units:");
+        positionNumberText = createLabelTextPair(this, "positions:");
 
         // columns
-        var col_container = createFlow(this, Horizontal, Middle, Left);
-        var col_labels  = createFlow(col_container, Vertical, Middle, Left);
-        var col_content  = createFlow(col_container, Vertical, Middle, Left);
-        createText(col_labels, "columns:");
-        var col_display = createFlow(col_content, Horizontal, Middle, Left);
-        columnText = createText(col_display);
-        var column_controls = createFlow(col_display, Vertical, Middle, Left);
+        var column_controls = createFlow(null, Vertical, Middle, Left);
         column_controls.verticalSpacing = 30;
         new TriangleButton(column_controls, () -> {f.columns++; updateStats(f);});
         new TriangleButton(column_controls, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, true);
+        columnText = createLabelTextFlowTriplet(this, "columns:", column_controls);
+        
         // new Text(DefaultFont.get(), col_container).text = StringTools.rpad("Spacing:", " ", 10);
         // columnSpaceText = new Text(DefaultFont.get(), col_container);
         // new TriangleButton(col_container, () -> {f.columnSpacing++; updateStats(f);});
@@ -125,6 +137,8 @@ class FormationUI extends Flow implements MessageListener {
         
         columnText.text = '${f.columns}';
         // columnSpaceText.text = StringTools.lpad('${f.columnSpacing}', " ", 6);
+
+        // flow beautification
         reflow();
     }
 

@@ -22,7 +22,7 @@ function getAllChildren(o: Object) : Array<Object> {
 }
 
 function createText(parent:Object, text="") : {text: Text, flow: Flow} {
-    var f = createFlow(parent);
+    var f = createFlow(parent, Left);
     var t = new Text(DefaultFont.get(), f);
     t.smooth = false;
     t.scale(2);
@@ -30,12 +30,13 @@ function createText(parent:Object, text="") : {text: Text, flow: Flow} {
     return {text: t, flow: f};
 }
 
-function createFlow(parent:Object, layout = FlowLayout.Vertical, v_align = FlowAlign.Middle, h_align = FlowAlign.Middle) : Flow {
+function createFlow(parent:Object, layout = FlowLayout.Vertical, h_align = FlowAlign.Middle, v_align = FlowAlign.Middle) : Flow {
     var flow = new Flow(parent);
     // flow.debug = true;
     flow.layout = layout;
     flow.horizontalAlign = h_align;
     flow.verticalAlign = v_align;
+    flow.paddingRight = 5;
     // TODO, find and apply this automatically
     // whatever flow is the tallest should set the min height for all others
     flow.minHeight = 26*2;
@@ -74,8 +75,8 @@ class FormationUI extends Flow implements MessageListener {
         // debug = true;
         // flow boilerplate
         backgroundTile = Res.img.ui.ScaleGrid.toTile();
-        borderWidth = 8;
-        borderHeight = 8;
+        borderWidth = 5;
+        borderHeight = 13;
         padding = 10;
         layout = Horizontal;
         verticalAlign = Top;
@@ -84,8 +85,8 @@ class FormationUI extends Flow implements MessageListener {
         watchedFormation = f.id;
 
         // the core of our UI
-        var labels = createFlow(this, Vertical);
-        var data = createFlow(this, Vertical);
+        var labels = createFlow(this, Vertical, Left);
+        var data = createFlow(this, Vertical, Left);
         data.minWidth = 100;
         var controls = createFlow(this, Vertical);
 
@@ -97,29 +98,25 @@ class FormationUI extends Flow implements MessageListener {
         positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, controls);
 
         // columns
-        var column_controls = createFlow(null, Vertical);
-        column_controls.verticalSpacing = 25;
-        new TriangleButton(column_controls, () -> {f.columns++; updateStats(f);});
-        new TriangleButton(column_controls, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, true);
+        var column_controls = createFlow(null, Horizontal);
+        new TriangleButton(column_controls, () -> {f.columns++; updateStats(f);}, Up);
+        new TriangleButton(column_controls, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, Down);
         columnText = createLabelDataControlTriplet(labels, "columns:", data, controls, column_controls);
         
-        var column_spacing_controls = createFlow(null, Vertical);
-        column_spacing_controls.verticalSpacing = 25;
-        new TriangleButton(column_spacing_controls, () -> {f.columnSpacing++; updateStats(f);});
-        new TriangleButton(column_spacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, true);
+        var column_spacing_controls = createFlow(null, Horizontal);
+        new TriangleButton(column_spacing_controls, () -> {f.columnSpacing++; updateStats(f);}, Up);
+        new TriangleButton(column_spacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, Down);
         columnSpaceText = createLabelDataControlTriplet(labels, "column spacing:", data, controls, column_spacing_controls);
 
         // rows
-        var row_controls = createFlow(null, Vertical);
-        row_controls.verticalSpacing = 25;
-        new TriangleButton(row_controls, () -> {f.rows++; updateStats(f);});
-        new TriangleButton(row_controls, () -> {if (f.rows == 1) return; f.rows--; updateStats(f);}, true);
+        var row_controls = createFlow(null, Horizontal);
+        new TriangleButton(row_controls, () -> {f.rows++; updateStats(f);}, Up);
+        new TriangleButton(row_controls, () -> {if (f.rows == 1) return; f.rows--; updateStats(f);}, Down);
         rowText = createLabelDataControlTriplet(labels, "rows:", data, controls, row_controls);
         
-        var row_spacing_controls = createFlow(null, Vertical);
-        row_spacing_controls.verticalSpacing = 25;
-        new TriangleButton(row_spacing_controls, () -> {f.rowSpacing++; updateStats(f);});
-        new TriangleButton(row_spacing_controls, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, true);
+        var row_spacing_controls = createFlow(null, Horizontal);
+        new TriangleButton(row_spacing_controls, () -> {f.rowSpacing++; updateStats(f);}, Up);
+        new TriangleButton(row_spacing_controls, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, Down);
         rowSpaceText = createLabelDataControlTriplet(labels, "row spacing:", data, controls, row_spacing_controls);
         
         // interactivity to move window around

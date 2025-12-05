@@ -19,6 +19,8 @@ make an interactive, have it control positioning and facing. Have a ghost to ind
 
 Have a direct mouse based way to change row\column parameters?
 
+Need to have a more clever assignment of units to positions. Pathfinding\distance based
+
 
 Notes on dynamics
 -----------------

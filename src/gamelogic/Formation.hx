@@ -81,11 +81,12 @@ class Formation implements MessageListener implements Updateable {
     }
 
     public function receive(msg:Message):Bool {
-        if (Std.isOfType(msg, KeyUp)) {
-            var params = cast(msg, KeyUp);
-            if (params.keycode == Key.SPACE)
-                rotating = !rotating;
-        } if (Std.isOfType(msg, MouseRelease)) {
+        // if (Std.isOfType(msg, KeyUp)) {
+        //     var params = cast(msg, KeyUp);
+        //     if (params.keycode == Key.SPACE)
+        //         rotating = !rotating;
+        // }
+        if (Std.isOfType(msg, MouseRelease)) {
             if (!listeningForDestination) return false;
             var params = cast(msg, MouseRelease);
             if (params.event.button == 0) {

@@ -1,5 +1,7 @@
 package graphics.ui;
 
+import hxd.Cursor;
+import hxd.Cursor.CustomCursor;
 import h2d.Bitmap;
 import graphics.ui.BitmapButton.ReticleButton;
 import graphics.ui.BitmapButton.RotationButton;
@@ -17,7 +19,7 @@ import h2d.Flow;
 import h2d.Object;
 
 // whether to show box debugging visualisation
-var DEBUGFLOWS = true;
+var DEBUGFLOWS = false;
 
 function getAllChildren(o: Object) : Array<Object> {
     var out = new Array<Object>();
@@ -77,8 +79,8 @@ class FormationUI extends Flow implements MessageListener {
     var isMoving = false;
     var xOffset = 0.0;
     var yOffset = 0.0;
-
-    var reticle: Bitmap;
+    
+    var reticleCursor: Bitmap;
 
     public function new(f: Formation, p: Object) {
         super(p);
@@ -94,9 +96,9 @@ class FormationUI extends Flow implements MessageListener {
 
         watchedFormation = f.id;
 
-        // movment reticle
-        reticle = new Bitmap(hxd.Res.img.ui.ReticleButton.Loading.toTile(), this);
-        reticle.visible = false;
+        // var reticle_cursor = Cursor.Custom(new CustomCursor( [hxd.Res.img.ui.ReticleButton.Loading.toBitmap()], 1, 0, 0));
+        reticleCursor = new Bitmap(hxd.Res.img.ui.ReticleButton.Loading.toTile().center(), parent);
+        reticleCursor.visible = false;
 
         // the core of our UI
         labels = createFlow(this, Vertical, Left);
@@ -106,11 +108,11 @@ class FormationUI extends Flow implements MessageListener {
         // initialise display of and interaction with formation stats
         idText = createLabelDataControlTriplet(labels, "id:", data, controls);
         var destination_controls = createFlow(null, Horizontal);
-        new ReticleButton(destination_controls, () -> {f.listeningForDestination = true;});
+        new ReticleButton(destination_controls, () -> {f.listeningForDestination = true; updateStats(f); });
         destinationText = createLabelDataControlTriplet(labels, "destination:", data, controls, destination_controls);
         var facing_controls = createFlow(null, Horizontal);
-        new RotationButton(facing_controls, () -> {f.targetFacing+=Math.PI/8; updateStats(f);}, true);
-        new RotationButton(facing_controls, () -> {f.targetFacing-=Math.PI/8; updateStats(f);});
+        new RotationButton(facing_controls, () -> {f.targetFacing+=Math.PI/32; updateStats(f);}, true);
+        new RotationButton(facing_controls, () -> {f.targetFacing-=Math.PI/32; updateStats(f);});
         facingText = createLabelDataControlTriplet(labels, "facing:", data, controls, facing_controls);
         unitNumberText = createLabelDataControlTriplet(labels, "units:", data, controls);
         positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, controls);
@@ -142,7 +144,7 @@ class FormationUI extends Flow implements MessageListener {
         interactive.onPush = (e: Event) -> {
             isMoving = true;
             xOffset = e.relX;
-            yOffset=e.relY;
+            yOffset = e.relY;
         }
         interactive.onRelease = (e: Event) -> {
             isMoving = false;
@@ -164,6 +166,8 @@ class FormationUI extends Flow implements MessageListener {
 
         rowText.text = '${f.rows}';
         rowSpaceText.text = '${f.rowSpacing}';
+
+        reticleCursor.visible = f.listeningForDestination;
 
         // flow beautification
         resizeFlows();
@@ -205,6 +209,8 @@ class FormationUI extends Flow implements MessageListener {
             var params = cast(msg, FormationUpdate);
             if (params.formation.id == watchedFormation) {
                 updateStats(params.formation);
+                if (!params.formation.listeningForDestination)
+                    reticleCursor.visible = false;
             }
         } if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
@@ -216,6 +222,8 @@ class FormationUI extends Flow implements MessageListener {
                 if (y < 0) y = 0;
                 if (y + outerHeight > Window.getInstance().height) y = Window.getInstance().height - outerHeight;
             }
+            reticleCursor.x = params.event.relX;
+            reticleCursor.y = params.event.relY;
         }
         return false;
     }

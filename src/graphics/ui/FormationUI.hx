@@ -1,5 +1,6 @@
 package graphics.ui;
 
+import hxd.Window;
 import hxd.Event;
 import utilities.Utilities.prettyPrintVectorRounded;
 import graphics.ui.BitmapButton.TriangleButton;
@@ -11,6 +12,9 @@ import hxd.Res;
 import utilities.MessageManager;
 import h2d.Flow;
 import h2d.Object;
+
+// whether to show box debugging visualisation
+var DEBUGFLOWS = false;
 
 function getAllChildren(o: Object) : Array<Object> {
     var out = new Array<Object>();
@@ -32,14 +36,11 @@ function createText(parent:Object, text="") : {text: Text, flow: Flow} {
 
 function createFlow(parent:Object, layout = FlowLayout.Vertical, h_align = FlowAlign.Middle, v_align = FlowAlign.Middle) : Flow {
     var flow = new Flow(parent);
-    // flow.debug = true;
+    flow.debug = DEBUGFLOWS;
     flow.layout = layout;
     flow.horizontalAlign = h_align;
     flow.verticalAlign = v_align;
-    flow.paddingRight = 5;
-    // TODO, find and apply this automatically
-    // whatever flow is the tallest should set the min height for all others
-    flow.minHeight = 26*2;
+    flow.padding = 5;
     return flow;
 }
 
@@ -53,6 +54,10 @@ function createLabelDataControlTriplet(label_container: Flow, label: String, dat
 }
 
 class FormationUI extends Flow implements MessageListener {
+
+    var labels: Flow;
+    var data: Flow;
+    var controls: Flow;
 
     var watchedFormation: Int;
     var rowText: Text;
@@ -72,7 +77,7 @@ class FormationUI extends Flow implements MessageListener {
 
     public function new(f: Formation, p: Object) {
         super(p);
-        // debug = true;
+        debug = DEBUGFLOWS;
         // flow boilerplate
         backgroundTile = Res.img.ui.ScaleGrid.toTile();
         borderWidth = 5;
@@ -85,10 +90,9 @@ class FormationUI extends Flow implements MessageListener {
         watchedFormation = f.id;
 
         // the core of our UI
-        var labels = createFlow(this, Vertical, Left);
-        var data = createFlow(this, Vertical, Left);
-        data.minWidth = 100;
-        var controls = createFlow(this, Vertical);
+        labels = createFlow(this, Vertical, Left);
+        data = createFlow(this, Vertical, Left);
+        controls = createFlow(this, Vertical);
 
         // initialise display of and interaction with formation stats
         idText = createLabelDataControlTriplet(labels, "id:", data, controls);
@@ -148,6 +152,33 @@ class FormationUI extends Flow implements MessageListener {
         rowSpaceText.text = '${f.rowSpacing}';
 
         // flow beautification
+        var max_height = 0;
+        for (c in getAllChildren(this))
+            if (Std.isOfType(c, Flow)) {
+                var f = cast(c, Flow);
+                max_height = f.outerHeight > max_height ? f.outerHeight : max_height;
+            }
+        var columns = [labels, data, controls];
+        for (i in 0...3) {
+            var max_width = 0;
+            for (c in getAllChildren(columns[i])) {
+                if (Std.isOfType(c, Flow)) {
+                    var f = cast(c, Flow);
+                    max_width = f.outerWidth > max_width ? f.outerWidth : max_width;
+                }
+            }
+            for (c in getAllChildren(columns[i])) {
+                if (Std.isOfType(c, Flow)) {
+                    var f = cast(c, Flow);
+                    f.minWidth = max_width;
+                }
+            }
+        }
+        for (c in getAllChildren(this))
+            if (Std.isOfType(c, Flow)) {
+                var f = cast(c, Flow);
+                f.minHeight = max_height;
+            }
         reflow();
     }
 
@@ -162,6 +193,10 @@ class FormationUI extends Flow implements MessageListener {
             if (isMoving) {
                 x = params.event.relX - xOffset;
                 y = params.event.relY - yOffset;
+                if (x < 0) x = 0;
+                if (x + outerWidth > Window.getInstance().width) x = Window.getInstance().width - outerWidth;
+                if (y < 0) y = 0;
+                if (y + outerHeight > Window.getInstance().height) y = Window.getInstance().height - outerHeight;
             }
         }
         return false;

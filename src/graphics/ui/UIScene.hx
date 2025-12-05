@@ -1,5 +1,6 @@
 package graphics.ui;
 
+import hxd.Window;
 import graphics.ui.FormationUI;
 import h2d.Scene;
 import h2d.Text;
@@ -13,8 +14,8 @@ class UIScene extends Scene implements MessageListener {
         super();
         fpsText = new h2d.Text(hxd.res.DefaultFont.get(), this);
         fpsText.visible = true;
-        fpsText.x = 1280*0.9;
-        fpsText.y = 720*0.9;
+        fpsText.x = Window.getInstance().width*0.9;
+        fpsText.y = Window.getInstance().height*0.9;
 
         defaultSmooth = true;
 

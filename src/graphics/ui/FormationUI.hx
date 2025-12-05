@@ -1,5 +1,8 @@
 package graphics.ui;
 
+import h2d.Bitmap;
+import graphics.ui.BitmapButton.ReticleButton;
+import graphics.ui.BitmapButton.RotationButton;
 import hxd.Window;
 import hxd.Event;
 import utilities.Utilities.prettyPrintVectorRounded;
@@ -14,7 +17,7 @@ import h2d.Flow;
 import h2d.Object;
 
 // whether to show box debugging visualisation
-var DEBUGFLOWS = false;
+var DEBUGFLOWS = true;
 
 function getAllChildren(o: Object) : Array<Object> {
     var out = new Array<Object>();
@@ -75,6 +78,8 @@ class FormationUI extends Flow implements MessageListener {
     var xOffset = 0.0;
     var yOffset = 0.0;
 
+    var reticle: Bitmap;
+
     public function new(f: Formation, p: Object) {
         super(p);
         debug = DEBUGFLOWS;
@@ -89,6 +94,10 @@ class FormationUI extends Flow implements MessageListener {
 
         watchedFormation = f.id;
 
+        // movment reticle
+        reticle = new Bitmap(hxd.Res.img.ui.ReticleButton.Loading.toTile(), this);
+        reticle.visible = false;
+
         // the core of our UI
         labels = createFlow(this, Vertical, Left);
         data = createFlow(this, Vertical, Left);
@@ -96,8 +105,13 @@ class FormationUI extends Flow implements MessageListener {
 
         // initialise display of and interaction with formation stats
         idText = createLabelDataControlTriplet(labels, "id:", data, controls);
-        destinationText = createLabelDataControlTriplet(labels, "destination:", data, controls);
-        facingText = createLabelDataControlTriplet(labels, "facing:", data, controls);
+        var destination_controls = createFlow(null, Horizontal);
+        new ReticleButton(destination_controls, () -> {f.listeningForDestination = true;});
+        destinationText = createLabelDataControlTriplet(labels, "destination:", data, controls, destination_controls);
+        var facing_controls = createFlow(null, Horizontal);
+        new RotationButton(facing_controls, () -> {f.targetFacing+=Math.PI/8; updateStats(f);}, true);
+        new RotationButton(facing_controls, () -> {f.targetFacing-=Math.PI/8; updateStats(f);});
+        facingText = createLabelDataControlTriplet(labels, "facing:", data, controls, facing_controls);
         unitNumberText = createLabelDataControlTriplet(labels, "units:", data, controls);
         positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, controls);
 
@@ -152,6 +166,11 @@ class FormationUI extends Flow implements MessageListener {
         rowSpaceText.text = '${f.rowSpacing}';
 
         // flow beautification
+        resizeFlows();
+        reflow();
+    }
+
+    function resizeFlows() {
         var max_height = 0;
         for (c in getAllChildren(this))
             if (Std.isOfType(c, Flow)) {
@@ -179,7 +198,6 @@ class FormationUI extends Flow implements MessageListener {
                 var f = cast(c, Flow);
                 f.minHeight = max_height;
             }
-        reflow();
     }
 
     public function receive(msg:Message):Bool {

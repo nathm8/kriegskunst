@@ -104,34 +104,22 @@ class TriangleButton extends BitmapButton {
 }
 
 class RotationButton extends BitmapButton {
-    public function new(p:Object, onClick:() -> Void, dirc: ButtonDirection) {
+    public function new(p:Object, onClick:() -> Void, x_flip=false) {
         var enabled, disabled, hover, active, loading : Tile;
-        switch (dirc) {
-            case Up:
-                enabled = hxd.Res.img.ui.RotationButton.UpEnabled.toTile();
-                disabled = hxd.Res.img.ui.RotationButton.UpDisabled.toTile();
-                hover = hxd.Res.img.ui.RotationButton.UpHover.toTile();
-                active = hxd.Res.img.ui.RotationButton.UpActive.toTile();
-                loading = hxd.Res.img.ui.RotationButton.UpLoading.toTile();
-            case Down:
-                enabled = hxd.Res.img.ui.RotationButton.DownEnabled.toTile();
-                disabled = hxd.Res.img.ui.RotationButton.DownDisabled.toTile();
-                hover = hxd.Res.img.ui.RotationButton.DownHover.toTile();
-                active = hxd.Res.img.ui.RotationButton.DownActive.toTile();
-                loading = hxd.Res.img.ui.RotationButton.DownLoading.toTile();
-            case Left:
-                enabled = hxd.Res.img.ui.RotationButton.LeftEnabled.toTile();
-                disabled = hxd.Res.img.ui.RotationButton.LeftDisabled.toTile();
-                hover = hxd.Res.img.ui.RotationButton.LeftHover.toTile();
-                active = hxd.Res.img.ui.RotationButton.LeftActive.toTile();
-                loading = hxd.Res.img.ui.RotationButton.LeftLoading.toTile();
-            case Right:
-                enabled = hxd.Res.img.ui.RotationButton.RightEnabled.toTile();
-                disabled = hxd.Res.img.ui.RotationButton.RightDisabled.toTile();
-                hover = hxd.Res.img.ui.RotationButton.RightHover.toTile();
-                active = hxd.Res.img.ui.RotationButton.RightActive.toTile();
-                loading = hxd.Res.img.ui.RotationButton.RightLoading.toTile();
+        if (x_flip) {
+            enabled = hxd.Res.img.ui.RotationButton.XMirrorEnabled.toTile();
+            disabled = hxd.Res.img.ui.RotationButton.XMirrorDisabled.toTile();
+            hover = hxd.Res.img.ui.RotationButton.XMirrorHover.toTile();
+            active = hxd.Res.img.ui.RotationButton.XMirrorActive.toTile();
+            loading = hxd.Res.img.ui.RotationButton.XMirrorLoading.toTile();
+        } else {
+            enabled = hxd.Res.img.ui.RotationButton.Enabled.toTile();
+            disabled = hxd.Res.img.ui.RotationButton.Disabled.toTile();
+            hover = hxd.Res.img.ui.RotationButton.Hover.toTile();
+            active = hxd.Res.img.ui.RotationButton.Active.toTile();
+            loading = hxd.Res.img.ui.RotationButton.Loading.toTile();
         }
+
         super(enabled,
               disabled,
               hover,

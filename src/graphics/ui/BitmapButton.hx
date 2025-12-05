@@ -12,8 +12,8 @@ class BitmapButton extends Bitmap {
     static var initialised = false;
     static var pixelsCollider: PixelsCollider;
     
-    var repeatRate = 1.0;
-    var timeRemaining = 1.0;
+    var repeatRate = 0.15;
+    var timeRemaining = 0.15;
     var repeating = false;
 
     public function new(enabled:Tile, disabled:Tile, hover:Tile, active:Tile, loading:Tile, p:Object, onClick:() -> Void) {
@@ -37,10 +37,12 @@ class BitmapButton extends Bitmap {
         i.onOut = (e: Event) -> {
             tile = enabled;
             repeating = false;
+            timeRemaining = repeatRate;
         };
         // button repeating
         i.onRelease = (e: Event) -> {
             repeating = false;
+            timeRemaining = repeatRate;
         }
         i.onPush = (e: Event) -> {
             repeating = true;
@@ -48,12 +50,15 @@ class BitmapButton extends Bitmap {
         i.onCheck = (e: Event) -> {
             if (!repeating) return;
             timeRemaining -= Timer.dt;
+            if (timeRemaining <= 0) {
+                timeRemaining = repeatRate;
+                i.onClick(e);
+            }
         };
-
     }
 }
 
-enum TriangleDirection {
+enum ButtonDirection {
     Up;
     Down;
     Left;
@@ -61,7 +66,7 @@ enum TriangleDirection {
 }
 
 class TriangleButton extends BitmapButton {
-    public function new(p:Object, onClick:() -> Void, dirc: TriangleDirection) {
+    public function new(p:Object, onClick:() -> Void, dirc: ButtonDirection) {
         var enabled, disabled, hover, active, loading : Tile;
         switch (dirc) {
             case Up:
@@ -89,6 +94,61 @@ class TriangleButton extends BitmapButton {
                 active = hxd.Res.img.ui.TriangleButton.RightActive.toTile();
                 loading = hxd.Res.img.ui.TriangleButton.RightLoading.toTile();
         }
+        super(enabled,
+              disabled,
+              hover,
+              active,
+              loading,
+              p, onClick);
+    }
+}
+
+class RotationButton extends BitmapButton {
+    public function new(p:Object, onClick:() -> Void, dirc: ButtonDirection) {
+        var enabled, disabled, hover, active, loading : Tile;
+        switch (dirc) {
+            case Up:
+                enabled = hxd.Res.img.ui.RotationButton.UpEnabled.toTile();
+                disabled = hxd.Res.img.ui.RotationButton.UpDisabled.toTile();
+                hover = hxd.Res.img.ui.RotationButton.UpHover.toTile();
+                active = hxd.Res.img.ui.RotationButton.UpActive.toTile();
+                loading = hxd.Res.img.ui.RotationButton.UpLoading.toTile();
+            case Down:
+                enabled = hxd.Res.img.ui.RotationButton.DownEnabled.toTile();
+                disabled = hxd.Res.img.ui.RotationButton.DownDisabled.toTile();
+                hover = hxd.Res.img.ui.RotationButton.DownHover.toTile();
+                active = hxd.Res.img.ui.RotationButton.DownActive.toTile();
+                loading = hxd.Res.img.ui.RotationButton.DownLoading.toTile();
+            case Left:
+                enabled = hxd.Res.img.ui.RotationButton.LeftEnabled.toTile();
+                disabled = hxd.Res.img.ui.RotationButton.LeftDisabled.toTile();
+                hover = hxd.Res.img.ui.RotationButton.LeftHover.toTile();
+                active = hxd.Res.img.ui.RotationButton.LeftActive.toTile();
+                loading = hxd.Res.img.ui.RotationButton.LeftLoading.toTile();
+            case Right:
+                enabled = hxd.Res.img.ui.RotationButton.RightEnabled.toTile();
+                disabled = hxd.Res.img.ui.RotationButton.RightDisabled.toTile();
+                hover = hxd.Res.img.ui.RotationButton.RightHover.toTile();
+                active = hxd.Res.img.ui.RotationButton.RightActive.toTile();
+                loading = hxd.Res.img.ui.RotationButton.RightLoading.toTile();
+        }
+        super(enabled,
+              disabled,
+              hover,
+              active,
+              loading,
+              p, onClick);
+    }
+}
+
+class ReticleButton extends BitmapButton {
+    public function new(p:Object, onClick:() -> Void) {
+        var enabled, disabled, hover, active, loading : Tile;
+        enabled = hxd.Res.img.ui.ReticleButton.Enabled.toTile();
+        disabled = hxd.Res.img.ui.ReticleButton.Disabled.toTile();
+        hover = hxd.Res.img.ui.ReticleButton.Hover.toTile();
+        active = hxd.Res.img.ui.ReticleButton.Active.toTile();
+        loading = hxd.Res.img.ui.ReticleButton.Loading.toTile();
         super(enabled,
               disabled,
               hover,

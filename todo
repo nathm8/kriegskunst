@@ -3,7 +3,9 @@ TODO
 
 FormationUI
 -----------------
-have holding down mouse repeat button activation
+add buttons for destination and facing
+
+make the data text directly editable
 
 Need to prevent clicks on UI from affecting gamescene
     Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
@@ -39,3 +41,4 @@ make whole UI draggable
     need to prevent it from being dragged off-screen
 make the layout pretty (kinda)
 Automatically have minimum width\height for all flows be equal to the largest, to preserve the grid layout
+have holding down mouse repeat button activation

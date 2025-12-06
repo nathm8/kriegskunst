@@ -30,11 +30,12 @@ class ParsingTextInput extends TextInput {
     function isValid(t: String) : Bool {
         switch(type) {
             case Int:
-                return Std.parseInt(t) != null;
+                return t == "" || Std.parseInt(t) != null;
             case Float:
-                return Std.parseFloat(t) != Math.NaN;
+                return t == "" || Std.parseFloat(t) != Math.NaN;
             case Vector2D:
                 var s = t.split(",");
+                if (s.length != 2) return false;
                 return Std.parseFloat(s[0]) != Math.NaN && Std.parseFloat(s[1]) != Math.NaN;
         }
     }

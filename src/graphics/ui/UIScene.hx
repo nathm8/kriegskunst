@@ -30,8 +30,8 @@ class UIScene extends Scene implements MessageListener {
         if (Std.isOfType(msg, NewFormation)) {
             var params = cast(msg, NewFormation);
             var ui = new FormationUI(params.formation, this);
-            ui.x = Window.getInstance().width*0.1;
-            ui.y = Window.getInstance().height*0.1;
+            ui.x = Window.getInstance().width*0.05;
+            ui.y = Window.getInstance().height*0.05;
         }
         return false;
     }

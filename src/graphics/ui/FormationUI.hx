@@ -1,10 +1,6 @@
 package graphics.ui;
 
-import utilities.Vector2D;
-import haxe.macro.Expr.Case;
-import h2d.TextInput;
-import hxd.Cursor;
-import hxd.Cursor.CustomCursor;
+import graphics.ui.ParsingTextInput.ParsingType;
 import h2d.Bitmap;
 import graphics.ui.BitmapButton.ReticleButton;
 import graphics.ui.BitmapButton.RotationButton;
@@ -28,13 +24,13 @@ function getAllChildren(o: Object) : Array<Object> {
     var out = new Array<Object>();
     for (c in o) {
         out.push(c);
-        out.concat(getAllChildren(c));
+        out = out.concat(getAllChildren(c));
     }
     return out;
 }
 
 function createText(parent:Object, text="") : {text: Text, flow: Flow} {
-    var f = createFlow(parent, Left);
+    var f = createFlow(parent, Left, Top);
     var t = new Text(DefaultFont.get(), f);
     t.smooth = false;
     t.scale(2);
@@ -42,15 +38,17 @@ function createText(parent:Object, text="") : {text: Text, flow: Flow} {
     return {text: t, flow: f};
 }
 
-function createParsingTextInput(parent:Object, callback: (t:ParsingTextInput<Any>) -> Void, type: Any) : {text: Text, flow: Flow} {
-    var f = createFlow(parent, Left);
-    var t = new ParsingTextInput<Any>(DefaultFont.get(), null);
-    if (Std.isOfType(type, Int))
-        t = new ParsingTextInput<Int>(DefaultFont.get(), f); 
-    else if (Std.isOfType(type, Float))
-        t = new ParsingTextInput<Float>(DefaultFont.get(), f); 
-    else
-        t = new ParsingTextInput<Vector2D>(DefaultFont.get(), f); 
+function createParsingTextInput(parent:Object, callback: (t:ParsingTextInput) -> Void, type: ParsingType) : {text: Text, flow: Flow} {
+    var f = createFlow(parent, Left, Top);
+    var t: ParsingTextInput;
+    switch(type) {
+        case Int:
+            t = new ParsingTextInput(DefaultFont.get(), Int, f); 
+        case Float:
+            t = new ParsingTextInput(DefaultFont.get(), Float, f); 
+        case Vector2D:
+            t = new ParsingTextInput(DefaultFont.get(), Vector2D, f);
+    }
     t.onFocus = (_) -> {t.textColor = 0xAAAAAAAA;}
     t.onFocusLost = (_) -> {t.textColor = 0xFFFFFF; callback(t);}
     t.inputWidth = 50;
@@ -70,13 +68,13 @@ function createFlow(parent:Object, layout = FlowLayout.Vertical, h_align = FlowA
 }
 
 // a null callback will result in static data text, instead of an InputText that uses the callback
-function createLabelDataControlTriplet(label_container: Flow, label: String, data_container: Flow, datatype: Any=null, callback: (t:ParsingTextInput<Any>)->Void=null, control_container: Flow, ?controls: Flow) : Text {
+function createLabelDataControlTriplet(label_container: Flow, label: String, data_container: Flow, callback: (t:ParsingTextInput)->Void, type: ParsingType, control_container: Flow, ?controls: Flow) : Text {
     createText(label_container, label);
     var text: Text;
-    if (datatype == null)
+    if (callback == null)
         text = createText(data_container).text;
     else
-        text = createParsingTextInput(data_container, datatype, callback).text;
+        text = createParsingTextInput(data_container, callback, type).text;
     if (controls == null)
         controls = createText(null, " ").flow;
     control_container.addChild(controls);
@@ -125,43 +123,61 @@ class FormationUI extends Flow implements MessageListener {
         reticleCursor.visible = false;
 
         // the core of our UI
-        labels = createFlow(this, Vertical, Left);
-        data = createFlow(this, Vertical, Left);
-        controls = createFlow(this, Vertical);
+        labels = createFlow(this, Vertical, Left, Top);
+        data = createFlow(this, Vertical, Left, Top);
+        controls = createFlow(this, Vertical, Left, Top);
 
         // initialise display of and interaction with formation stats
-        idText = createLabelDataControlTriplet(labels, "id:", data, null, controls);
+        idText = createLabelDataControlTriplet(labels, "id:", data, null, null, controls);
         var destination_controls = createFlow(null, Horizontal);
         new ReticleButton(destination_controls, () -> {f.listeningForDestination = true; updateStats(f); });
-        destinationText = createLabelDataControlTriplet(labels, "destination:", data, (t:ParsingTextInput<Vector2D>) -> {f.destination = t.value; updateStats(f);}, controls, destination_controls);
+        destinationText = createLabelDataControlTriplet(
+            labels, "destination:",
+            data, (t:ParsingTextInput) -> {f.destination = t.value; updateStats(f);}, Vector2D,
+            controls, destination_controls);
         var facing_controls = createFlow(null, Horizontal);
         new RotationButton(facing_controls, () -> {f.targetFacing+=Math.PI/32; updateStats(f);}, true);
         new RotationButton(facing_controls, () -> {f.targetFacing-=Math.PI/32; updateStats(f);});
-        facingText = createLabelDataControlTriplet(labels, "facing:", data, null, controls, facing_controls);
-        unitNumberText = createLabelDataControlTriplet(labels, "units:", data, null, controls);
-        positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, null, controls);
+        facingText = createLabelDataControlTriplet(
+            labels, "facing:",
+            data, (t:ParsingTextInput) -> {f.targetFacing = t.value; updateStats(f);}, Float,
+            controls, facing_controls);
+        unitNumberText = createLabelDataControlTriplet(labels, "units:", data, null, null, controls);
+        positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, null, null, controls);
 
         // columns
         var column_controls = createFlow(null, Horizontal);
         new TriangleButton(column_controls, () -> {f.columns++; updateStats(f);}, Up);
         new TriangleButton(column_controls, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, Down);
-        columnText = createLabelDataControlTriplet(labels, "columns:", data, null, controls, column_controls);
+        columnText = createLabelDataControlTriplet(
+            labels, "columns:",
+            data, (t:ParsingTextInput) -> {f.columns = t.value; updateStats(f);}, Int,
+            controls, column_controls);
         
         var column_spacing_controls = createFlow(null, Horizontal);
         new TriangleButton(column_spacing_controls, () -> {f.columnSpacing++; updateStats(f);}, Up);
         new TriangleButton(column_spacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, Down);
-        columnSpaceText = createLabelDataControlTriplet(labels, "column spacing:", data, null, controls, column_spacing_controls);
+        columnSpaceText = createLabelDataControlTriplet(
+            labels, "column spacing:",
+            data, (t:ParsingTextInput) -> {f.columnSpacing = t.value; updateStats(f);}, Int,
+            controls, column_spacing_controls);
 
         // rows
         var row_controls = createFlow(null, Horizontal);
         new TriangleButton(row_controls, () -> {f.rows++; updateStats(f);}, Up);
         new TriangleButton(row_controls, () -> {if (f.rows == 1) return; f.rows--; updateStats(f);}, Down);
-        rowText = createLabelDataControlTriplet(labels, "rows:", data, null, controls, row_controls);
+        rowText = createLabelDataControlTriplet(
+            labels, "rows:",
+            data, (t:ParsingTextInput) -> {f.rows = t.value; updateStats(f);}, Int,
+            controls, row_controls);
         
         var row_spacing_controls = createFlow(null, Horizontal);
         new TriangleButton(row_spacing_controls, () -> {f.rowSpacing++; updateStats(f);}, Up);
         new TriangleButton(row_spacing_controls, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, Down);
-        rowSpaceText = createLabelDataControlTriplet(labels, "row spacing:", data, null, controls, row_spacing_controls);
+        rowSpaceText = createLabelDataControlTriplet(
+            labels, "row spacing:",
+            data, (t:ParsingTextInput) -> {f.rowSpacing = t.value; updateStats(f);}, Int,
+            controls, row_spacing_controls);
         
         // interactivity to move window around
         enableInteractive = true;
@@ -200,11 +216,6 @@ class FormationUI extends Flow implements MessageListener {
 
     function resizeFlows() {
         var max_height = 0;
-        for (c in getAllChildren(this))
-            if (Std.isOfType(c, Flow)) {
-                var f = cast(c, Flow);
-                max_height = f.outerHeight > max_height ? f.outerHeight : max_height;
-            }
         var columns = [labels, data, controls];
         for (i in 0...3) {
             var max_width = 0;
@@ -212,6 +223,7 @@ class FormationUI extends Flow implements MessageListener {
                 if (Std.isOfType(c, Flow)) {
                     var f = cast(c, Flow);
                     max_width = f.outerWidth > max_width ? f.outerWidth : max_width;
+                    max_height = f.outerHeight > max_height ? f.outerHeight : max_height;
                 }
             }
             for (c in getAllChildren(columns[i])) {
@@ -221,11 +233,12 @@ class FormationUI extends Flow implements MessageListener {
                 }
             }
         }
-        for (c in getAllChildren(this))
-            if (Std.isOfType(c, Flow)) {
-                var f = cast(c, Flow);
-                f.minHeight = max_height;
-            }
+        for (i in 0...3)
+            for (c in getAllChildren(columns[i]))
+                if (Std.isOfType(c, Flow)) {
+                    var f = cast(c, Flow);
+                    f.minHeight = max_height;
+                }
     }
 
     public function receive(msg:Message):Bool {

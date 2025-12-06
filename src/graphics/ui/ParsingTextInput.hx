@@ -5,11 +5,18 @@ import h2d.Object;
 import h2d.Font;
 import h2d.TextInput;
 
-class ParsingTextInput<T> extends TextInput {
-    public var value(get, null): T;
-    var type: T;
+enum ParsingType {
+    Int;
+    Float;
+    Vector2D;
+}
 
-    public function new(font:Font, ?parent:Object) {
+class ParsingTextInput extends TextInput {
+    public var value(get, null): Any;
+    var type: ParsingType;
+
+    public function new(font:Font, t: ParsingType, ?parent:Object) {
+        type = t;
         super(font, parent);
     }
 
@@ -21,25 +28,27 @@ class ParsingTextInput<T> extends TextInput {
 	}
 
     function isValid(t: String) : Bool {
-        if (Std.isOfType(type, Int))
-            return Std.parseInt(t) != null;
-        else if (Std.isOfType(type, Float))
-            return Std.parseFloat(t) != Math.NaN;
-        else {
-            var s = t.split(",");
-            return Std.parseFloat(s[0]) != Math.NaN && Std.parseFloat(s[1]) != Math.NaN;
+        switch(type) {
+            case Int:
+                return Std.parseInt(t) != null;
+            case Float:
+                return Std.parseFloat(t) != Math.NaN;
+            case Vector2D:
+                var s = t.split(",");
+                return Std.parseFloat(s[0]) != Math.NaN && Std.parseFloat(s[1]) != Math.NaN;
         }
     }
 
-    public function get_value() : T {
+    public function get_value() : Any {
         // assuming isValid
-        if (Std.isOfType(type, Int))
-            return cast Std.parseInt(text);
-        else if (Std.isOfType(type, Float))
-            return cast Std.parseFloat(text);
-        else {
-            var s = text.split(",");
-            return cast new Vector2D(Std.parseFloat(s[0]), Std.parseFloat(s[1]));
+        switch(type) {
+            case Int:
+                return cast Std.parseInt(text);
+            case Float:
+                return cast Std.parseFloat(text);
+            case Vector2D:
+                var s = text.split(",");
+                return cast new Vector2D(Std.parseFloat(s[0]), Std.parseFloat(s[1]));
         }
     }
 }

@@ -1,12 +1,8 @@
 package gamelogic;
 
 import hxd.Window;
-import graphics.ui.FormationUI;
-import h2d.Camera;
-import hxd.Key;
 import h2d.Scene;
 import h2d.Text;
-import hxd.Timer;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;
 import utilities.MessageManager;
@@ -23,6 +19,9 @@ class GameScene extends Scene implements MessageListener {
     var middleMouseMoving = false;
     var prevX = 0.0;
     var prevY = 0.0;
+
+    var cameraMinScale = 0.1;
+    var cameraMaxScale = 10.0;
 
     public function new() {
         super();
@@ -55,6 +54,7 @@ class GameScene extends Scene implements MessageListener {
                 cameraScale *= 0.9;
             else
                 cameraScale *= 1.1;
+            cameraScale = Math.min(Math.max(cameraMinScale, cameraScale), cameraMaxScale);
             camera.setScale(cameraScale, cameraScale);
         } if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);

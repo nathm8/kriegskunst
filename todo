@@ -17,6 +17,8 @@ Issues
     Middle mouse scroll is always from centre. Would be nice to do it from the mouse position, but I'd need to override camera's linalg ops and I'm lazy
     Will need an option to invert middle mouse movement direction. Probably lots of others. To revisit when we're serialising everything.
 
+    InputText doesn't delete the last character correctly
+
 Direct Formation Control
 -----------------
 make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning

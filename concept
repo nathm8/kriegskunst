@@ -4,6 +4,7 @@ Pike & Shot Concept
 Overall Design Philosophy
 -------------------
     - early modern battles, with melee and ranged combat
+    - tactical level
     - creating emergence via the interplay of small, simple quantities
     - bottom up design
     - real time
@@ -94,6 +95,13 @@ Technical
         - live save\loading from disk\string
     async stuff
     https://github.com/dpomier/haxe-coroutine/
+
+    clipboard stuff
+    https://api.haxe.org/js/html/Clipboard.html
+    heaps System may be able to do it on js
+
+    console stuff, for debugging
+    https://heaps.io/api/h2d/Console.html
 
 Misc
 -------------------

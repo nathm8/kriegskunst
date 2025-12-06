@@ -1,14 +1,23 @@
 TODO
 =======================
 
+GeneralUI
+-----------------
+middle mouse scroll, infinite zoom, edge scrolling
+
 FormationUI
 -----------------
-
-
 make the data text directly editable
 
 Need to prevent clicks on UI from affecting gamescene
     Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
+
+    see discord screengrab, have a dummy interactive layer under the UI. Still kinda hacky
+
+Issues
+    UI min width\height will never decrease. Once an element pushes the max it will stay that way.
+        Extra UI to shrink down? Kinda a PITA, UI for UI's sake
+    Reticle interactive being pixel perfect is annoying. Ditto Rotation. "concave" interactives in general.
 
 Direct Formation Control
 -----------------

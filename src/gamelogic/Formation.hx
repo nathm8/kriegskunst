@@ -18,7 +18,6 @@ class Formation implements MessageListener implements Updateable {
 
     public var state = Standing;
     public var units = new Array<Unit>();
-    public var positions = 0;
     public var rows = 1;
     public var columns = 1;
     // in metres
@@ -58,7 +57,6 @@ class Formation implements MessageListener implements Updateable {
                 out.push(p);
             }
         }
-        positions = out.length;
         return out;
     }
 

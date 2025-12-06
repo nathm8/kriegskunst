@@ -51,7 +51,7 @@ function createParsingTextInput(parent:Object, callback: (t:ParsingTextInput) ->
     }
     t.onFocus = (_) -> {t.textColor = 0xAAAAAAAA;}
     t.onFocusLost = (_) -> {t.textColor = 0xFFFFFF; callback(t);}
-    t.inputWidth = 50;
+    t.inputWidth = 60;
     t.smooth = false;
     t.scale(2);
     return {text: t, flow: f};

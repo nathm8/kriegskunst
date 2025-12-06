@@ -1,5 +1,6 @@
 package gamelogic;
 
+import hxd.Window;
 import graphics.ui.FormationUI;
 import h2d.Camera;
 import hxd.Key;
@@ -14,6 +15,14 @@ class GameScene extends Scene implements MessageListener {
     var updateables = new Array<Updateable>();
     var fpsText: Text;
     var cameraScale = 1.0;
+    var cameraMovingLeft = false;
+    var cameraMovingRight = false;
+    var cameraMovingDown = false;
+    var cameraMovingUp = false;
+    var edgeScrollDistance = 50;
+    var middleMouseMoving = false;
+    var prevX = 0.0;
+    var prevY = 0.0;
 
     public function new() {
         super();
@@ -40,23 +49,53 @@ class GameScene extends Scene implements MessageListener {
     }
 
     public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, MouseWheel)) {
+            var params = cast(msg, MouseWheel);
+            if (params.event.wheelDelta > 0)
+                cameraScale *= 0.9;
+            else
+                cameraScale *= 1.1;
+            camera.setScale(cameraScale, cameraScale);
+        } if (Std.isOfType(msg, MouseMove)) {
+            var params = cast(msg, MouseMove);
+            if (middleMouseMoving) {
+                camera.x -= params.event.relX - prevX;
+                camera.y -= params.event.relY - prevY;
+            }
+            prevX = params.event.relX;
+            prevY = params.event.relY;
+            if (params.event.relX < 0 || params.event.relY < 0 || params.event.relX > Window.getInstance().width || params.event.relY > Window.getInstance().height) {
+                cameraMovingLeft = false;
+                cameraMovingRight = false;
+                cameraMovingUp = false;
+                cameraMovingDown = false;
+                return false;
+            }
+            cameraMovingLeft = params.event.relX < edgeScrollDistance;
+            cameraMovingRight = params.event.relX > Window.getInstance().width - edgeScrollDistance;
+            cameraMovingUp = params.event.relY < edgeScrollDistance;
+            cameraMovingDown = params.event.relY > Window.getInstance().height - edgeScrollDistance;
+        } if (Std.isOfType(msg, MouseClick)) {
+            var params = cast(msg, MouseClick);
+            if (params.event.button == 2)
+                middleMouseMoving = true;
+        } if (Std.isOfType(msg, MouseRelease)) {
+            var params = cast(msg, MouseRelease);
+            if (params.event.button == 2)
+                middleMouseMoving = false;
+        }
         return false;
     }
-
+    
     function cameraControl() {
-        // if (Key.isDown(Key.A))
-        //     camera.move(-10*1/cameraScale,0);
-        // if (Key.isDown(Key.D))
-        //     camera.move(10*1/cameraScale,0);
-        // if (Key.isDown(Key.W))
-        //     camera.move(0,-10*1/cameraScale);
-        // if (Key.isDown(Key.S))
-        //     camera.move(0,10*1/cameraScale);
-        // if (Key.isDown(Key.E))
-        //     cameraScale *= 1.1;
-        // if (Key.isDown(Key.Q))
-        //     cameraScale *= 0.9;
-        // camera.setScale(cameraScale, cameraScale);
+        if (cameraMovingUp)
+            camera.y -= 10/cameraScale;
+        if (cameraMovingDown)
+            camera.y += 10/cameraScale;
+        if (cameraMovingRight)
+            camera.x += 10/cameraScale;
+        if (cameraMovingLeft)
+            camera.x -= 10/cameraScale;
     }
 
 }

@@ -40,6 +40,7 @@ Formation (battalion) Statisitcs
 -------------------
     - parameters
         - rank depth\width
+        - offset rows and cols
         - relative distances
         - potential order for high-skill formations, to dynamically change parameters. E.g. Form square, form line, etc. Similarly to change "stances", i.e. behaviour parameters, based on commands
     - morale
@@ -50,6 +51,7 @@ Formation (battalion) Statisitcs
     - hetergenous units, put stronger\shorter range ones in front typically. No mixing of ranged, melee; or of foot and cavalry. Or artillery and anything else.
     - abilities.
         - countermarch, caracole, volley fire. Bracing? Advancing\retreating fire, or countermarch in place. Change of stance\preset behaviour, as above\below
+        - about face
     - preset formation behaviours, by default and triggered by orders (trumpet\drum\bagpipe calls, flag waving, no direct RTS style control)
             - when to fire
                 - how high the hit chance on the enemy

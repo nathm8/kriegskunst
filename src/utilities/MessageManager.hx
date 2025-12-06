@@ -34,6 +34,11 @@ class MouseMove extends Message {
     public var worldPosition: Vector2D;
     public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
 }
+class MouseWheel extends Message {
+    public var event: Event;
+    public var worldPosition: Vector2D;
+    public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
+}
 
 interface MessageListener {
     public function receive(msg: Message): Bool;

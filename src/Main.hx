@@ -68,17 +68,15 @@ class Main extends UIApp implements MessageListener {
                 var p = new Point(event.relX, event.relY);
                 s2d.camera.sceneToCamera(p);
                 MessageManager.send(new MouseMove(event, p));
-            case EKeyDown:
-                switch (event.keyCode) {
-                    case hxd.Key.ESCAPE:
-                        MessageManager.send(new Restart());
-                }
-            case EKeyUp:
-                MessageManager.send(new KeyUp(event.keyCode));
             case EWheel:
                 var p = new Point(event.relX, event.relY);
                 s2d.camera.sceneToCamera(p);
                 MessageManager.send(new MouseWheel(event, p));
+            case EKeyDown:
+                if (event.keyCode == hxd.Key.ESCAPE)
+                    MessageManager.send(new Restart());
+            case EKeyUp:
+                MessageManager.send(new KeyUp(event.keyCode));
             case _:
         }
     }

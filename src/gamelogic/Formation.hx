@@ -27,7 +27,7 @@ class Formation implements MessageListener implements Updateable {
     static var maxID = 0;
     public var id: Int;
 
-    public var destination = new Vector2D();
+    public var destination = new Vector2D(0,0);
     public var targetFacing = 0.0;
     var rotating = false;
     public var listeningForDestination = false;
@@ -36,7 +36,7 @@ class Formation implements MessageListener implements Updateable {
         id = maxID++;
         rows = r;
         columns = c;
-        for (p in determineRectangularPositions(new Vector2D(0,0), 0)) {
+        for (p in determineRectangularPositions(destination, 0)) {
             var u = new Unit(p);
             units.push(u);
         }
@@ -88,8 +88,6 @@ class Formation implements MessageListener implements Updateable {
             if (!listeningForDestination) return false;
             var params = cast(msg, MouseRelease);
             if (params.event.button == 0) {
-                destination = params.worldPosition;
-                destination *= -1;
                 listeningForDestination = false;
                 MessageManager.send(new FormationUpdate(this));
             }

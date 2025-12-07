@@ -1,5 +1,6 @@
 package utilities;
 
+import gamelogic.Unit;
 import gamelogic.Formation;
 import hxd.Event;
 import utilities.Vector2D;
@@ -7,6 +8,10 @@ import utilities.Vector2D;
 class Message {public function new(){}}
 
 class Restart extends Message {}
+class NewUnit extends Message {
+    public var unit: Unit;
+    public function new(u: Unit) {super(); unit = u;}
+}
 class FormationUpdate extends Message {
     public var formation: Formation;
     public function new(f: Formation) {super(); formation = f;}
@@ -17,8 +22,8 @@ class NewFormation extends Message {
 }
 class MouseClick extends Message {
     public var event: Event;
-    public var worldPosition: Vector2D;
-    public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
+    public var scenePosition: Vector2D;
+    public function new(e: Event, p: Vector2D) {super(); event = e; scenePosition = p;}
 }
 class KeyUp extends Message {
     public var keycode: Int;
@@ -26,18 +31,18 @@ class KeyUp extends Message {
 }
 class MouseRelease extends Message {
     public var event: Event;
-    public var worldPosition: Vector2D;
-    public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
+    public var scenePosition: Vector2D;
+    public function new(e: Event, p: Vector2D) {super(); event = e; scenePosition = p;}
 }
 class MouseMove extends Message {
     public var event: Event;
-    public var worldPosition: Vector2D;
-    public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
+    public var scenePosition: Vector2D;
+    public function new(e: Event, p: Vector2D) {super(); event = e; scenePosition = p;}
 }
 class MouseWheel extends Message {
     public var event: Event;
-    public var worldPosition: Vector2D;
-    public function new(e: Event, p: Vector2D) {super(); event = e; worldPosition = p;}
+    public var scenePosition: Vector2D;
+    public function new(e: Event, p: Vector2D) {super(); event = e; scenePosition = p;}
 }
 
 interface MessageListener {

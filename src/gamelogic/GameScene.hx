@@ -1,5 +1,7 @@
 package gamelogic;
 
+import h2d.col.Point;
+import graphics.UnitGraphics;
 import hxd.Window;
 import h2d.Scene;
 import h2d.Text;
@@ -29,33 +31,35 @@ class GameScene extends Scene implements MessageListener {
         defaultSmooth = true;
         camera.anchorX = 0.5;
         camera.anchorY = 0.5;
-        // camera.layerVisible = (l) -> l != 2;
 
         MessageManager.addListener(this);
 
-        var f = new Formation(6, 100);
+        // var f = new Formation(6, 100);
+        var f = new Formation(10, 10);
         updateables.push(f);
     }
     
     public function update(dt:Float) {
-        // trace("GSU: start");
         PhysicalWorld.update(dt);
-        // trace("GSU: world");
         cameraControl();
         for (u in updateables)
             u.update(dt);
-        // trace("GSU: updates");
     }
 
     public function receive(msg:Message):Bool {
+        // camera controls
         if (Std.isOfType(msg, MouseWheel)) {
             var params = cast(msg, MouseWheel);
             if (params.event.wheelDelta > 0)
                 cameraScale *= 0.9;
             else
                 cameraScale *= 1.1;
+            // camera.anchorX = params.event.relX / Window.getInstance().width;
+            // camera.anchorY = params.event.relY / Window.getInstance().width;
             cameraScale = Math.min(Math.max(cameraMinScale, cameraScale), cameraMaxScale);
             camera.setScale(cameraScale, cameraScale);
+            // camera.anchorX = 0.5;
+            // camera.anchorY = 0.5;
         } if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
             if (middleMouseMoving) {
@@ -69,14 +73,15 @@ class GameScene extends Scene implements MessageListener {
                 cameraMovingRight = false;
                 cameraMovingUp = false;
                 cameraMovingDown = false;
-                return false;
+            } else {
+                cameraMovingLeft = params.event.relX < edgeScrollDistance;
+                cameraMovingRight = params.event.relX > Window.getInstance().width - edgeScrollDistance;
+                cameraMovingUp = params.event.relY < edgeScrollDistance;
+                cameraMovingDown = params.event.relY > Window.getInstance().height - edgeScrollDistance;
             }
-            cameraMovingLeft = params.event.relX < edgeScrollDistance;
-            cameraMovingRight = params.event.relX > Window.getInstance().width - edgeScrollDistance;
-            cameraMovingUp = params.event.relY < edgeScrollDistance;
-            cameraMovingDown = params.event.relY > Window.getInstance().height - edgeScrollDistance;
         } if (Std.isOfType(msg, MouseClick)) {
             var params = cast(msg, MouseClick);
+            var p = new Point(params.event.relX, params.event.relY);
             if (params.event.button == 2)
                 middleMouseMoving = true;
         } if (Std.isOfType(msg, MouseRelease)) {
@@ -84,7 +89,16 @@ class GameScene extends Scene implements MessageListener {
             if (params.event.button == 2)
                 middleMouseMoving = false;
         }
+        // graphics
+        if (Std.isOfType(msg, NewUnit)) {
+            var params = cast(msg, NewUnit);
+            newUnit(params.unit);
+        }
         return false;
+    }
+
+    function newUnit(u: Unit) {
+        updateables.push(new UnitGraphics(u, this));
     }
     
     function cameraControl() {

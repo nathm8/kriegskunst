@@ -15,6 +15,7 @@ class HeapsDebugDraw extends B2DebugDraw {
     public function new(parent: Scene) {
         super();
         graphics = new Graphics();
+        graphics.alpha = 0.5;
         parent.add(graphics, 0);
         setFlags(B2DebugDraw.e_shapeBit);
         m_drawScale = PHYSICSCALE;

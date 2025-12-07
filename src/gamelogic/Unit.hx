@@ -1,14 +1,14 @@
 package gamelogic;
 
 import utilities.RNGManager;
-import utilities.Utilities.prettyPrintVector;
-import utilities.Utilities.floatToStringPrecision;
 import utilities.MessageManager;
 import gamelogic.physics.CircularPhysicalGameObject;
 import gamelogic.physics.PhysicalWorld;
 import box2D.dynamics.joints.B2MouseJoint;
 import box2D.dynamics.joints.B2MouseJointDef;
 import utilities.Vector2D;
+
+final UNITRADIUS = 0.2;
 
 class Unit extends CircularPhysicalGameObject implements MessageListener implements Updateable {
     public var destination: Vector2D;
@@ -26,7 +26,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     static var maxID = 0;
 
     public function new(p: Vector2D) {
-        super(p, 0.2, this);
+        super(p, UNITRADIUS, this);
         destination = p;
         id = maxID++;
 
@@ -41,6 +41,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouseJoint = cast(PhysicalWorld.gameWorld.createJoint(mouse_joint_definition), B2MouseJoint);
         body.setUserData(this);
 
+        MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);
     }
 
@@ -59,7 +60,6 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         if (prevNoises.length > 10)
             prevNoises.shift();
         mouseJoint.setTarget(destination + average_noise);
-        // trace(prettyPrintVector(body.getPosition()), prettyPrintVector(destination));
 
         // apply jitter
         // might be good for showing morale, etc.

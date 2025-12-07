@@ -29,11 +29,8 @@ class PhysicalWorld {
     }
 
     public static function update(dt: Float) {
-        // trace("PWU: start");
         gameWorld.step(dt, 1, 1);
-        // trace("PWU: clear");
         gameWorld.clearForces();
-        // trace("PWU: send");
         gameWorld.drawDebugData();
     }
 }

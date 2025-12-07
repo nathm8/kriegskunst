@@ -60,6 +60,7 @@ Formation (battalion) Statisitcs
                 e.g. brace\scatter against cavalry, attempt last-minute volley fire, 
             - volley fire, how much at once, how quickly, when
             - charges, when
+            - skirmishers, allow other troops to fire 'through' them. Or have a lower chance of friendly fire. Stay out of the way of main field of fire?
     - more rules\behaviours causing a loss in inefficiency for all actions - especially temporal\synchronicity and morale. Veterancy offsets this
     - rallying based on proximity of fleeing units. Possible flocking behaviour as an ability? i.e. cavalry wheels to retreat, recovers in good order. Vs infantry scattering and struggling to rally
 
@@ -138,6 +139,7 @@ Ideas Considered Out of Scope
     - marching order, and how it deploys into battle order
     strategic level scouting\intelligence
     ship combat more broadly
+    Have formation "drilled" stat, how efficient they are at their configuration. I.e. to disincentivise quickly changing config between battles. But that's campaign stuff
 
 Legacy ideas
 -------------------

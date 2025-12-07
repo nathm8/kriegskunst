@@ -28,4 +28,8 @@ class RNGManager {
         if (!init) initialise();
         return rand;
     }
+
+    public static function randomAngle(): Float {
+        return rand.rand() * 2 * Math.PI;
+    }
 }

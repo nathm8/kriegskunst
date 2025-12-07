@@ -18,6 +18,7 @@ class CircularPhysicalGameObject {
         body_definition.position = position;
         body_definition.linearDamping = 0.5;
         body_definition.angularDamping = 0.5;
+        body_definition.fixedRotation = true;
         var circle = new B2CircleShape();
         circle.setRadius(radius);
         var fixture_definition = new B2FixtureDef();

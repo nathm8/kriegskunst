@@ -51,7 +51,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
     public function update(dt:Float) {
         // set destination with some noise
-        var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle());
+        var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
         prevNoises.push(noise);
         var average_noise = new Vector2D();
         for (n in prevNoises)

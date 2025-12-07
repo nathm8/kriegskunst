@@ -1,5 +1,6 @@
 package gamelogic;
 
+import h2d.Camera;
 import h2d.col.Point;
 import graphics.UnitGraphics;
 import hxd.Window;
@@ -8,6 +9,16 @@ import h2d.Text;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;
 import utilities.MessageManager;
+
+@:access(h2d.Camera)
+function getDiff(s: Scene, c: Camera) {
+    // absX = Math.round(-(c.x * c.matA + c.y * c.matC) + (s.width * c.anchorX * viewW) + s.width * c.viewX);
+    // absY = Math.round(-(c.x * c.matB + c.y * c.matD) + (s.height * c.anchorY * viewH) + s.height * c.viewY);
+
+    var absX = Math.round(-(c.x * c.matA) + (s.width * c.anchorX * c.viewW) + s.width * c.viewX);
+    var absY = Math.round(-(c.y * c.matD) + (s.height * c.anchorY * c.viewH) + s.height * c.viewY);
+    // return {x: x, y: y};
+}
 
 class GameScene extends Scene implements MessageListener {
     var updateables = new Array<Updateable>();
@@ -54,20 +65,31 @@ class GameScene extends Scene implements MessageListener {
                 cameraScale *= 0.9;
             else
                 cameraScale *= 1.1;
-            // camera.anchorX = params.event.relX / Window.getInstance().width;
-            // camera.anchorY = params.event.relY / Window.getInstance().width;
             cameraScale = Math.min(Math.max(cameraMinScale, cameraScale), cameraMaxScale);
             camera.setScale(cameraScale, cameraScale);
-            // camera.anchorX = 0.5;
-            // camera.anchorY = 0.5;
         } if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
+            
+            // change anchor for zooming
+            var prevAbsX = camera.absX;
+            var prevAbsY = camera.absY;
+            camera.anchorX = params.event.relX / Window.getInstance().width;
+            camera.anchorY = params.event.relY / Window.getInstance().height;
+            camera.sync(ctx, true);
+            var x_diff = prevAbsX - camera.absX;
+            var y_diff = prevAbsY - camera.absY;
+            camera.x -= x_diff/camera.scaleX;
+            camera.y -= y_diff/camera.scaleY;
+            camera.sync(ctx, true);
+
+            // middle mouse movement
             if (middleMouseMoving) {
                 camera.x -= params.event.relX - prevX;
                 camera.y -= params.event.relY - prevY;
             }
             prevX = params.event.relX;
             prevY = params.event.relY;
+            // edge scroll
             if (params.event.relX < 0 || params.event.relY < 0 || params.event.relX > Window.getInstance().width || params.event.relY > Window.getInstance().height) {
                 cameraMovingLeft = false;
                 cameraMovingRight = false;

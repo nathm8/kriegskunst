@@ -1,7 +1,6 @@
 TODO
 =======================
 
-
 FormationUI
 -----------------
 Need to prevent clicks on UI from affecting gamescene
@@ -14,10 +13,15 @@ Issues
         Extra UI to shrink down? Kinda a PITA, UI for UI's sake
         Need to have more dynamic inputWidth for TextInputs, destination in particular gets hidden quickly
     Reticle interactive being pixel perfect is annoying. Ditto Rotation. "concave" interactives in general.
-    Middle mouse scroll is always from centre. Would be nice to do it from the mouse position, but I'd need to override camera's linalg ops and I'm lazy
     Will need an option to invert middle mouse movement direction. Probably lots of others. To revisit when we're serialising everything.
 
-    InputText doesn't delete the last character correctly
+    I've commented out the following
+    https://github.com/HeapsIO/heaps/blob/master/h2d/Scene.hx#L528-L529
+    if( ex < 0 || ey < 0 || ex >= width || ey >= height )
+        return null;
+    it's intention seems to be to prevent checking against interactives that aren't in the viewport, but I must be misunderstanding something because very clearly it's preventing me from interacting with units that are on screen.
+
+
 
 Direct Formation Control
 -----------------
@@ -57,3 +61,8 @@ make the data text directly editable
 GameScene
 -----------------
 middle mouse scroll, infinite zoom, edge scrolling
+    Middle mouse scroll is always from centre. Would be nice to do it from the mouse position, but I'd need to override camera's linalg ops and I'm lazy
+
+Issues
+-----------------
+InputText doesn't delete the last character correctly (still a bit buggy with Vector2D inputs)

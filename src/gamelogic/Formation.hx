@@ -72,7 +72,6 @@ class Formation implements MessageListener implements Updateable {
         if (Std.isOfType(msg, MouseRelease)) {
             if (!listeningForDestination) return false;
             var params = cast(msg, MouseRelease);
-            trace("mouse release");
             if (params.event.button == 0) {
                 listeningForDestination = false;
                 destination = params.scenePosition;
@@ -81,15 +80,4 @@ class Formation implements MessageListener implements Updateable {
         }
         return false;
     }
-
-    // public function setMarchingOrder(destination: Vector2D, facing: Float) {
-    //     if (state == Standing) {
-    //         var ps = determineRectangularPositions(destination, facing);
-    //         for (i in 0...units.length) {
-    //             units[i].marchTo(ps[i], facing);
-    //         }
-    //     } else {
-
-    //     }
-    // }
 }

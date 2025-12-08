@@ -1,6 +1,5 @@
 TODO
 =======================
-FIXME: Slosh in middle mouse button move now
 
 FormationUI
 -----------------
@@ -15,9 +14,6 @@ Issues
         Need to have more dynamic inputWidth for TextInputs, destination in particular gets hidden quickly
     Reticle interactive being pixel perfect is annoying. Ditto Rotation. "concave" interactives in general.
     Will need an option to invert middle mouse movement direction. Probably lots of others. To revisit when we're serialising everything.
-
-
-
 
     I've commented out the following
     https://github.com/HeapsIO/heaps/blob/master/h2d/Scene.hx#L528-L529

@@ -1,5 +1,6 @@
 package graphics;
 
+import utilities.MessageManager;
 import utilities.MessageManager.MouseMove;
 import utilities.Vector2D;
 import gamelogic.Unit.UNITRADIUS;
@@ -27,6 +28,8 @@ class FormationGraphics extends Object implements MessageListener {
     public function new(f: Formation, ?p: Object) {
         super(p);
         formation = f;
+
+        MessageManager.addListener(this);
     }
 
     function initialiseGraphics() {
@@ -36,6 +39,8 @@ class FormationGraphics extends Object implements MessageListener {
         graphics.beginFill(0x6666AA, 0.5);
         for (p in formation.determineRectangularPositions(new Vector2D(), 0))
             graphics.drawCircle(p.x, p.y, UNITRADIUS*PHYSICSCALE);
+        graphics.x = formation.destination.x;
+        graphics.y = formation.destination.y;
         graphics.rotation = formation.targetFacing;
     }
 
@@ -46,15 +51,33 @@ class FormationGraphics extends Object implements MessageListener {
             if (formation.units.contains(unit)) {
                 state = Selected;
                 initialiseGraphics();
-                trace("formation selected");
             }
-        } if (Std.isOfType(msg, MouseMove)) {
+        }
+        if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
             if (state == Selected) {
                 graphics.x = params.scenePosition.x;
                 graphics.y = params.scenePosition.y;
-            } if (state == ChoosingFacing) {
+            }
+            if (state == ChoosingFacing) {
                 graphics.rotation = (new Vector2D(graphics.x, graphics.y) - params.scenePosition).angle();
+            }
+        }
+        if (Std.isOfType(msg, MouseRelease)) {
+            var params = cast(msg, MouseRelease);
+            if (params.event.button == 0) {
+                if (state == Selected) {
+                    formation.destination = new Vector2D(graphics.x, graphics.y);
+                    graphics.visible = false;
+                    state = None;
+                    MessageManager.send(new FormationUpdate(formation));
+                }
+            }
+            if (params.event.button == 1) {
+                if (state == Selected) {
+                    graphics.visible = false;
+                    state = None;
+                }
             }
         }
         return false;

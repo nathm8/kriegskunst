@@ -249,7 +249,8 @@ class FormationUI extends Flow implements MessageListener {
                 if (!params.formation.listeningForDestination)
                     reticleCursor.visible = false;
             }
-        } if (Std.isOfType(msg, MouseMove)) {
+        }
+        if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
             if (isMoving) {
                 x = params.event.relX - xOffset;

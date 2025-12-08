@@ -112,7 +112,8 @@ class RotationButton extends BitmapButton {
             hover = hxd.Res.img.ui.RotationButton.XMirrorHover.toTile();
             active = hxd.Res.img.ui.RotationButton.XMirrorActive.toTile();
             loading = hxd.Res.img.ui.RotationButton.XMirrorLoading.toTile();
-        } else {
+        }
+        else {
             enabled = hxd.Res.img.ui.RotationButton.Enabled.toTile();
             disabled = hxd.Res.img.ui.RotationButton.Disabled.toTile();
             hover = hxd.Res.img.ui.RotationButton.Hover.toTile();

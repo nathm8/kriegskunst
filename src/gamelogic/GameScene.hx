@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.FormationGraphics;
 import h2d.Camera;
 import h2d.col.Point;
 import graphics.UnitGraphics;
@@ -9,16 +10,6 @@ import h2d.Text;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;
 import utilities.MessageManager;
-
-@:access(h2d.Camera)
-function getDiff(s: Scene, c: Camera) {
-    // absX = Math.round(-(c.x * c.matA + c.y * c.matC) + (s.width * c.anchorX * viewW) + s.width * c.viewX);
-    // absY = Math.round(-(c.x * c.matB + c.y * c.matD) + (s.height * c.anchorY * viewH) + s.height * c.viewY);
-
-    var absX = Math.round(-(c.x * c.matA) + (s.width * c.anchorX * c.viewW) + s.width * c.viewX);
-    var absY = Math.round(-(c.y * c.matD) + (s.height * c.anchorY * c.viewH) + s.height * c.viewY);
-    // return {x: x, y: y};
-}
 
 class GameScene extends Scene implements MessageListener {
     var updateables = new Array<Updateable>();
@@ -67,14 +58,16 @@ class GameScene extends Scene implements MessageListener {
                 cameraScale *= 1.1;
             cameraScale = Math.min(Math.max(cameraMinScale, cameraScale), cameraMaxScale);
             camera.setScale(cameraScale, cameraScale);
-        } if (Std.isOfType(msg, MouseMove)) {
+        }
+        if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
 
             // middle mouse movement
             if (middleMouseMoving) {
-                camera.x -= params.event.relX - prevX;
-                camera.y -= params.event.relY - prevY;
-            } else {
+                camera.x -= (params.event.relX - prevX)/camera.scaleX;
+                camera.y -= (params.event.relY - prevY)/camera.scaleY;
+            }
+            else {
                 // change anchor for zooming
                 var prevAbsX = camera.absX;
                 var prevAbsY = camera.absY;
@@ -96,18 +89,21 @@ class GameScene extends Scene implements MessageListener {
                 cameraMovingRight = false;
                 cameraMovingUp = false;
                 cameraMovingDown = false;
-            } else {
+            }
+            else {
                 cameraMovingLeft = params.event.relX < edgeScrollDistance;
                 cameraMovingRight = params.event.relX > Window.getInstance().width - edgeScrollDistance;
                 cameraMovingUp = params.event.relY < edgeScrollDistance;
                 cameraMovingDown = params.event.relY > Window.getInstance().height - edgeScrollDistance;
             }
-        } if (Std.isOfType(msg, MouseClick)) {
+        }
+        if (Std.isOfType(msg, MouseClick)) {
             var params = cast(msg, MouseClick);
             var p = new Point(params.event.relX, params.event.relY);
             if (params.event.button == 2)
                 middleMouseMoving = true;
-        } if (Std.isOfType(msg, MouseRelease)) {
+        }
+        if (Std.isOfType(msg, MouseRelease)) {
             var params = cast(msg, MouseRelease);
             if (params.event.button == 2)
                 middleMouseMoving = false;
@@ -117,11 +113,19 @@ class GameScene extends Scene implements MessageListener {
             var params = cast(msg, NewUnit);
             newUnit(params.unit);
         }
+        if (Std.isOfType(msg, NewFormation)) {
+            var params = cast(msg, NewFormation);
+            newFormation(params.formation);
+        }
         return false;
     }
 
     function newUnit(u: Unit) {
         updateables.push(new UnitGraphics(u, this));
+    }
+
+    function newFormation(f: Formation) {
+        new FormationGraphics(f, this);
     }
     
     function cameraControl() {

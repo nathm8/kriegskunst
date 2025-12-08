@@ -45,7 +45,8 @@ class UIApp implements h3d.IDrawable {
             this.engine = engine;
             engine.onReady = setup;
             haxe.Timer.delay(setup, 0);
-        } else {
+        }
+        else {
             hxd.System.start(function() {
                 this.engine = engine = @:privateAccess new h3d.Engine();
                 engine.onReady = setup;
@@ -73,7 +74,8 @@ class UIApp implements h3d.IDrawable {
         if( new2D != null ) {
             sevents.removeScene(s2d);
             sevents.addScene(scene, 0);
-        } else if( new3D != null ) {
+        }
+        else if( new3D != null ) {
             sevents.removeScene(s3d);
             sevents.addScene(scene);
         }

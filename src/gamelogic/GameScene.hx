@@ -97,8 +97,8 @@ class GameScene extends Scene implements MessageListener {
                 cameraMovingDown = params.event.relY > Window.getInstance().height - edgeScrollDistance;
             }
         }
-        if (Std.isOfType(msg, MouseClick)) {
-            var params = cast(msg, MouseClick);
+        if (Std.isOfType(msg, MousePush)) {
+            var params = cast(msg, MousePush);
             var p = new Point(params.event.relX, params.event.relY);
             if (params.event.button == 2)
                 middleMouseMoving = true;

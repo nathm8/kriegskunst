@@ -59,7 +59,7 @@ class Main extends UIApp implements MessageListener {
             case EPush:
                 var p = new Point(event.relX, event.relY);
                 s2d.camera.sceneToCamera(p);
-                MessageManager.send(new MouseClick(event, p));
+                MessageManager.send(new MousePush(event, p));
             case ERelease:
                 var p = new Point(event.relX, event.relY);
                 s2d.camera.sceneToCamera(p);

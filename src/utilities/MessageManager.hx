@@ -24,7 +24,7 @@ class NewFormation extends Message {
     public var formation: Formation;
     public function new(f: Formation) {super(); formation = f;}
 }
-class MouseClick extends Message {
+class MousePush extends Message {
     public var event: Event;
     public var scenePosition: Vector2D;
     public function new(e: Event, p: Vector2D) {super(); event = e; scenePosition = p;}

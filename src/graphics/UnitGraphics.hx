@@ -22,10 +22,10 @@ class UnitGraphics extends Object implements Updateable {
     public function new(u: Unit, p: Object) {
         super(p);
         unit = u;
-        var g = new Graphics(this);
-        g.lineStyle(1, 0x0000FF);
-        g.beginFill(0x0000AA);
-        g.drawCircle(0, 0, UNITRADIUS*PHYSICSCALE);
+        // var g = new Graphics(this);
+        // g.lineStyle(1, 0x0000FF);
+        // g.beginFill(0x0000AA);
+        // g.drawCircle(0, 0, UNITRADIUS*PHYSICSCALE);
 
         if (!initialised) {
             initialised = true;

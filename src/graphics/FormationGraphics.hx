@@ -60,7 +60,7 @@ class FormationGraphics extends Object implements MessageListener {
                 graphics.y = params.scenePosition.y;
             }
             if (state == ChoosingFacing) {
-                graphics.rotation = (new Vector2D(graphics.x, graphics.y) - params.scenePosition).angle();
+                graphics.rotation = (params.scenePosition - new Vector2D(graphics.x, graphics.y)).angle() + Math.PI/2;
             }
         }
         if (Std.isOfType(msg, MouseRelease)) {
@@ -72,11 +72,26 @@ class FormationGraphics extends Object implements MessageListener {
                     state = None;
                     MessageManager.send(new FormationUpdate(formation));
                 }
+                if (state == ChoosingFacing) {
+                    formation.destination = new Vector2D(graphics.x, graphics.y);
+                    formation.targetFacing = graphics.rotation;
+                    graphics.visible = false;
+                    state = None;
+                    MessageManager.send(new FormationUpdate(formation));
+                }
             }
             if (params.event.button == 1) {
                 if (state == Selected) {
                     graphics.visible = false;
                     state = None;
+                }
+            }
+        }
+        if (Std.isOfType(msg, MousePush)) {
+            var params = cast(msg, MousePush);
+            if (params.event.button == 0) {
+                if (state == Selected) {
+                    state = ChoosingFacing;
                 }
             }
         }

@@ -83,13 +83,11 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouseJoint.setMaxForce(10*speed);
     }
 
-
-
     public function receive(msg:Message):Bool {
         return false;
     }
 
-    public function marchTo(arg:Vector2D, facing:Float) {
-        throw new haxe.exceptions.NotImplementedException();
-    }
+    // public function marchTo(arg:Vector2D, facing:Float) {
+    //     throw new haxe.exceptions.NotImplementedException();
+    // }
 }

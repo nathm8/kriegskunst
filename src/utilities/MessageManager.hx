@@ -12,6 +12,10 @@ class NewUnit extends Message {
     public var unit: Unit;
     public function new(u: Unit) {super(); unit = u;}
 }
+class UnitClicked extends Message {
+    public var unit: Unit;
+    public function new(u: Unit) {super(); unit = u;}
+}
 class FormationUpdate extends Message {
     public var formation: Formation;
     public function new(f: Formation) {super(); formation = f;}

@@ -31,6 +31,6 @@ class PhysicalWorld {
     public static function update(dt: Float) {
         gameWorld.step(dt, 1, 1);
         gameWorld.clearForces();
-        // gameWorld.drawDebugData();
+        gameWorld.drawDebugData();
     }
 }

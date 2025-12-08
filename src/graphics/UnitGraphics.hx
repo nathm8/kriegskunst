@@ -9,6 +9,7 @@ import gamelogic.Unit;
 import h2d.Object;
 import gamelogic.Updateable;
 
+// increase hit-circle of unit by this much
 final INTERACTIVERADIUSMOD = 1.5;
 
 class UnitGraphics extends Object implements Updateable {
@@ -31,7 +32,7 @@ class UnitGraphics extends Object implements Updateable {
             circle = new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE);
         }
         var i = new Interactive(0, 0, this, circle);
-        i.onClick = (_) ->  {trace('unit ${unit.id} clicked, pos $x $y');}
+        i.onClick = (_) ->  {MessageManager.send(new UnitClicked(this.unit));}
     }
 
     public function update(dt:Float) {

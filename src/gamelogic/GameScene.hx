@@ -69,26 +69,27 @@ class GameScene extends Scene implements MessageListener {
             camera.setScale(cameraScale, cameraScale);
         } if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
-            
-            // change anchor for zooming
-            var prevAbsX = camera.absX;
-            var prevAbsY = camera.absY;
-            camera.anchorX = params.event.relX / Window.getInstance().width;
-            camera.anchorY = params.event.relY / Window.getInstance().height;
-            camera.sync(ctx, true);
-            var x_diff = prevAbsX - camera.absX;
-            var y_diff = prevAbsY - camera.absY;
-            camera.x -= x_diff/camera.scaleX;
-            camera.y -= y_diff/camera.scaleY;
-            camera.sync(ctx, true);
 
             // middle mouse movement
             if (middleMouseMoving) {
                 camera.x -= params.event.relX - prevX;
                 camera.y -= params.event.relY - prevY;
+            } else {
+                // change anchor for zooming
+                var prevAbsX = camera.absX;
+                var prevAbsY = camera.absY;
+                camera.anchorX = params.event.relX / Window.getInstance().width;
+                camera.anchorY = params.event.relY / Window.getInstance().height;
+                camera.sync(ctx, true);
+                var x_diff = prevAbsX - camera.absX;
+                var y_diff = prevAbsY - camera.absY;
+                camera.x -= x_diff/camera.scaleX;
+                camera.y -= y_diff/camera.scaleY;
+                camera.sync(ctx, true);
             }
             prevX = params.event.relX;
             prevY = params.event.relY;
+            
             // edge scroll
             if (params.event.relX < 0 || params.event.relY < 0 || params.event.relX > Window.getInstance().width || params.event.relY > Window.getInstance().height) {
                 cameraMovingLeft = false;

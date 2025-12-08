@@ -7,16 +7,9 @@ import utilities.Vector2D;
 import utilities.MessageManager.Message;
 import utilities.MessageManager.MessageListener;
 
-enum FormationState {
-    Standing;
-    Moving;
-}
-
-
 // facings are radians, 0 = right facing, increasing clockwise
 class Formation implements MessageListener implements Updateable {
 
-    public var state = Standing;
     public var units = new Array<Unit>();
     public var rows = 1;
     public var columns = 1;
@@ -48,12 +41,12 @@ class Formation implements MessageListener implements Updateable {
         return new Vector2D((rows-1)*rowSpacing, (columns-1)*columnSpacing)*0.5;
     }
 
-    function determineRectangularPositions(position: Vector2D, facing: Float) : Array<Vector2D> {
+    public function determineRectangularPositions(position: Vector2D, facing: Float) : Array<Vector2D> {
         var out = new Array<Vector2D>();
         var centre = getRectangularCentre();
         for (r in 0...rows) {
             for (c in 0...columns) {
-                var p = new Vector2D(r*rowSpacing, c*columnSpacing).rotateAboutPoint(facing, centre) - position - centre;
+                var p = new Vector2D(r*rowSpacing, c*columnSpacing).rotateAboutPoint(facing, centre) + position - centre;
                 out.push(p);
             }
         }
@@ -73,22 +66,16 @@ class Formation implements MessageListener implements Updateable {
 
         for (u in units)
             u.update(dt);
-
-        // lazy bad hacky
-        // MessageManager.send(new FormationUpdate(this));
     }
 
     public function receive(msg:Message):Bool {
-        // if (Std.isOfType(msg, KeyUp)) {
-        //     var params = cast(msg, KeyUp);
-        //     if (params.keycode == Key.SPACE)
-        //         rotating = !rotating;
-        // }
         if (Std.isOfType(msg, MouseRelease)) {
             if (!listeningForDestination) return false;
             var params = cast(msg, MouseRelease);
+            trace("mouse release");
             if (params.event.button == 0) {
                 listeningForDestination = false;
+                destination = params.scenePosition;
                 MessageManager.send(new FormationUpdate(this));
             }
         }

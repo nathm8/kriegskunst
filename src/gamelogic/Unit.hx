@@ -93,10 +93,6 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return false;
     }
 
-    // public function marchTo(arg:Vector2D, facing:Float) {
-    //     throw new haxe.exceptions.NotImplementedException();
-    // }
-
     function set_selectable(value) {
         selectable = value;
         graphics.interactive.visible = value;

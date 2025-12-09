@@ -28,6 +28,7 @@ Issues
     if( ex < 0 || ey < 0 || ex >= width || ey >= height )
         return null;
     it's intention seems to be to prevent checking against interactives that aren't in the viewport, but I must be misunderstanding something because very clearly it's preventing me from interacting with units that are on screen.
+        verified that this is a problem with my particular setup, somehow. Need to do a fresh install, perhaps
 
 Direct Formation Control
 -----------------
@@ -43,6 +44,19 @@ Enough disordered units near each other should break from formation completely. 
 Need to calculate the maximum turn rate for a formation of a given width and units of given top speed. Or, y'know, just let the player figure it out.
 
 How to reorder units naturally? Feels like rows should fill from the back, and units removed from columns should form new rows at the back.
+
+Have "macros" for manuevers, where you keyframe several configurations together, activatable as abilities
+    goal: design countermarch and caracole this way
+
+Have a formation's destination be another formation, friendly or enemy.
+
+Two rank fire:
+    have first rank kneel, not sure how to show this visually
+Three rank fire:
+    have first kneel, third step to the side. Need to have some limit to this, five maybe? Maybe not, the further out you step the longer it takes. And balance it somehow, make it expensive in "drilling" points or something. Also morale loss from being "out of order". How to generalise? the further away from the "standard" formation the more expensive it is? Number of steps in the "macro"?
+
+    Each "line" be a separate formation then?
+
 
 Completed
 =======================
@@ -73,3 +87,4 @@ InputText doesn't delete the last character correctly (still a bit buggy with Ve
 Direct Formation Control
 -----------------
 make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning
+    add a small timer before setting ChoosingFacing in FormationGraphics, to prevent unintended facing changes 

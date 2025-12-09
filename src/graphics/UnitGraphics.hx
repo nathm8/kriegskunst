@@ -1,5 +1,6 @@
 package graphics;
 
+import h2d.Bitmap;
 import h2d.col.Circle;
 import h2d.Interactive;
 import utilities.MessageManager;
@@ -16,9 +17,7 @@ class UnitGraphics extends Object implements Updateable {
 
     var unit: Unit;
     public var interactive: Interactive;
-
-    static var initialised = false;
-    static var circle: Circle;
+    var musket: Bitmap;
 
     public function new(u: Unit, p: Object) {
         super(p);
@@ -30,11 +29,13 @@ class UnitGraphics extends Object implements Updateable {
         g.drawCircle(0, 0, UNITRADIUS*PHYSICSCALE);
         g.endFill();
 
-        if (!initialised) {
-            initialised = true;
-            circle = new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE);
-        }
-        interactive = new Interactive(0, 0, this, circle);
+        musket = new Bitmap(hxd.Res.img.Musket.toTile().center(), this);
+        musket.scale(0.25);
+        musket.rotation = -Math.PI/2;
+        musket.x = 5;
+        musket.y = -5;
+
+        interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE));
         interactive.onClick = (_) ->  {MessageManager.send(new UnitClicked(this.unit));}
     }
 

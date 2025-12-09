@@ -1,5 +1,6 @@
 package graphics;
 
+import hxd.Timer;
 import utilities.MessageManager;
 import utilities.MessageManager.MouseMove;
 import utilities.Vector2D;
@@ -22,6 +23,8 @@ class FormationGraphics extends Object implements MessageListener {
 
     var formation: Formation;
     var state = None;
+    var timeToChooseFace = 0.15;
+    var timestamp = 0.0;
 
     var graphics: Graphics;
 
@@ -62,7 +65,9 @@ class FormationGraphics extends Object implements MessageListener {
                 graphics.y = params.scenePosition.y;
             }
             if (state == ChoosingFacing) {
-                graphics.rotation = (params.scenePosition - new Vector2D(graphics.x, graphics.y)).angle() + Math.PI/2;
+                trace(timestamp - haxe.Timer.stamp());
+                if (haxe.Timer.stamp() - timestamp >= timeToChooseFace)
+                    graphics.rotation = (params.scenePosition - new Vector2D(graphics.x, graphics.y)).angle() + Math.PI/2;
             }
         }
         if (Std.isOfType(msg, MouseRelease)) {
@@ -100,6 +105,7 @@ class FormationGraphics extends Object implements MessageListener {
             if (params.event.button == 0) {
                 if (state == Selected) {
                     state = ChoosingFacing;
+                    timestamp = haxe.Timer.stamp();
                 }
             }
         }

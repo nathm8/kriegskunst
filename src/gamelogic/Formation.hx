@@ -1,8 +1,6 @@
 package gamelogic;
 
-import gamelogic.physics.PhysicalWorld.PHYSICSCALEINVERT;
 import utilities.MessageManager;
-import hxd.Key;
 import utilities.Vector2D;
 import utilities.MessageManager.Message;
 import utilities.MessageManager.MessageListener;

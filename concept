@@ -77,8 +77,6 @@ Graphics
         - needs gameplay treatment
     - "morale ripples"
 
-    - UI
-        https://www.haxeui.org/api/getting-started/backends/composite-backends/haxeui-heaps.html
     - Tweens
         https://heaps.io/documentation/demo-of-slide.html
         https://github.com/AndreiRudenko/slide
@@ -118,6 +116,12 @@ Misc
         - raid, outpost attack, divide and conquer, smash and grab
         - skirmish against foragers
         - forced battle (marching order particularly important here) (stretch)
+        Historical
+            1522,  "...if it were necessary to fix an arbitrary date for the first really effective use of small fire-arms in the battlefield, the day of Bicocca might well be selected."
+            https://en.wikipedia.org/wiki/Battle_of_Bicocca
+
+            1524, "The battle of the Sesia, by contrast, featured no constructed defences: the arquebusiers operated in the open, albeit in terrain that was favourable to them."
+            https://en.wikipedia.org/wiki/Battle_of_the_Sesia_(1524)
     
     terrain
         - simple mapgen. Have forced symmetry be an option. Stretch goal to have other "balancing" concerns in a more random generation.

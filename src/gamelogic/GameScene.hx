@@ -1,7 +1,6 @@
 package gamelogic;
 
 import graphics.FormationGraphics;
-import h2d.Camera;
 import h2d.col.Point;
 import graphics.UnitGraphics;
 import hxd.Window;
@@ -36,7 +35,7 @@ class GameScene extends Scene implements MessageListener {
 
         MessageManager.addListener(this);
 
-        // var f = new Formation(6, 100);
+        // var f = new Formation(6, 600);
         var f = new Formation(10, 10);
         updateables.push(f);
     }

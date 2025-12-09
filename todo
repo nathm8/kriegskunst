@@ -1,8 +1,16 @@
 TODO
 =======================
 
+MVP
+-----------------
+Have units firing
+Have a separate formation to fight
+
 FormationUI
 -----------------
+resizeablility
+scrollability, for when it gets too big
+
 Need to prevent clicks on UI from affecting gamescene
     Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
 
@@ -21,16 +29,11 @@ Issues
         return null;
     it's intention seems to be to prevent checking against interactives that aren't in the viewport, but I must be misunderstanding something because very clearly it's preventing me from interacting with units that are on screen.
 
-
-
 Direct Formation Control
 -----------------
-make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning
-
 Have a direct mouse based way to change row\column parameters?
 
 Need to have a more clever assignment of units to positions. Pathfinding\distance based
-
 
 Notes on dynamics
 -----------------
@@ -66,3 +69,7 @@ middle mouse scroll, infinite zoom, edge scrolling
 Issues
 -----------------
 InputText doesn't delete the last character correctly (still a bit buggy with Vector2D inputs)
+
+Direct Formation Control
+-----------------
+make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning

@@ -26,9 +26,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.0785409"
-     inkscape:cx="271.19973"
-     inkscape:cy="361.13605"
+     inkscape:zoom="1.0126238"
+     inkscape:cx="-346.13053"
+     inkscape:cy="581.16353"
      inkscape:window-width="1920"
      inkscape:window-height="1080"
      inkscape:window-x="1080"
@@ -122,6 +122,19 @@
          k2="0.25"
          k3="0.75"
          id="feComposite57" />
+    </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Blur"
+       id="filter19"
+       x="-0.36449899"
+       y="-0.36449899"
+       width="1.728998"
+       height="1.728998">
+      <feGaussianBlur
+         stdDeviation="10 10"
+         result="blur"
+         id="feGaussianBlur19" />
     </filter>
   </defs>
   <g
@@ -315,5 +328,14 @@
        inkscape:export-filename="Active.png"
        inkscape:export-xdpi="24.228968"
        inkscape:export-ydpi="24.228968" />
+    <circle
+       style="fill:#ffffff;stroke:none;stroke-width:2;stroke-miterlimit:3.3;paint-order:markers stroke fill;filter:url(#filter19)"
+       id="path11"
+       cx="-114.44279"
+       cy="149.97755"
+       r="32.921902"
+       inkscape:export-filename="SmokeParticle.png"
+       inkscape:export-xdpi="14.279215"
+       inkscape:export-ydpi="14.279215" />
   </g>
 </svg>

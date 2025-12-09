@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.UnitGraphics;
 import utilities.RNGManager;
 import utilities.MessageManager;
 import gamelogic.physics.CircularPhysicalGameObject;
@@ -24,6 +25,11 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var prevSpeedNoises = new Array<Float>();
     
     static var maxID = 0;
+
+    // UI control state,
+    // messy for it to be here
+    public var selectable(default, set) = true;
+    public var graphics: UnitGraphics;
 
     public function new(p: Vector2D) {
         super(p, UNITRADIUS, this);
@@ -90,4 +96,10 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     // public function marchTo(arg:Vector2D, facing:Float) {
     //     throw new haxe.exceptions.NotImplementedException();
     // }
+
+    function set_selectable(value) {
+        selectable = value;
+        graphics.interactive.visible = value;
+        return value;
+    }
 }

@@ -50,6 +50,8 @@ class FormationGraphics extends Object implements MessageListener {
             var unit = cast(msg, UnitClicked).unit;
             if (formation.units.contains(unit)) {
                 state = Selected;
+                for (u in formation.units)
+                    u.selectable = false;
                 initialiseGraphics();
             }
         }
@@ -70,6 +72,8 @@ class FormationGraphics extends Object implements MessageListener {
                     formation.destination = new Vector2D(graphics.x, graphics.y);
                     graphics.visible = false;
                     state = None;
+                    for (u in formation.units)
+                        u.selectable = true;
                     MessageManager.send(new FormationUpdate(formation));
                 }
                 if (state == ChoosingFacing) {
@@ -77,6 +81,8 @@ class FormationGraphics extends Object implements MessageListener {
                     formation.targetFacing = graphics.rotation;
                     graphics.visible = false;
                     state = None;
+                    for (u in formation.units)
+                        u.selectable = true;
                     MessageManager.send(new FormationUpdate(formation));
                 }
             }
@@ -84,6 +90,8 @@ class FormationGraphics extends Object implements MessageListener {
                 if (state == Selected) {
                     graphics.visible = false;
                     state = None;
+                    for (u in formation.units)
+                        u.selectable = true;
                 }
             }
         }

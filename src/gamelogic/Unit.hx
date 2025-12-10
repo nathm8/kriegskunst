@@ -1,7 +1,6 @@
 package gamelogic;
 
 import utilities.Utilities.slerp;
-import utilities.Utilities.normaliseRadian;
 import graphics.UnitGraphics;
 import utilities.RNGManager;
 import utilities.MessageManager;
@@ -22,15 +21,15 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var maxSpeed = 1.5;
 
     // how much random variation is applied destination to noise up movement
-    var jitterMagnitude = 3.0;
+    var jitterMagnitude = 1.0;
     var prevNoises = new Array<Vector2D>();
     // how much top speed can fluctuate
     var speedJitterMagnitude = 1.0;
     var prevSpeedNoises = new Array<Float>();
     
     // in radians
-    public var facing(default, set) = 0.0;
-    public var targetFacing(default, set) = 0.0;
+    public var facing = 0.0;
+    public var targetFacing = 0.0;
 
     ////////////////////
     // Combat Stats
@@ -97,9 +96,18 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
         // facing
         facing = slerp(facing, targetFacing, 0.95);
+
+        return false;
     }
 
     public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, Fire)) {
+            // our position
+            var p = body.getPosition();
+            // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
+            var q = new Vector2D(2*UNITRADIUS*PHYSICSCALEINVERT, 0).rotate(facing).toBox2DVec();
+            // new Bullet();
+        }
         return false;
     }
 
@@ -107,15 +115,5 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         selectable = value;
         graphics.interactive.visible = value;
         return value;
-    }
-
-    function set_facing(value) {
-        facing = normaliseRadian(value);
-        return facing;
-    }
-
-    function set_targetFacing(value) {
-        targetFacing = normaliseRadian(value);
-        return targetFacing;
     }
 }

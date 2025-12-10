@@ -1,5 +1,7 @@
 package graphics.ui;
 
+import utilities.Utilities.fromPiMultiple;
+import utilities.Utilities.toPiMultiple;
 import graphics.ui.ParsingTextInput.ParsingType;
 import h2d.Bitmap;
 import graphics.ui.BitmapButton.ReticleButton;
@@ -94,10 +96,11 @@ class FormationUI extends Flow implements MessageListener {
     var rowSpaceText: Text;
 
     var idText: Text;
+    var positionNumberText: Text;
+    var unitNumberText: Text;
     var destinationText: Text;
     var facingText: Text;
-    var unitNumberText: Text;
-    var positionNumberText: Text;
+    var unitFacingText: Text;
 
     var isMoving = false;
     var xOffset = 0.0;
@@ -129,54 +132,134 @@ class FormationUI extends Flow implements MessageListener {
 
         // initialise display of and interaction with formation stats
         idText = createLabelDataControlTriplet(labels, "id:", data, null, null, controls);
+        unitNumberText = createLabelDataControlTriplet(labels, "units:", data, null, null, controls);
+        positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, null, null, controls);
         var destination_controls = createFlow(null, Horizontal);
         new ReticleButton(destination_controls, () -> {f.listeningForDestination = true; updateStats(f); });
         destinationText = createLabelDataControlTriplet(
             labels, "destination:",
-            data, (t:ParsingTextInput) -> {f.destination = t.value; updateStats(f);}, Vector2D,
+            data, (t:ParsingTextInput) -> {
+                f.destination = t.value;
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Vector2D,
             controls, destination_controls);
+
         var facing_controls = createFlow(null, Horizontal);
-        new RotationButton(facing_controls, () -> {f.targetFacing+=Math.PI/32; updateStats(f);}, true);
-        new RotationButton(facing_controls, () -> {f.targetFacing-=Math.PI/32; updateStats(f);});
+        new RotationButton(facing_controls, () -> {
+            f.targetFacing+=Math.PI/32;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, true);
+        new RotationButton(facing_controls, () -> {
+            f.targetFacing-=Math.PI/32;
+            f.sendMarchingOrders();
+            updateStats(f);
+        });
         facingText = createLabelDataControlTriplet(
             labels, "facing:",
-            data, (t:ParsingTextInput) -> {f.targetFacing = t.value; updateStats(f);}, Float,
+            data, (t:ParsingTextInput) -> {
+                f.targetFacing = fromPiMultiple(t.value);
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Float,
             controls, facing_controls);
-        unitNumberText = createLabelDataControlTriplet(labels, "units:", data, null, null, controls);
-        positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, null, null, controls);
+
+        var unit_facing_controls = createFlow(null, Horizontal);
+        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing+Math.PI/32); updateStats(f);}, true);
+        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing-Math.PI/32); updateStats(f);});
+        unitFacingText = createLabelDataControlTriplet(
+            labels, "unit facing:",
+            data, (t:ParsingTextInput) -> {
+                f.setUnitFacings(fromPiMultiple(t.value));
+                updateStats(f);
+            }, Float,
+            controls, unit_facing_controls);
 
         // rows
         var row_controls = createFlow(null, Horizontal);
-        new TriangleButton(row_controls, () -> {f.rows++; updateStats(f);}, Up);
-        new TriangleButton(row_controls, () -> {if (f.rows == 1) return; f.rows--; updateStats(f);}, Down);
+        new TriangleButton(row_controls, () -> {
+            f.rows++;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Up);
+        new TriangleButton(row_controls, () -> {
+            if (f.rows == 1) return;
+            f.rows--;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Down);
         rowText = createLabelDataControlTriplet(
             labels, "rows:",
-            data, (t:ParsingTextInput) -> {f.rows = t.value; updateStats(f);}, Int,
+            data, (t:ParsingTextInput) -> {
+                f.rows = t.value;
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Int,
             controls, row_controls);
         
         var row_spacing_controls = createFlow(null, Horizontal);
-        new TriangleButton(row_spacing_controls, () -> {f.rowSpacing++; updateStats(f);}, Up);
-        new TriangleButton(row_spacing_controls, () -> {if (f.rowSpacing == 1) return; f.rowSpacing--; updateStats(f);}, Down);
+        new TriangleButton(row_spacing_controls, () -> {
+            f.rowSpacing++;
+            f.sendMarchingOrders(); 
+            updateStats(f);
+        }, Up);
+        new TriangleButton(row_spacing_controls, () -> {
+            if (f.rowSpacing == 1) return;
+            f.rowSpacing--;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Down);
         rowSpaceText = createLabelDataControlTriplet(
             labels, "row spacing:",
-            data, (t:ParsingTextInput) -> {f.rowSpacing = t.value; updateStats(f);}, Int,
+            data, (t:ParsingTextInput) -> {
+                f.rowSpacing = t.value;
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Int,
             controls, row_spacing_controls);
 
         // columns
         var rowcontrols = createFlow(null, Horizontal);
-        new TriangleButton(rowcontrols, () -> {f.columns++; updateStats(f);}, Up);
-        new TriangleButton(rowcontrols, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, Down);
+        new TriangleButton(rowcontrols, () -> {
+            f.columns++;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Up);
+        new TriangleButton(rowcontrols, () -> {
+            if (f.columns == 1) return;
+            f.columns--;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Down);
         columnText = createLabelDataControlTriplet(
             labels, "columns:",
-            data, (t:ParsingTextInput) -> {f.columns = t.value; updateStats(f);}, Int,
+            data, (t:ParsingTextInput) -> {
+                f.columns = t.value;
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Int,
             controls, rowcontrols);
         
         var rowspacing_controls = createFlow(null, Horizontal);
-        new TriangleButton(rowspacing_controls, () -> {f.columnSpacing++; updateStats(f);}, Up);
-        new TriangleButton(rowspacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, Down);
+        new TriangleButton(rowspacing_controls, () -> {
+            f.columnSpacing++;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Up);
+        new TriangleButton(rowspacing_controls, () -> {
+            if (f.columnSpacing == 1) return;
+            f.columnSpacing--;
+            f.sendMarchingOrders();
+            updateStats(f);
+        }, Down);
         columnSpaceText = createLabelDataControlTriplet(
             labels, "column spacing:",
-            data, (t:ParsingTextInput) -> {f.columnSpacing = t.value; updateStats(f);}, Int,
+            data, (t:ParsingTextInput) -> {
+                f.columnSpacing = t.value;
+                f.sendMarchingOrders();
+                updateStats(f);
+            }, Int,
             controls, rowspacing_controls);
         
         // interactivity to move window around
@@ -196,10 +279,11 @@ class FormationUI extends Flow implements MessageListener {
 
     function updateStats(f: Formation) {
         idText.text = '${f.id}';
-        destinationText.text = prettyPrintVectorRounded(f.destination, true);
-        facingText.text = floatToStringPrecision((f.targetFacing%2*Math.PI)/(Math.PI), 2)+" pi";
         unitNumberText.text = '${f.units.length}';
         positionNumberText.text = '${f.columns*f.rows}';
+        destinationText.text = prettyPrintVectorRounded(f.destination, true);
+        facingText.text = floatToStringPrecision(toPiMultiple(f.targetFacing), 2)+" pi";
+        unitFacingText.text = floatToStringPrecision(toPiMultiple(f.units[0].targetFacing), 2)+" pi";
 
         rowText.text = '${f.rows}';
         rowSpaceText.text = '${f.rowSpacing}';

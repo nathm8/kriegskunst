@@ -21,11 +21,25 @@ function slerp(p: Float, q: Float, r: Float) {
 }
 
 function normaliseRadian(t: Float) {
-    while (t < -Math.PI)
+    while (t < 0)
         t += 2*Math.PI;
-    while (t > Math.PI)
+    while (t > 2*Math.PI)
         t -= 2*Math.PI;
+    // while (t < -Math.PI)
+    //     t += 2*Math.PI;
+    // while (t > Math.PI)
+    //     t -= 2*Math.PI;
     return t;
+}
+
+function toPiMultiple(t: Float) {
+    t = normaliseRadian(t);
+    return t/Math.PI;
+}
+
+function fromPiMultiple(t: Float) {
+    t *= Math.PI;
+    return normaliseRadian(t);
 }
 
 function floatToStringPrecision(n:Float, prec:Int){

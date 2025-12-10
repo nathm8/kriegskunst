@@ -22,7 +22,12 @@ class BulletGraphics extends Object implements Updateable {
     }
 
     public function update(dt:Float) {
-        x = bullet.body.getPosition().x * PHYSICSCALE;
-        y = bullet.body.getPosition().y * PHYSICSCALE;
+        if (bullet.lifetime > 0) {
+            x = bullet.body.getPosition().x * PHYSICSCALE;
+            y = bullet.body.getPosition().y * PHYSICSCALE;
+        } else {
+            alpha = 0.5;
+        }
+        return false;
     }
 }

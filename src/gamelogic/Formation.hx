@@ -51,6 +51,33 @@ class Formation implements MessageListener implements Updateable {
     }
 
     public function update(dt:Float) {
+        // TODO: remove updateables that return true
+        for (u in units)
+            u.update(dt);
+
+        return false;
+    }
+
+    public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, MouseRelease)) {
+            if (!listeningForDestination) return false;
+            var params = cast(msg, MouseRelease);
+            if (params.event.button == 0) {
+                listeningForDestination = false;
+                destination = params.scenePosition;
+                sendMarchingOrders();
+                MessageManager.send(new FormationUpdate(this));
+            }
+        }
+        return false;
+    }
+
+    public function setUnitFacings(f: Float) {
+        for (i in 0...rows*columns)
+            units[i].targetFacing = f;
+    }
+
+    public function sendMarchingOrders() {
         var ps = determineRectangularPositions(destination, targetFacing);
         for (i in 0...units.length) {
             if (i >= ps.length) {
@@ -62,21 +89,5 @@ class Formation implements MessageListener implements Updateable {
                 units[i].targetFacing = targetFacing;
             }
         }
-
-        for (u in units)
-            u.update(dt);
-    }
-
-    public function receive(msg:Message):Bool {
-        if (Std.isOfType(msg, MouseRelease)) {
-            if (!listeningForDestination) return false;
-            var params = cast(msg, MouseRelease);
-            if (params.event.button == 0) {
-                listeningForDestination = false;
-                destination = params.scenePosition;
-                MessageManager.send(new FormationUpdate(this));
-            }
-        }
-        return false;
     }
 }

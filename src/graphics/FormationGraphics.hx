@@ -73,6 +73,7 @@ class FormationGraphics extends Object implements MessageListener {
             if (params.event.button == 0) {
                 if (state == Selected) {
                     formation.destination = new Vector2D(graphics.x, graphics.y);
+                    formation.sendMarchingOrders();
                     graphics.visible = false;
                     state = None;
                     for (u in formation.units)
@@ -82,6 +83,7 @@ class FormationGraphics extends Object implements MessageListener {
                 if (state == ChoosingFacing) {
                     formation.destination = new Vector2D(graphics.x, graphics.y);
                     formation.targetFacing = graphics.rotation;
+                    formation.sendMarchingOrders();
                     graphics.visible = false;
                     state = None;
                     for (u in formation.units)

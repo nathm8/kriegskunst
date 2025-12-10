@@ -44,6 +44,7 @@ class GameScene extends Scene implements MessageListener {
     public function update(dt:Float) {
         PhysicalWorld.update(dt);
         cameraControl();
+        // TODO: remove updateables that return true
         for (u in updateables)
             u.update(dt);
     }

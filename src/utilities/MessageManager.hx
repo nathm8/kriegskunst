@@ -9,6 +9,7 @@ import utilities.Vector2D;
 class Message {public function new(){}}
 
 class Restart extends Message {}
+class Fire extends Message {}
 class NewBullet extends Message {
     public var bullet: Bullet;
     public function new(b: Bullet) {super(); bullet = b;}

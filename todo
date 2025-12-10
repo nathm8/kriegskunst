@@ -7,6 +7,10 @@ Have units firing
 Have a separate formation to fight
 units killable
 
+add some hystersis to xflip of musket
+
+slerp taking ages to do 180, figure out a constant turn rate and do it that way instead
+
 To think about
 -----------------
 verticality. 
@@ -20,6 +24,8 @@ FormationUI
 -----------------
 resizeablility
 scrollability, for when it gets too big
+have separate field for unit facing
+have import\export
 
 Need to prevent clicks on UI from affecting gamescene
     Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)

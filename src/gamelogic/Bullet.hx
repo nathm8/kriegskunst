@@ -9,10 +9,12 @@ import utilities.Vector2D;
 
 final BULLETRADIUS = 0.1;
 
-class Bullet extends CircularPhysicalGameObject {
+class Bullet extends CircularPhysicalGameObject implements Updateable {
+    
     public var graphics: BulletGraphics;
+    public var lifetime: Float;
 
-    public function new(p: Vector2D) {
+    public function new(p: Vector2D, facing: Float, i=100.0, l=1.0) {
         var body_definition = new B2BodyDef();
         body_definition.type = B2BodyType.KINEMATIC_BODY;
         body_definition.position = p;
@@ -21,7 +23,18 @@ class Bullet extends CircularPhysicalGameObject {
 
         super(p, BULLETRADIUS, this);
 
+        lifetime = l;
+        body.applyImpulse(new Vector2D(i, 0).rotate(facing), p);
+
         MessageManager.send(new NewBullet(this));
     }
 
+    public function update(dt:Float) {
+        lifetime -= dt;
+        if (lifetime <= 0) {
+            removePhysics();
+            return true;
+        }
+        return false;
+    }
 }

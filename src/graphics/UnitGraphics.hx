@@ -47,5 +47,7 @@ class UnitGraphics extends Object implements Updateable {
             musket.scaleX = -MUSKETSCALE;
         else
             musket.scaleX = MUSKETSCALE;
+
+        return false;
     }
 }

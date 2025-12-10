@@ -46,6 +46,12 @@ Have a direct mouse based way to change row\column parameters?
 
 Need to have a more clever assignment of units to positions. Pathfinding\distance based
 
+Notes on optimisation
+-----------------
+Make a big list of normal values and work through them instead of numerical\marsaglia method
+
+Might be worth having a go at porting box2d v3.
+
 Notes on dynamics
 -----------------
 If a unit is too disordered (far from where it's meant to be in formation), it should lose track of where it's meant to be. Especially if morale is impacted.
@@ -58,8 +64,6 @@ How to reorder units naturally? Feels like rows should fill from the back, and u
 Have "macros" for manuevers, where you keyframe several configurations together, activatable as abilities
     goal: design countermarch and caracole this way
 
-Have a formation's destination be another formation, friendly or enemy.
-
 Two rank fire:
     have first rank kneel, not sure how to show this visually
 Three rank fire:
@@ -67,6 +71,9 @@ Three rank fire:
 
     Each "line" be a separate formation then?
 
+Have a formation's destination be another formation, friendly or enemy.
+    have formations break into sub-formations? I.e counter march by having front row break into sub formation, then move back through the original formation, rejoining it.
+    Similarly with forming square.
 
 Completed
 =======================

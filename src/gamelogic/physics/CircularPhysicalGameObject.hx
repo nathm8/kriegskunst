@@ -1,6 +1,5 @@
 package gamelogic.physics;
 
-import box2D.collision.shapes.B2PolygonShape;
 import box2D.dynamics.B2Body;
 import box2D.dynamics.B2BodyDef;
 import box2D.collision.shapes.B2CircleShape;
@@ -12,13 +11,7 @@ class CircularPhysicalGameObject {
 
     public var body: B2Body;
 
-    public function new(position: Vector2D, radius: Float, userdata: Dynamic) {
-        var body_definition = new B2BodyDef();
-        body_definition.type = B2BodyType.DYNAMIC_BODY;
-        body_definition.position = position;
-        body_definition.linearDamping = 0.5;
-        body_definition.angularDamping = 0.5;
-        body_definition.fixedRotation = true;
+    public function new(position: Vector2D, radius: Float, userdata: Dynamic, bd: B2BodyDef=null) {
         var circle = new B2CircleShape();
         circle.setRadius(radius);
         var fixture_definition = new B2FixtureDef();
@@ -27,10 +20,18 @@ class CircularPhysicalGameObject {
         fixture_definition.restitution = 0.5;
         fixture_definition.density = 0.5;
 
-        body = PhysicalWorld.gameWorld.createBody(body_definition);
+        if (bd != null)
+            body = PhysicalWorld.gameWorld.createBody(bd);
+        else {
+            var body_definition = new B2BodyDef();
+            body_definition.type = B2BodyType.DYNAMIC_BODY;
+            body_definition.position = position;
+            body_definition.linearDamping = 0.5;
+            body_definition.fixedRotation = true;
+            body = PhysicalWorld.gameWorld.createBody(body_definition);
+        }
         var fix = body.createFixture(fixture_definition);
         fix.setUserData(userdata);
-        body.setActive(true);
     }
 
     public function removePhysics() {

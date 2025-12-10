@@ -40,7 +40,7 @@ Formation (battalion) Statisitcs
 -------------------
     - parameters
         - rank depth\width
-        - offset rows and cols
+        - offset columns and cols
         - relative distances
         - potential order for high-skill formations, to dynamically change parameters. E.g. Form square, form line, etc. Similarly to change "stances", i.e. behaviour parameters, based on commands
     - morale

@@ -88,10 +88,10 @@ class FormationUI extends Flow implements MessageListener {
     var controls: Flow;
 
     var watchedFormation: Int;
-    var rowText: Text;
-    var rowSpaceText: Text;
     var columnText: Text;
     var columnSpaceText: Text;
+    var rowText: Text;
+    var rowSpaceText: Text;
 
     var idText: Text;
     var destinationText: Text;
@@ -145,23 +145,6 @@ class FormationUI extends Flow implements MessageListener {
         unitNumberText = createLabelDataControlTriplet(labels, "units:", data, null, null, controls);
         positionNumberText = createLabelDataControlTriplet(labels, "positions:", data, null, null, controls);
 
-        // columns
-        var column_controls = createFlow(null, Horizontal);
-        new TriangleButton(column_controls, () -> {f.columns++; updateStats(f);}, Up);
-        new TriangleButton(column_controls, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, Down);
-        columnText = createLabelDataControlTriplet(
-            labels, "columns:",
-            data, (t:ParsingTextInput) -> {f.columns = t.value; updateStats(f);}, Int,
-            controls, column_controls);
-        
-        var column_spacing_controls = createFlow(null, Horizontal);
-        new TriangleButton(column_spacing_controls, () -> {f.columnSpacing++; updateStats(f);}, Up);
-        new TriangleButton(column_spacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, Down);
-        columnSpaceText = createLabelDataControlTriplet(
-            labels, "column spacing:",
-            data, (t:ParsingTextInput) -> {f.columnSpacing = t.value; updateStats(f);}, Int,
-            controls, column_spacing_controls);
-
         // rows
         var row_controls = createFlow(null, Horizontal);
         new TriangleButton(row_controls, () -> {f.rows++; updateStats(f);}, Up);
@@ -178,6 +161,23 @@ class FormationUI extends Flow implements MessageListener {
             labels, "row spacing:",
             data, (t:ParsingTextInput) -> {f.rowSpacing = t.value; updateStats(f);}, Int,
             controls, row_spacing_controls);
+
+        // columns
+        var rowcontrols = createFlow(null, Horizontal);
+        new TriangleButton(rowcontrols, () -> {f.columns++; updateStats(f);}, Up);
+        new TriangleButton(rowcontrols, () -> {if (f.columns == 1) return; f.columns--; updateStats(f);}, Down);
+        columnText = createLabelDataControlTriplet(
+            labels, "columns:",
+            data, (t:ParsingTextInput) -> {f.columns = t.value; updateStats(f);}, Int,
+            controls, rowcontrols);
+        
+        var rowspacing_controls = createFlow(null, Horizontal);
+        new TriangleButton(rowspacing_controls, () -> {f.columnSpacing++; updateStats(f);}, Up);
+        new TriangleButton(rowspacing_controls, () -> {if (f.columnSpacing == 1) return; f.columnSpacing--; updateStats(f);}, Down);
+        columnSpaceText = createLabelDataControlTriplet(
+            labels, "column spacing:",
+            data, (t:ParsingTextInput) -> {f.columnSpacing = t.value; updateStats(f);}, Int,
+            controls, rowspacing_controls);
         
         // interactivity to move window around
         enableInteractive = true;
@@ -199,13 +199,13 @@ class FormationUI extends Flow implements MessageListener {
         destinationText.text = prettyPrintVectorRounded(f.destination, true);
         facingText.text = floatToStringPrecision((f.targetFacing%2*Math.PI)/(Math.PI), 2)+" pi";
         unitNumberText.text = '${f.units.length}';
-        positionNumberText.text = '${f.rows*f.columns}';
-
-        columnText.text = '${f.columns}';
-        columnSpaceText.text = '${f.columnSpacing}';
+        positionNumberText.text = '${f.columns*f.rows}';
 
         rowText.text = '${f.rows}';
         rowSpaceText.text = '${f.rowSpacing}';
+
+        columnText.text = '${f.columns}';
+        columnSpaceText.text = '${f.columnSpacing}';
 
         reticleCursor.visible = f.listeningForDestination;
 
@@ -216,17 +216,17 @@ class FormationUI extends Flow implements MessageListener {
 
     function resizeFlows() {
         var max_height = 0;
-        var columns = [labels, data, controls];
+        var rows = [labels, data, controls];
         for (i in 0...3) {
             var max_width = 0;
-            for (c in getAllChildren(columns[i])) {
+            for (c in getAllChildren(rows[i])) {
                 if (Std.isOfType(c, Flow)) {
                     var f = cast(c, Flow);
                     max_width = f.outerWidth > max_width ? f.outerWidth : max_width;
                     max_height = f.outerHeight > max_height ? f.outerHeight : max_height;
                 }
             }
-            for (c in getAllChildren(columns[i])) {
+            for (c in getAllChildren(rows[i])) {
                 if (Std.isOfType(c, Flow)) {
                     var f = cast(c, Flow);
                     f.minWidth = max_width;
@@ -234,7 +234,7 @@ class FormationUI extends Flow implements MessageListener {
             }
         }
         for (i in 0...3)
-            for (c in getAllChildren(columns[i]))
+            for (c in getAllChildren(rows[i]))
                 if (Std.isOfType(c, Flow)) {
                     var f = cast(c, Flow);
                     f.minHeight = max_height;

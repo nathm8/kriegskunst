@@ -9,24 +9,23 @@ import utilities.MessageManager.MessageListener;
 class Formation implements MessageListener implements Updateable {
 
     public var units = new Array<Unit>();
-    public var rows = 1;
     public var columns = 1;
+    public var rows = 1;
     // in metres
-    public var rowSpacing = 20;
-    public var columnSpacing = 15;
+    public var columnSpacing = 20;
+    public var rowSpacing = 15;
 
     static var maxID = 0;
     public var id: Int;
 
     public var destination = new Vector2D(0,0);
     public var targetFacing = 0.0;
-    var rotating = false;
     public var listeningForDestination = false;
 
     public function new(r:Int, c:Int) {
         id = maxID++;
-        rows = r;
-        columns = c;
+        columns = r;
+        rows = c;
         for (p in determineRectangularPositions(destination, 0)) {
             var u = new Unit(p);
             units.push(u);
@@ -36,15 +35,15 @@ class Formation implements MessageListener implements Updateable {
     }
 
     function getRectangularCentre(): Vector2D {
-        return new Vector2D((rows-1)*rowSpacing, (columns-1)*columnSpacing)*0.5;
+        return new Vector2D((columns-1)*columnSpacing, (rows-1)*rowSpacing)*0.5;
     }
 
     public function determineRectangularPositions(position: Vector2D, facing: Float) : Array<Vector2D> {
         var out = new Array<Vector2D>();
         var centre = getRectangularCentre();
-        for (r in 0...rows) {
-            for (c in 0...columns) {
-                var p = new Vector2D(r*rowSpacing, c*columnSpacing).rotateAboutPoint(facing, centre) + position - centre;
+        for (r in 0...columns) {
+            for (c in 0...rows) {
+                var p = new Vector2D(r*columnSpacing, c*rowSpacing).rotateAboutPoint(facing, centre) + position - centre;
                 out.push(p);
             }
         }
@@ -52,14 +51,16 @@ class Formation implements MessageListener implements Updateable {
     }
 
     public function update(dt:Float) {
-        if (rotating)
-            targetFacing += 0.5*dt;
         var ps = determineRectangularPositions(destination, targetFacing);
         for (i in 0...units.length) {
-            if (i >= ps.length)
+            if (i >= ps.length) {
                 units[i].destination = new Vector2D(500, 500);
-            else
+                units[i].targetFacing = 0;
+            }
+            else {
                 units[i].destination = ps[i];
+                units[i].targetFacing = targetFacing;
+            }
         }
 
         for (u in units)

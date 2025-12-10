@@ -1,5 +1,7 @@
 package gamelogic;
 
+import utilities.Utilities.slerp;
+import utilities.Utilities.normaliseRadian;
 import graphics.UnitGraphics;
 import utilities.RNGManager;
 import utilities.MessageManager;
@@ -12,33 +14,39 @@ import utilities.Vector2D;
 final UNITRADIUS = 0.2;
 
 class Unit extends CircularPhysicalGameObject implements MessageListener implements Updateable {
+    ////////////////////
+    // Physics
+    ////////////////////
     public var destination: Vector2D;
-    public var id: Int;
     var mouseJoint: B2MouseJoint;
     var maxSpeed = 1.5;
 
     // how much random variation is applied destination to noise up movement
-    var jitterMagnitude = 1;
+    var jitterMagnitude = 3.0;
     var prevNoises = new Array<Vector2D>();
     // how much top speed can fluctuate
-    var speedJitterMagnitude = 1;
+    var speedJitterMagnitude = 1.0;
     var prevSpeedNoises = new Array<Float>();
     
-    static var maxID = 0;
+    // in radians
+    public var facing(default, set) = 0.0;
+    public var targetFacing(default, set) = 0.0;
 
-    // combat stats
+    ////////////////////
+    // Combat Stats
+    ////////////////////
     public var healthpoints = 1.0;
     // var damage
 
-    // UI control state,
-    // messy for it to be here
+    ////////////////////
+    // UI Control State
+    ////////////////////
     public var selectable(default, set) = true;
     public var graphics: UnitGraphics;
 
     public function new(p: Vector2D) {
         super(p, UNITRADIUS, this);
         destination = p;
-        id = maxID++;
 
         // init physical movement
         var mouse_joint_definition = new B2MouseJointDef();
@@ -49,14 +57,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouse_joint_definition.maxForce = 10;
         
         mouseJoint = cast(PhysicalWorld.gameWorld.createJoint(mouse_joint_definition), B2MouseJoint);
-        body.setUserData(this);
 
         MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);
-    }
-
-    public function hashCode() : Int {
-        return id;
     }
 
     public function update(dt:Float) {
@@ -91,6 +94,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         }
 
         mouseJoint.setMaxForce(10*speed);
+
+        // facing
+        facing = slerp(facing, targetFacing, 0.95);
     }
 
     public function receive(msg:Message):Bool {
@@ -101,5 +107,15 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         selectable = value;
         graphics.interactive.visible = value;
         return value;
+    }
+
+    function set_facing(value) {
+        facing = normaliseRadian(value);
+        return facing;
+    }
+
+    function set_targetFacing(value) {
+        targetFacing = normaliseRadian(value);
+        return targetFacing;
     }
 }

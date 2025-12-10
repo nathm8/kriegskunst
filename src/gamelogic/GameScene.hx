@@ -37,6 +37,7 @@ class GameScene extends Scene implements MessageListener {
 
         // var f = new Formation(6, 600);
         var f = new Formation(10, 10);
+        // var f = new Formation(1, 1);
         updateables.push(f);
     }
     

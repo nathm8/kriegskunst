@@ -1,5 +1,6 @@
 package utilities;
 
+import gamelogic.Bullet;
 import gamelogic.Unit;
 import gamelogic.Formation;
 import hxd.Event;
@@ -8,6 +9,10 @@ import utilities.Vector2D;
 class Message {public function new(){}}
 
 class Restart extends Message {}
+class NewBullet extends Message {
+    public var bullet: Bullet;
+    public function new(b: Bullet) {super(); bullet = b;}
+}
 class NewUnit extends Message {
     public var unit: Unit;
     public function new(u: Unit) {super(); unit = u;}

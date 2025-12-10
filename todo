@@ -5,6 +5,16 @@ MVP
 -----------------
 Have units firing
 Have a separate formation to fight
+units killable
+
+To think about
+-----------------
+verticality. 
+    How to represent?
+        terrain, units crouching, prone
+    
+    Mechanics?
+        collision masks
 
 FormationUI
 -----------------

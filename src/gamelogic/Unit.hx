@@ -26,6 +26,10 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     
     static var maxID = 0;
 
+    // combat stats
+    public var healthpoints = 1.0;
+    // var damage
+
     // UI control state,
     // messy for it to be here
     public var selectable(default, set) = true;
@@ -72,7 +76,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         // body.applyForce(new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle()), body.getPosition());
 
         // impose speed limit
-        var speed_noise = RNGManager.rand.srand(speedJitterMagnitude);
+        var speed_noise = RNGManager.srand(speedJitterMagnitude);
         prevSpeedNoises.push(speed_noise);
         var average_speed_noise = 0.0;
         for (n in prevSpeedNoises)

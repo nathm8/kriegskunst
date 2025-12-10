@@ -1,6 +1,5 @@
 package graphics;
 
-import hxd.Timer;
 import utilities.MessageManager;
 import utilities.MessageManager.MouseMove;
 import utilities.Vector2D;
@@ -65,7 +64,6 @@ class FormationGraphics extends Object implements MessageListener {
                 graphics.y = params.scenePosition.y;
             }
             if (state == ChoosingFacing) {
-                trace(timestamp - haxe.Timer.stamp());
                 if (haxe.Timer.stamp() - timestamp >= timeToChooseFace)
                     graphics.rotation = (params.scenePosition - new Vector2D(graphics.x, graphics.y)).angle() + Math.PI/2;
             }

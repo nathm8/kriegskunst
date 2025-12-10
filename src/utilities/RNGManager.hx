@@ -5,12 +5,15 @@ import hxd.Rand;
 class RNGManager {
     static var init = false;
     public static var seed(get, null): Int;
-    public static var rand(get, null): Rand;
+    static var rand: Rand;
     
-    public static function initialise() {
+    public static function initialise(s=-1) {
         if (init) return;
         init = true;
-        seed = Std.random(0x7FFFFFFF);
+        if (s == -1)
+            seed = Std.random(0x7FFFFFFF);
+        else
+            seed = Std.random(s);
         rand = new Rand(seed);
     }
 
@@ -24,12 +27,40 @@ class RNGManager {
         return seed;
     }
 
-    public static function get_rand(): Rand {
+	public static inline function random( n ) {
         if (!init) initialise();
-        return rand;
-    }
+		return rand.random(n);
+	}
 
-    public static function randomAngle(): Float {
+	public static inline function shuffle<T>( a : Array<T> ) {
+        if (!init) initialise();
+		return rand.shuffle(a);
+	}
+
+	public static inline function srand(scale=1.0) {
+        if (!init) initialise();
+		return rand.srand(scale);
+	}
+
+    public static inline function randomAngle(): Float {
+        if (!init) initialise();
         return rand.rand() * 2 * Math.PI;
     }
+
+    // maybe just make a big list of this and pick a random one
+    public static inline function normal(mu=0, sigma=1): Float {
+        if (!init) initialise();
+        function marsaglia() : Float {
+            var x = 0.0;
+            while (true) {
+                var i = rand.srand();
+                var j = rand.srand();
+                x = i*i + j*j;
+                if (x < 1) break;
+            }
+            return Math.sqrt(-2 * Math.log(x) / x);
+        }
+        return mu + sigma*marsaglia();
+    }
+
 }

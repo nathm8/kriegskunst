@@ -95,6 +95,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouseJoint.setMaxForce(10*speed);
 
         // facing
+        // TODO impose more strict timeline
         facing = slerp(facing, targetFacing, 0.95);
 
         return false;
@@ -105,8 +106,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
             // our position
             var p = body.getPosition();
             // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
-            var q = new Vector2D(2*UNITRADIUS*PHYSICSCALEINVERT, 0).rotate(facing).toBox2DVec();
-            // new Bullet();
+            var q = new Vector2D(0, -2*UNITRADIUS*PHYSICSCALE).rotate(facing).toBox2DVec();
+            p.add(q);
+            new Bullet(p, facing);
         }
         return false;
     }

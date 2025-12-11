@@ -51,10 +51,6 @@ class Formation implements MessageListener implements Updateable {
     }
 
     public function update(dt:Float) {
-        // TODO: remove updateables that return true
-        for (u in units)
-            u.update(dt);
-
         return false;
     }
 

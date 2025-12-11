@@ -10,14 +10,14 @@ class BulletGraphics extends Object implements Updateable {
     
     var bullet: Bullet;
 
-    public function new(b, Bullet, p: Object) {
+    public function new(b: Bullet, p: Object) {
         super(p);
         bullet = b;
 
         var g = new Graphics(this);
         g.lineStyle(1, 0x999999);
         g.beginFill(0x999999);
-        g.drawCircle(0, 0, BULLETRADIUS*PHYSICSCALE);
+        g.drawCircle(0, 0, BULLETRADIUS*PHYSICSCALE, 16);
         g.endFill();
     }
 
@@ -26,8 +26,9 @@ class BulletGraphics extends Object implements Updateable {
             x = bullet.body.getPosition().x * PHYSICSCALE;
             y = bullet.body.getPosition().y * PHYSICSCALE;
         } else {
-            alpha = 0.5;
+            bullet = null;
+            remove();
         }
-        return false;
+        return bullet == null;
     }
 }

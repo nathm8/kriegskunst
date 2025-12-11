@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.BulletGraphics;
 import graphics.FormationGraphics;
 import h2d.col.Point;
 import graphics.UnitGraphics;
@@ -35,7 +36,7 @@ class GameScene extends Scene implements MessageListener {
 
         MessageManager.addListener(this);
 
-        // var f = new Formation(6, 600);
+        // var f = new Formation(300, 3);
         var f = new Formation(10, 10);
         // var f = new Formation(1, 1);
         updateables.push(f);
@@ -44,9 +45,13 @@ class GameScene extends Scene implements MessageListener {
     public function update(dt:Float) {
         PhysicalWorld.update(dt);
         cameraControl();
-        // TODO: remove updateables that return true
+        
+        var to_remove = new Array<Updateable>();
         for (u in updateables)
-            u.update(dt);
+            if (u.update(dt))
+                to_remove.push(u);
+        for (u in to_remove)
+            updateables.remove(u);
     }
 
     public function receive(msg:Message):Bool {
@@ -118,15 +123,25 @@ class GameScene extends Scene implements MessageListener {
             var params = cast(msg, NewFormation);
             newFormation(params.formation);
         }
+        if (Std.isOfType(msg, NewBullet)) {
+            var params = cast(msg, NewBullet);
+            newBullet(params.bullet);
+        }
         return false;
     }
 
     function newUnit(u: Unit) {
+        updateables.push(u);
         updateables.push(new UnitGraphics(u, this));
     }
 
     function newFormation(f: Formation) {
         new FormationGraphics(f, this);
+    }
+
+    function newBullet(b: Bullet) {
+        updateables.push(b);
+        updateables.push(new BulletGraphics(b, this));
     }
     
     function cameraControl() {

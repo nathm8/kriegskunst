@@ -10,7 +10,8 @@ units killable
 add some hystersis to xflip of musket
 
 slerp taking ages to do 180, figure out a constant turn rate and do it that way instead
-
+    or rather a "time to turn X amount" and slerp it with strict time limits. The slerp is still visually nice.
+    
 To think about
 -----------------
 verticality. 

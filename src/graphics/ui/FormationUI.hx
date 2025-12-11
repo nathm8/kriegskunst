@@ -166,8 +166,8 @@ class FormationUI extends Flow implements MessageListener {
             controls, facing_controls);
 
         var unit_facing_controls = createFlow(null, Horizontal);
-        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing+Math.PI/32); updateStats(f);}, true);
-        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing-Math.PI/32); updateStats(f);});
+        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing+Math.PI/4); updateStats(f);}, true);
+        new RotationButton(unit_facing_controls, () -> {f.setUnitFacings(f.units[0].targetFacing-Math.PI/4); updateStats(f);});
         unitFacingText = createLabelDataControlTriplet(
             labels, "unit facing:",
             data, (t:ParsingTextInput) -> {

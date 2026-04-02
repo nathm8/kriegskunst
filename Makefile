@@ -1,8 +1,8 @@
 clean:
 	rm -r bin/ out/
 
-runweb: buildjs
-	chromium bin/index.html
+runjs: buildjs
+	chromium index.html
 
 runhl: buildhl
 	hl ./bin/kriegskunst.hl
@@ -11,7 +11,7 @@ runnative: buildc
 	./bin/kriegskunst
 
 buildjs:
-	haxe compile.hxml
+	haxe js.hxml
 
 buildhl:
 	haxe hl.hxml

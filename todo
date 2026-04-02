@@ -1,17 +1,23 @@
 TODO
 =======================
 
+project
+-----------------
+static analysis
+https://github.com/HaxeCheckstyle/haxe-checkstyle
+
 MVP
 -----------------
-Have units firing
 Have a separate formation to fight
 units killable
 
+Polish
+-----------------
 add some hystersis to xflip of musket
 
 slerp taking ages to do 180, figure out a constant turn rate and do it that way instead
     or rather a "time to turn X amount" and slerp it with strict time limits. The slerp is still visually nice.
-    
+
 To think about
 -----------------
 verticality. 
@@ -20,6 +26,11 @@ verticality.
     
     Mechanics?
         collision masks
+
+raycasts instead of physically simulated bullets
+
+multithread stuff
+https://code.haxe.org/category/javascript/javascript-inline-workers.html
 
 FormationUI
 -----------------
@@ -88,6 +99,7 @@ MVP
 -----------------
 Have units moving about in formation
 Be able to dynamically change formation
+Have units firing
 
 FormationUI
 -----------------

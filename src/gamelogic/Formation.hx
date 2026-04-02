@@ -65,6 +65,12 @@ class Formation implements MessageListener implements Updateable {
                 MessageManager.send(new FormationUpdate(this));
             }
         }
+        if (Std.isOfType(msg, KeyUp)) {
+            var params = cast(msg, KeyUp);
+            if (params.keycode == hxd.Key.SPACE)
+                for (i in 0...rows*columns)
+                    units[i].fire();
+        }
         return false;
     }
 

@@ -24,9 +24,7 @@ class Bullet extends CircularPhysicalGameObject implements Updateable {
         body_definition.linearVelocity = new Vector2D(0, -i).rotate(facing);
 
         super(p, BULLETRADIUS, this, body_definition);
-
         lifetime = l;
-        // body.applyImpulse(new Vector2D(i, 0).rotate(facing), p);
 
         MessageManager.send(new NewBullet(this));
     }

@@ -102,15 +102,16 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function receive(msg:Message):Bool {
-        if (Std.isOfType(msg, Fire)) {
-            // our position
-            var p = body.getPosition();
-            // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
-            var q = new Vector2D(0, -2*UNITRADIUS*PHYSICSCALE).rotate(facing).toBox2DVec();
-            p.add(q);
-            new Bullet(p, facing);
-        }
         return false;
+    }
+    
+    public function fire() {
+        // our position
+        var p = body.getPosition();
+        // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
+        var q = new Vector2D(0, -2*UNITRADIUS*PHYSICSCALE).rotate(facing).toBox2DVec();
+        p.add(q);
+        new Bullet(p, facing);
     }
 
     function set_selectable(value) {

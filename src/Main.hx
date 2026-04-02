@@ -77,16 +77,13 @@ class Main extends UIApp implements MessageListener {
                     MessageManager.send(new Restart());
             case EKeyUp:
                 MessageManager.send(new KeyUp(event.keyCode));
-                if (event.keyCode == hxd.Key.SPACE)
-                    MessageManager.send(new Fire());
             case _:
         }
     }
 
     public function receive(msg:Message):Bool {
-        if (Std.isOfType(msg, Restart)) {
+        if (Std.isOfType(msg, Restart))
             newGame();
-        }
         return false;
     }
 }

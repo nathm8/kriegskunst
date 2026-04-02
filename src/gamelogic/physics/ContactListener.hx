@@ -9,8 +9,9 @@ class ContactListener extends B2ContactListener {
     override public function postSolve(contact:B2Contact, impulse:B2ContactImpulse):Void {
         var object_a = contact.getFixtureA().getUserData();
         var object_b = contact.getFixtureB().getUserData();
-        // if (Std.isOfType(object_a, Torpedo))
-        //     MessageManager.sendMessage(new TorpedoHitMessage(cast(object_a, Torpedo)));
+        contact.getFixtureB().getBody().getUserData();
+        // if (Std.isOfType(object_a, Bullet))
+        //     MessageManager.send(new BulletHit(cast(object_a, Torpedo)));
         // if (Std.isOfType(object_b, Torpedo))
         //     MessageManager.sendMessage(new TorpedoHitMessage(cast(object_b, Torpedo)));
     }

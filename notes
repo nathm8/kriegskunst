@@ -1,0 +1,6 @@
+heaps edits
+-----------------------------
+in h2d.Scene.hx commented out the following
+// if( ex < 0 || ey < 0 || ex >= width || ey >= height )
+// 	return null;
+as it seems to be interfering with unit selection. Other users couldn't reproduce, see discord log. 

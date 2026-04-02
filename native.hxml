@@ -1,0 +1,8 @@
+-lib heaps
+-lib box2d
+-lib slide
+-lib hlsdl
+-lib format
+-cp src
+-hl out/main.c
+-main Main

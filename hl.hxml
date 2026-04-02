@@ -1,7 +1,9 @@
 -lib heaps
 -lib box2d
 -lib slide
+-lib hlsdl
+-lib format
 -cp src
--js bin/kriegskunst.js
+-hl bin/kriegskunst.hl
 -main Main
 -debug

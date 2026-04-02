@@ -1,6 +1,12 @@
 TODO
 =======================
 
+physics
+-----------------
+try to spawn bullets in more performantly
+
+compare performance with echo
+
 project
 -----------------
 static analysis

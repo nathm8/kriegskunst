@@ -1,5 +1,6 @@
 package gamelogic;
 
+import utilities.Vector2D;
 import graphics.BulletGraphics;
 import graphics.FormationGraphics;
 import h2d.col.Point;
@@ -36,8 +37,11 @@ class GameScene extends Scene implements MessageListener {
 
         MessageManager.addListener(this);
 
-        // var f = new Formation(300, 3);
-        var f = new Formation(10, 10);
+        // for (x in 0...100) {
+        //     var f = new Formation(100, 3, new Vector2D(0, 100*x));
+        //     updateables.push(f);
+        // }
+        var f = new Formation(10, 10, new Vector2D(0, 0));
         // var f = new Formation(1, 1);
         updateables.push(f);
     }

@@ -1,5 +1,5 @@
 clean:
-	rm -r bin/ out/
+	rm -fr bin/ out/
 
 runjs: buildjs
 	chromium index.html

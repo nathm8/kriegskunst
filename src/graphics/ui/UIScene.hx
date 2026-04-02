@@ -1,5 +1,6 @@
 package graphics.ui;
 
+import gamelogic.physics.PhysicalWorld;
 import hxd.Window;
 import graphics.ui.FormationUI;
 import h2d.Scene;
@@ -14,16 +15,15 @@ class UIScene extends Scene implements MessageListener {
         super();
         fpsText = new h2d.Text(hxd.res.DefaultFont.get(), this);
         fpsText.visible = true;
-        fpsText.x = Window.getInstance().width*0.9;
-        fpsText.y = Window.getInstance().height*0.9;
-
         defaultSmooth = true;
-
+        
         MessageManager.addListener(this);
     }
-
+    
     public function update(dt:Float) {
-        fpsText.text = Std.string(Math.round(Timer.fps()));
+        fpsText.x = Window.getInstance().width*0.9;
+        fpsText.y = Window.getInstance().height*0.9;
+        fpsText.text = '${Math.round(Timer.fps())} : ${PhysicalWorld.gameWorld.getBodyCount()}' ;
     }
 
     public function receive(msg:Message):Bool {

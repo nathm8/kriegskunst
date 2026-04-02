@@ -22,7 +22,8 @@ class Formation implements MessageListener implements Updateable {
     public var targetFacing = 0.0;
     public var listeningForDestination = false;
 
-    public function new(r:Int, c:Int) {
+    public function new(r:Int, c:Int, d:Vector2D) {
+        destination = d;
         id = maxID++;
         columns = r;
         rows = c;

@@ -5,4 +5,7 @@
 -lib format
 -cp src
 -hl out/main.c
+-dce full
+-D no-traces
+-D analyzer-optimize
 -main Main

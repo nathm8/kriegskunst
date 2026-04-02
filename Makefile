@@ -1,8 +1,11 @@
+clean:
+	rm -r bin/ out/
+
 runweb: buildjs
 	chromium bin/index.html
 
 runhl: buildhl
-	hl ./bin/kriegskunst
+	hl ./bin/kriegskunst.hl
 
 runnative: buildc
 	./bin/kriegskunst
@@ -15,11 +18,11 @@ buildhl:
 
 buildc:
 	haxe native.hxml
-	gcc -o ./bin/kriegskunst out/main.c -Iout /usr/local/lib/*.hdll -lhl -lSDL2 -lm -lopenal -lGL -luv
+	mkdir -p bin
+	gcc -o bin/kriegskunst out/main.c -Iout /usr/local/lib/*.hdll -lhl -lSDL2 -lm -lopenal -lGL -luv -w
+	chmod +x bin/kriegskunst
 
-	chmod +x ./bin/kriegskunst
-
-push: buildjs
+push: clean buildjs
 	zip -r Kriegskunst.zip *
 	butler push Kriegskunst.zip nathmate/kriegskunst:HTML
 	git push

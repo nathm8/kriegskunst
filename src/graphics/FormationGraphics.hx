@@ -1,11 +1,10 @@
 package graphics;
 
+import h2d.SpriteBatch;
+import h2d.Tile;
 import utilities.MessageManager;
 import utilities.MessageManager.MouseMove;
 import utilities.Vector2D;
-import gamelogic.Unit.UNITRADIUS;
-import gamelogic.physics.PhysicalWorld.PHYSICSCALE;
-import h2d.Graphics;
 import utilities.MessageManager.UnitClicked;
 import gamelogic.Formation;
 import h2d.Object;
@@ -25,25 +24,40 @@ class FormationGraphics extends Object implements MessageListener {
     var timeToChooseFace = 0.15;
     var timestamp = 0.0;
 
-    var graphics: Graphics;
+    static var spriteTile: Tile = null;
+    static var spriteBatch: SpriteBatch = null;
+
+    private function init() {
+        spriteTile = hxd.Res.img.Unit.toTile();
+        spriteTile.setCenterRatio(0.5, 0.5);
+    }
 
     public function new(f: Formation, ?p: Object) {
         super(p);
         formation = f;
 
+        if (spriteTile == null)
+            init();
+
         MessageManager.addListener(this);
     }
 
     function initialiseGraphics() {
-        graphics?.remove();
-        graphics = new Graphics(this);
-        graphics.lineStyle(1, 0x6666FF, 0.5);
-        graphics.beginFill(0x6666AA, 0.5);
-        for (p in formation.determineRectangularPositions(new Vector2D(), 0))
-            graphics.drawCircle(p.x, p.y, UNITRADIUS*PHYSICSCALE);
-        graphics.x = formation.destination.x;
-        graphics.y = formation.destination.y;
-        graphics.rotation = formation.targetFacing;
+        spriteBatch?.remove();
+        spriteBatch = new SpriteBatch(spriteTile, parent);
+        for (p in formation.determineRectangularPositions(new Vector2D(), 0)) {
+            var sprite = new BasicElement(spriteTile);
+            sprite.r = 0.258;
+            sprite.g = 0.258;
+            sprite.b = 0.66;
+            sprite.a = 0.5;
+            sprite.x = p.x;
+            sprite.y = p.y;
+            spriteBatch.add(sprite);
+        }
+        spriteBatch.x = formation.destination.x;
+        spriteBatch.y = formation.destination.y;
+        spriteBatch.rotation = formation.targetFacing;
     }
 
     public function receive(msg:Message):Bool {
@@ -60,31 +74,31 @@ class FormationGraphics extends Object implements MessageListener {
         if (Std.isOfType(msg, MouseMove)) {
             var params = cast(msg, MouseMove);
             if (state == Selected) {
-                graphics.x = params.scenePosition.x;
-                graphics.y = params.scenePosition.y;
+                spriteBatch.x = params.scenePosition.x;
+                spriteBatch.y = params.scenePosition.y;
             }
             if (state == ChoosingFacing) {
                 if (haxe.Timer.stamp() - timestamp >= timeToChooseFace)
-                    graphics.rotation = (params.scenePosition - new Vector2D(graphics.x, graphics.y)).angle() + Math.PI/2;
+                    spriteBatch.rotation = (params.scenePosition - new Vector2D(spriteBatch.x, spriteBatch.y)).angle() + Math.PI/2;
             }
         }
         if (Std.isOfType(msg, MouseRelease)) {
             var params = cast(msg, MouseRelease);
             if (params.event.button == 0) {
                 if (state == Selected) {
-                    formation.destination = new Vector2D(graphics.x, graphics.y);
+                    formation.destination = new Vector2D(spriteBatch.x, spriteBatch.y);
                     formation.sendMarchingOrders();
-                    graphics.visible = false;
+                    spriteBatch.visible = false;
                     state = None;
                     for (u in formation.units)
                         u.selectable = true;
                     MessageManager.send(new FormationUpdate(formation));
                 }
                 if (state == ChoosingFacing) {
-                    formation.destination = new Vector2D(graphics.x, graphics.y);
-                    formation.targetFacing = graphics.rotation;
+                    formation.destination = new Vector2D(spriteBatch.x, spriteBatch.y);
+                    formation.targetFacing = spriteBatch.rotation;
                     formation.sendMarchingOrders();
-                    graphics.visible = false;
+                    spriteBatch.visible = false;
                     state = None;
                     for (u in formation.units)
                         u.selectable = true;
@@ -93,7 +107,7 @@ class FormationGraphics extends Object implements MessageListener {
             }
             if (params.event.button == 1) {
                 if (state == Selected) {
-                    graphics.visible = false;
+                    spriteBatch.visible = false;
                     state = None;
                     for (u in formation.units)
                         u.selectable = true;

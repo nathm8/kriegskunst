@@ -54,6 +54,9 @@ class UnitGraphics extends Object implements Updateable {
         musket = new BasicElement(musketTile);
         musket.scaleX = 0.6;
         musket.scaleY = 0.75;
+        musket.r = 0.6;
+        musket.g = 0.6;
+        musket.b = 0.6;
         musketBatch.add(musket);
 
         interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE));

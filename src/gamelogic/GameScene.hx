@@ -51,19 +51,9 @@ class GameScene extends Scene implements MessageListener {
         cameraControl();
         
         var to_remove = new Array<Updateable>();
-        var awake = 0;
-        var total = 0;
-        for (u in updateables) {
-            if (Std.isOfType(u, Unit)) {
-                total++;
-                var b = cast(u, Unit).body;
-                if (b.isAwake())
-                    awake++;
-            }
+        for (u in updateables)
             if (u.update(dt))
                 to_remove.push(u);
-        }
-        trace('${awake} \\ ${total}');
         for (u in to_remove)
             updateables.remove(u);
     }

@@ -63,38 +63,45 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function update(dt:Float) {
-        // set destination with some noise
-        // var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
-        // prevNoises.push(noise);
-        // var average_noise = new Vector2D();
-        // for (n in prevNoises)
-        //     average_noise += n;
-        // average_noise /= prevNoises.length;
-        // if (prevNoises.length > 10)
-        //     prevNoises.shift();
-        // mouseJoint.setTarget(destination + average_noise);
+        if (body.isAwake()) {
+            // set destination with some noise
+            // var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
+            // prevNoises.push(noise);
+            // var average_noise = new Vector2D();
+            // for (n in prevNoises)
+            //     average_noise += n;
+            // average_noise /= prevNoises.length;
+            // if (prevNoises.length > 10)
+            //     prevNoises.shift();
+            // mouseJoint.setTarget(destination + average_noise);
 
-        // apply jitter
-        // might be good for showing morale, etc.
-        // body.applyForce(new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle()), body.getPosition());
+            // apply jitter
+            // might be good for showing morale, etc.
+            // body.applyForce(new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle()), body.getPosition());
 
-        // impose speed limit
-        var speed_noise = RNGManager.srand(speedJitterMagnitude);
-        prevSpeedNoises.push(speed_noise);
-        var average_speed_noise = 0.0;
-        for (n in prevSpeedNoises)
-            average_speed_noise += n;
-        average_speed_noise /= prevSpeedNoises.length;
-        if (prevSpeedNoises.length > 10)
-            prevSpeedNoises.shift();
-        var vel: Vector2D = body.getLinearVelocity();
-        var speed = maxSpeed + average_speed_noise;
-        if (vel.magnitude > maxSpeed) {
-            body.setLinearVelocity(speed*vel.normalize());
+            // impose speed limit
+            var speed_noise = RNGManager.srand(speedJitterMagnitude);
+            prevSpeedNoises.push(speed_noise);
+            var average_speed_noise = 0.0;
+            for (n in prevSpeedNoises)
+                average_speed_noise += n;
+            average_speed_noise /= prevSpeedNoises.length;
+            if (prevSpeedNoises.length > 10)
+                prevSpeedNoises.shift();
+            var vel: Vector2D = body.getLinearVelocity();
+            var speed = maxSpeed + average_speed_noise;
+            if (vel.magnitude > maxSpeed) {
+                body.setLinearVelocity(speed*vel.normalize());
+            }
+            mouseJoint.setMaxForce(10*speed);
+
+            var p: Vector2D = body.getPosition();
+            if (p.distanceTo(destination) > 0.1) {
+                var v = RNGManager.srand() * new Vector2D(5, 0).rotate(2*RNGManager.srand());
+                body.applyImpulse(v, body.getPosition());
+            }
         }
-
-        mouseJoint.setMaxForce(10*speed);
-
+        
         // facing
         // TODO impose more strict timeline
         facing = slerp(facing, targetFacing, 0.95);

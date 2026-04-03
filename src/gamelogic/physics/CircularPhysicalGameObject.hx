@@ -18,7 +18,7 @@ class CircularPhysicalGameObject {
         fixture_definition.shape = circle;
         fixture_definition.friction = 0.5;
         fixture_definition.restitution = 0.5;
-        fixture_definition.density = 0.5;
+        fixture_definition.density = 1;
 
         if (bd != null)
             body = PhysicalWorld.gameWorld.createBody(bd);
@@ -26,7 +26,7 @@ class CircularPhysicalGameObject {
             var body_definition = new B2BodyDef();
             body_definition.type = B2BodyType.DYNAMIC_BODY;
             body_definition.position = position;
-            body_definition.linearDamping = 0.5;
+            body_definition.linearDamping = 0.1;
             body_definition.fixedRotation = true;
             body = PhysicalWorld.gameWorld.createBody(body_definition);
         }

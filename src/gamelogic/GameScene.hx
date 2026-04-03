@@ -1,8 +1,8 @@
 package gamelogic;
 
+import graphics.FormationGraphics;
 import utilities.Vector2D;
 import graphics.BulletGraphics;
-import graphics.FormationGraphics;
 import h2d.col.Point;
 import graphics.UnitGraphics;
 import hxd.Window;
@@ -31,7 +31,7 @@ class GameScene extends Scene implements MessageListener {
     public function new() {
         super();
 
-        defaultSmooth = true;
+        defaultSmooth = false;
         camera.anchorX = 0.5;
         camera.anchorY = 0.5;
 

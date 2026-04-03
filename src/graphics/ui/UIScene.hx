@@ -23,7 +23,14 @@ class UIScene extends Scene implements MessageListener {
     public function update(dt:Float) {
         fpsText.x = Window.getInstance().width*0.9;
         fpsText.y = Window.getInstance().height*0.9;
-        fpsText.text = '${Math.round(Timer.fps())} : ${PhysicalWorld.gameWorld.getBodyCount()}' ;
+        var awake = 0;
+        var b = PhysicalWorld.gameWorld.getBodyList();
+        while (b != null) {
+            if (b.isAwake())
+                awake++;
+            b = b.getNext();
+        }
+        fpsText.text = '${Math.round(Timer.fps())}\n${awake}\\${PhysicalWorld.gameWorld.getBodyCount()}' ;
     }
 
     public function receive(msg:Message):Bool {

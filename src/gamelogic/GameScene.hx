@@ -37,13 +37,13 @@ class GameScene extends Scene implements MessageListener {
 
         MessageManager.addListener(this);
 
-        // for (x in 0...100) {
-        //     var f = new Formation(100, 3, new Vector2D(0, 100*x));
-        //     updateables.push(f);
-        // }
-        var f = new Formation(10, 10, new Vector2D(0, 0));
+        for (x in 0...5) {
+            var f = new Formation(100, 3, new Vector2D(0, 100*x));
+            updateables.push(f);
+        }
+        // var f = new Formation(10, 10, new Vector2D(0, 0));
         // var f = new Formation(1, 1);
-        updateables.push(f);
+        // updateables.push(f);
     }
     
     public function update(dt:Float) {
@@ -51,9 +51,19 @@ class GameScene extends Scene implements MessageListener {
         cameraControl();
         
         var to_remove = new Array<Updateable>();
-        for (u in updateables)
+        var awake = 0;
+        var total = 0;
+        for (u in updateables) {
+            if (Std.isOfType(u, Unit)) {
+                total++;
+                var b = cast(u, Unit).body;
+                if (b.isAwake())
+                    awake++;
+            }
             if (u.update(dt))
                 to_remove.push(u);
+        }
+        trace('${awake} \\ ${total}');
         for (u in to_remove)
             updateables.remove(u);
     }

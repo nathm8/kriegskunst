@@ -4,6 +4,7 @@ TODO
 physics
 -----------------
 try to spawn bullets in more performantly
+    do them with raycasts, only have cannonballs be physical projectiles
 
 compare performance with echo
 
@@ -75,6 +76,11 @@ Notes on optimisation
 Make a big list of normal values and work through them instead of numerical\marsaglia method
 
 Might be worth having a go at porting box2d v3.
+    that was a waste of time, but instructive
+
+Why is this more performant on js?
+
+Have units not jitter when not on screen. Do graphics properly, batching sprites
 
 Notes on dynamics
 -----------------

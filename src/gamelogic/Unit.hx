@@ -16,9 +16,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     ////////////////////
     // Physics
     ////////////////////
-    public var destination: Vector2D;
+    public var destination(default, set): Vector2D;
     var mouseJoint: B2MouseJoint;
-    var maxSpeed = 1.5;
+    var maxSpeed = 1.0;
 
     // how much random variation is applied destination to noise up movement
     var jitterMagnitude = 1.0;
@@ -45,7 +45,6 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
     public function new(p: Vector2D) {
         super(p, UNITRADIUS, this);
-        destination = p;
 
         // init physical movement
         var mouse_joint_definition = new B2MouseJointDef();
@@ -57,21 +56,23 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         
         mouseJoint = cast(PhysicalWorld.gameWorld.createJoint(mouse_joint_definition), B2MouseJoint);
 
+        destination = p;
+
         MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);
     }
 
     public function update(dt:Float) {
         // set destination with some noise
-        var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
-        prevNoises.push(noise);
-        var average_noise = new Vector2D();
-        for (n in prevNoises)
-            average_noise += n;
-        average_noise /= prevNoises.length;
-        if (prevNoises.length > 10)
-            prevNoises.shift();
-        mouseJoint.setTarget(destination + average_noise);
+        // var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
+        // prevNoises.push(noise);
+        // var average_noise = new Vector2D();
+        // for (n in prevNoises)
+        //     average_noise += n;
+        // average_noise /= prevNoises.length;
+        // if (prevNoises.length > 10)
+        //     prevNoises.shift();
+        // mouseJoint.setTarget(destination + average_noise);
 
         // apply jitter
         // might be good for showing morale, etc.
@@ -118,5 +119,11 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         selectable = value;
         graphics.interactive.visible = value;
         return value;
+    }
+
+    function set_destination(value:Vector2D):Vector2D {
+        destination = value;
+        mouseJoint.setTarget(destination);
+        return destination;
     }
 }

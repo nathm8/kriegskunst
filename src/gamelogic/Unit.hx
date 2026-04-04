@@ -48,7 +48,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
         // init physical movement
         var mouse_joint_definition = new B2MouseJointDef();
-        mouse_joint_definition.bodyA = PhysicalWorld.dummyCircle.body;
+        mouse_joint_definition.bodyA = PhysicalWorld.gameWorld.m_groundBody;
         mouse_joint_definition.bodyB = body;
         mouse_joint_definition.collideConnected = false;
         mouse_joint_definition.target = p;
@@ -114,6 +114,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
     
     public function fire() {
+        body.setAwake(true);
         // our position
         var p = body.getPosition();
         // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later

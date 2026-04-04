@@ -38,26 +38,3 @@ class CircularPhysicalGameObject {
         body.getWorld()?.destroyBody(body);
     }
 }
-
-class DummyCircle {
-    
-    public var body: B2Body;
-
-    public function new(position: Vector2D) {
-        var body_definition = new B2BodyDef();
-        body_definition.fixedRotation = true;
-        body_definition.type = B2BodyType.STATIC_BODY;
-        body_definition.position = position;
-        var circle = new B2CircleShape();
-        circle.setRadius(1);
-        var fixture_definition = new B2FixtureDef();
-        fixture_definition.shape = circle;
-        // no collision with anything
-        fixture_definition.filter.categoryBits = 0;
-        fixture_definition.filter.maskBits = 0;
-
-        body = PhysicalWorld.gameWorld.createBody(body_definition);
-        body.setUserData("DO NOT DRAW");
-        body.createFixture(fixture_definition);
-    }
-}

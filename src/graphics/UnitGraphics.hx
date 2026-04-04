@@ -33,7 +33,7 @@ class UnitGraphics extends Object implements Updateable {
         spriteBatch = new SpriteBatch(spriteTile, parent);
         
         musketTile = hxd.Res.img.Musket.toTile();
-        musketTile.setCenterRatio(0.5, 0.75);
+        musketTile.setCenterRatio(0.5, 0.8);
         musketBatch = new SpriteBatch(musketTile, parent);
         musketBatch.hasRotationScale = true;
     }
@@ -52,7 +52,7 @@ class UnitGraphics extends Object implements Updateable {
         spriteBatch.add(sprite);
 
         musket = new BasicElement(musketTile);
-        musket.scaleX = 0.6;
+        musket.scaleX = 0.4;
         musket.scaleY = 0.75;
         musket.r = 0.6;
         musket.g = 0.6;

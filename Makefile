@@ -19,7 +19,7 @@ buildhl:
 buildc:
 	haxe native.hxml
 	mkdir -p bin
-	gcc -o bin/kriegskunst out/main.c -Iout /usr/local/lib/*.hdll -lhl -lSDL2 -lm -lopenal -lGL -luv -w
+	gcc -O -o bin/kriegskunst out/main.c -Iout /usr/local/lib/*.hdll -lhl -lSDL2 -lm -lopenal -lGL -luv -w
 	chmod +x bin/kriegskunst
 
 push: clean buildjs

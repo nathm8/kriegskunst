@@ -1,9 +1,0 @@
-heaps edits
------------------------------
-in h2d.Scene.hx commented out the following
-// if( ex < 0 || ey < 0 || ex >= width || ey >= height )
-// 	return null;
-as it seems to be interfering with unit selection. Other users couldn't reproduce, see discord log. 
-
-edited the old box2d lib to have a timestep based timestamp in mouse joint
-    b2Max(0.0f, 1.0f - 0.02f * (60.0f * data.step.dt));

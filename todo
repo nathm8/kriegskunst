@@ -1,22 +1,28 @@
 TODO
 =======================
 
-physics
+MVP
 -----------------
-try to spawn bullets in more performantly
-    do them with raycasts, only have cannonballs be physical projectiles
+do bullets with raycasts
+smoke particles when firing
+Have a separate formation to fight
+units killable
 
-compare performance with echo
+formation movement editor
+-----------------
+    save list of "keyframes"
+    once saved, have clickable in formatinon ui. Optionally infinitely repeatably
+
+    how to handle casualties?
+        have sub-formations be percentage-based, with positions calculated accordingly
 
 project
 -----------------
 static analysis
 https://github.com/HaxeCheckstyle/haxe-checkstyle
 
-MVP
------------------
-Have a separate formation to fight
-units killable
+edited the old box2d lib to have a timestep based timestamp in mouse joint
+    b2Max(0.0f, 1.0f - 0.02f * (60.0f * data.step.dt));
 
 Polish
 -----------------
@@ -65,6 +71,7 @@ Issues
     it's intention seems to be to prevent checking against interactives that aren't in the viewport, but I must be misunderstanding something because very clearly it's preventing me from interacting with units that are on screen.
         verified that this is a problem with my particular setup, somehow. Need to do a fresh install, perhaps
 
+
 Direct Formation Control
 -----------------
 Have a direct mouse based way to change row\column parameters?
@@ -79,8 +86,7 @@ Might be worth having a go at porting box2d v3.
     that was a waste of time, but instructive
 
 Why is this more performant on js?
-
-Have units not jitter when not on screen. Do graphics properly, batching sprites
+    slightly better on native with -O flag, FPS all over the place though
 
 Notes on dynamics
 -----------------
@@ -131,6 +137,7 @@ middle mouse scroll, infinite zoom, edge scrolling
 Issues
 -----------------
 InputText doesn't delete the last character correctly (still a bit buggy with Vector2D inputs)
+Do graphics properly, batching sprites
 
 Direct Formation Control
 -----------------

@@ -13,7 +13,6 @@ import gamelogic.Updateable;
 
 // increase hit-circle of unit by this much
 final INTERACTIVERADIUSMOD = 1.5;
-final MUSKETSCALE = 0.25;
 
 class UnitGraphics extends Object implements Updateable {
 
@@ -52,7 +51,7 @@ class UnitGraphics extends Object implements Updateable {
         spriteBatch.add(sprite);
 
         musket = new BasicElement(musketTile);
-        musket.scaleX = 0.4;
+        musket.scaleX = 0.75;
         musket.scaleY = 0.75;
         musket.r = 0.6;
         musket.g = 0.6;
@@ -70,9 +69,9 @@ class UnitGraphics extends Object implements Updateable {
         musket.x = p.x; musket.y = p.y;
         musket.rotation = unit.facing;
         if (musket.rotation < 0)
-            musket.scaleX = -1;
+            musket.scaleX = -0.75;
         else
-            musket.scaleX = 1;
+            musket.scaleX = 0.75;
 
         return false;
     }

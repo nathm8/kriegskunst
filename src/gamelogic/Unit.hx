@@ -130,7 +130,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     function set_destination(value:Vector2D):Vector2D {
-        destination = value;
+        destination = value + (new Vector2D(1, 0)).rotate(RNGManager.randomAngle());
         mouseJoint.setTarget(destination);
         return destination;
     }

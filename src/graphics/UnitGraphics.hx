@@ -14,7 +14,7 @@ import gamelogic.Updateable;
 // increase hit-circle of unit by this much
 final INTERACTIVERADIUSMOD = 1.5;
 
-class UnitGraphics extends Object implements Updateable {
+class UnitGraphics extends Object implements Updateable implements MessageListener {
 
     var unit: Unit;
     public var interactive: Interactive;
@@ -60,6 +60,8 @@ class UnitGraphics extends Object implements Updateable {
 
         interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE));
         interactive.onClick = (_) -> {MessageManager.send(new UnitClicked(this.unit));}
+
+        MessageManager.addListener(this);
     }
 
     public function update(dt:Float) {
@@ -73,6 +75,12 @@ class UnitGraphics extends Object implements Updateable {
         else
             musket.scaleX = 0.75;
 
+        return false;
+    }
+
+    public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, Restart))
+            spriteTile = null;
         return false;
     }
 }

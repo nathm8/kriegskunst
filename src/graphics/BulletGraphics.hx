@@ -1,5 +1,6 @@
 package graphics;
 
+import utilities.MessageManager;
 import h2d.SpriteBatch;
 import h2d.Tile;
 import h2d.SpriteBatch.BasicElement;
@@ -8,7 +9,7 @@ import gamelogic.physics.PhysicalWorld.PHYSICSCALE;
 import gamelogic.Bullet;
 import gamelogic.Updateable;
 
-class BulletGraphics extends Object implements Updateable {
+class BulletGraphics extends Object implements Updateable implements MessageListener {
     
     var bullet: Bullet;
 
@@ -31,6 +32,8 @@ class BulletGraphics extends Object implements Updateable {
 
         sprite = new BasicElement(spriteTile);
         spriteBatch.add(sprite);
+
+        MessageManager.addListener(this);
     }
 
     public function update(dt:Float) {
@@ -43,5 +46,11 @@ class BulletGraphics extends Object implements Updateable {
             remove();
         }
         return bullet == null;
+    }
+
+    public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, Restart))
+            spriteTile = null;
+        return false;
     }
 }

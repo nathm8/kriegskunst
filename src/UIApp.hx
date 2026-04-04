@@ -116,7 +116,7 @@ class UIApp implements h3d.IDrawable {
 
     function setScene2D( s2d : h2d.Scene, disposePrevious = true ) {
         sevents.removeScene(this.s2d);
-        sevents.addScene(s2d,0);
+        sevents.addScene(s2d);
         if( disposePrevious )
             this.s2d.dispose();
         this.s2d = s2d;

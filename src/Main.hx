@@ -24,12 +24,12 @@ class Main extends UIApp implements MessageListener {
         // boilerplate
         RNGManager.initialise();
         hxd.Res.initEmbed();
+        SoundManager.initialise();
         // background
         h3d.Engine.getCurrent().backgroundColor = 0x003F05;
         // controls
-        hxd.Window.getInstance().addEventTarget(onEvent);    
+        hxd.Window.getInstance().addEventTarget(onEvent);
         // gamelogic
-        SoundManager.initialise();
         newGame();
     }
     

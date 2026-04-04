@@ -264,12 +264,17 @@ class FormationUI extends Flow implements MessageListener {
         
         // interactivity to move window around
         enableInteractive = true;
+        interactive.onFocus = interactive.onCheck = interactive.onClick = interactive.onMove = interactive.onOver = interactive.onWheel = (e: Event) -> {
+            e.propagate = false;
+        }
         interactive.onPush = (e: Event) -> {
+            e.propagate = false;
             isMoving = true;
             xOffset = e.relX;
             yOffset = e.relY;
         }
         interactive.onRelease = (e: Event) -> {
+            e.propagate = false;
             isMoving = false;
         }
 

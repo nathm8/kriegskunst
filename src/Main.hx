@@ -22,15 +22,15 @@ class Main extends UIApp implements MessageListener {
 
     override private function init() {
         // boilerplate
-        RNGManager.initialise();
         hxd.Res.initEmbed();
+        RNGManager.initialise();
         SoundManager.initialise();
         // background
         h3d.Engine.getCurrent().backgroundColor = 0x003F05;
-        // controls
-        hxd.Window.getInstance().addEventTarget(onEvent);
         // gamelogic
         newGame();
+        // controls
+        hxd.Window.getInstance().addEventTarget(onEvent);
     }
     
     override function update(dt:Float) {

@@ -82,15 +82,20 @@ class Formation implements MessageListener implements Updateable {
 
     public function sendMarchingOrders() {
         var ps = determineRectangularPositions(destination, targetFacing);
+        if (ps.length > units.length) {
+            for (i in 0...ps.length - units.length) {
+                var u = new Unit(new Vector2D());
+                u.destination = ps[i];
+                units.push(u);
+            }
+        } else if (units.length > ps.length) {
+            for (i in ps.length...units.length)
+                MessageManager.send(new RemoveUnit(units[i]));
+            units.resize(ps.length);
+        }
         for (i in 0...units.length) {
-            if (i >= ps.length) {
-                units[i].destination = new Vector2D(500, 500);
-                units[i].targetFacing = 0;
-            }
-            else {
-                units[i].destination = ps[i];
-                units[i].targetFacing = targetFacing;
-            }
+            units[i].destination = ps[i];
+            units[i].targetFacing = targetFacing;
         }
     }
 }

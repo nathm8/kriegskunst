@@ -21,7 +21,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var maxSpeed = 1.0;
 
     // how much random variation is applied destination to noise up movement
-    var jitterMagnitude = 1.0;
+    var jitterMagnitude = 5.0;
     var prevNoises = new Array<Vector2D>();
     // how much top speed can fluctuate
     var speedJitterMagnitude = 1.0;
@@ -63,22 +63,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function update(dt:Float) {
+        if (body == null)
+            return false;
         if (body.isAwake()) {
-            // set destination with some noise
-            // var noise = new Vector2D(jitterMagnitude, 0).rotate(RNGManager.randomAngle());
-            // prevNoises.push(noise);
-            // var average_noise = new Vector2D();
-            // for (n in prevNoises)
-            //     average_noise += n;
-            // average_noise /= prevNoises.length;
-            // if (prevNoises.length > 10)
-            //     prevNoises.shift();
-            // mouseJoint.setTarget(destination + average_noise);
-
-            // apply jitter
-            // might be good for showing morale, etc.
-            // body.applyForce(new Vector2D(jitterMagnitude, 0).rotate(RNGManager.rand.randomAngle()), body.getPosition());
-
             // impose speed limit
             var speed_noise = RNGManager.srand(speedJitterMagnitude);
             prevSpeedNoises.push(speed_noise);
@@ -90,14 +77,17 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
                 prevSpeedNoises.shift();
             var vel: Vector2D = body.getLinearVelocity();
             var speed = maxSpeed + average_speed_noise;
-            if (vel.magnitude > maxSpeed) {
-                body.setLinearVelocity(speed*vel.normalize());
-            }
+            var mag = vel.magnitude;
+            if (mag > maxSpeed)
+                body.setLinearVelocity(speed*vel/mag);
             mouseJoint.setMaxForce(10*speed);
 
+            // apply some jitter if we're not at our destination yet
+            // helps get unstuck from other units, and looks kinda nice
+            // TODO: do this periodically instead of every frame
             var p: Vector2D = body.getPosition();
             if (p.distanceTo(destination) > 0.1) {
-                var v = RNGManager.srand() * new Vector2D(5, 0).rotate(2*RNGManager.srand());
+                var v = RNGManager.srand() * new Vector2D(jitterMagnitude, 0).rotate(2*RNGManager.srand());
                 body.applyImpulse(v, body.getPosition());
             }
         }
@@ -110,6 +100,13 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, RemoveUnit)) {
+            var params = cast(msg, RemoveUnit);
+            if (params.unit == this) {
+                MessageManager.removeListener(this);
+                removePhysics();
+            }
+        }
         return false;
     }
     

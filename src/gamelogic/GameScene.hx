@@ -13,8 +13,8 @@ import gamelogic.physics.PhysicalWorld;
 import utilities.MessageManager;
 
 class GameScene extends Scene implements MessageListener {
+
     var updateables = new Array<Updateable>();
-    var fpsText: Text;
     var cameraScale = 1.0;
     var cameraMovingLeft = false;
     var cameraMovingRight = false;

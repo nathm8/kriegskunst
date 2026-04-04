@@ -1,5 +1,7 @@
 package graphics;
 
+import slide.easing.SmoothStep;
+import slide.TweenManager;
 import h2d.SpriteBatch;
 import h2d.Tile;
 import h2d.col.Circle;
@@ -65,6 +67,8 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     }
 
     public function update(dt:Float) {
+        if (unit.body == null)
+            return false;
         var p: Vector2D = unit.body.getPosition();
         x = p.x; y = p.y;
         sprite.x = p.x; sprite.y = p.y;
@@ -81,6 +85,21 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     public function receive(msg:Message):Bool {
         if (Std.isOfType(msg, Restart))
             spriteTile = null;
+        if (Std.isOfType(msg, RemoveUnit)) {
+            var params = cast(msg, RemoveUnit);
+            if (params.unit == unit) {
+                Main.tweenManager.animateTo(sprite, {alpha: 0}, 1, SmoothStep.easeIn).start();
+                Main.tweenManager.animateTo(musket, {alpha: 0}, 1, SmoothStep.easeIn, () -> {cleanup();}).start();
+            }
+        }
         return false;
     }
+
+    function cleanup() {
+        sprite.remove();
+        musket.remove();
+        interactive.remove();
+        remove();
+    }
+
 }

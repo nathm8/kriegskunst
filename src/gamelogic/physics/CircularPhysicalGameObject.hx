@@ -1,8 +1,8 @@
 package gamelogic.physics;
 
+import box2D.collision.shapes.B2CircleShape;
 import box2D.dynamics.B2Body;
 import box2D.dynamics.B2BodyDef;
-import box2D.collision.shapes.B2CircleShape;
 import box2D.dynamics.B2FixtureDef;
 import box2D.dynamics.B2BodyType;
 import utilities.Vector2D;
@@ -36,5 +36,6 @@ class CircularPhysicalGameObject {
 
     public function removePhysics() {
         body.getWorld()?.destroyBody(body);
+        body = null;
     }
 }

@@ -2,20 +2,20 @@ package graphics.ui;
 
 import utilities.Utilities.fromPiMultiple;
 import utilities.Utilities.toPiMultiple;
+import utilities.Utilities.prettyPrintVectorRounded;
+import utilities.Utilities.floatToStringPrecision;
+import utilities.MessageManager;
 import graphics.ui.ParsingTextInput.ParsingType;
-import h2d.Bitmap;
 import graphics.ui.BitmapButton.ReticleButton;
 import graphics.ui.BitmapButton.RotationButton;
+import graphics.ui.BitmapButton.TriangleButton;
+import gamelogic.Formation;
+import hxd.res.DefaultFont;
 import hxd.Window;
 import hxd.Event;
-import utilities.Utilities.prettyPrintVectorRounded;
-import graphics.ui.BitmapButton.TriangleButton;
-import hxd.res.DefaultFont;
-import utilities.Utilities.floatToStringPrecision;
-import h2d.Text;
-import gamelogic.Formation;
 import hxd.Res;
-import utilities.MessageManager;
+import h2d.Bitmap;
+import h2d.Text;
 import h2d.Flow;
 import h2d.Object;
 

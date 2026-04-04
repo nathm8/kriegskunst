@@ -18,6 +18,10 @@ class NewUnit extends Message {
     public var unit: Unit;
     public function new(u: Unit) {super(); unit = u;}
 }
+class RemoveUnit extends Message {
+    public var unit: Unit;
+    public function new(u: Unit) {super(); unit = u;}
+}
 class UnitClicked extends Message {
     public var unit: Unit;
     public function new(u: Unit) {super(); unit = u;}

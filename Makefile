@@ -23,6 +23,6 @@ buildc:
 	chmod +x bin/kriegskunst
 
 push: clean buildjs
-	zip -r Kriegskunst.zip *
+	zip -r Kriegskunst.zip index.html bin/kriegskunst.js bin/kriegskunst.js.map
 	butler push Kriegskunst.zip nathmate/kriegskunst:HTML
 	git push

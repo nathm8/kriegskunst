@@ -1,6 +1,10 @@
 TODO
 =======================
 
+Bugs
+-----------------
+sometimes on restart batch graphics aren't showing
+
 MVP
 -----------------
 do bullets with raycasts
@@ -10,6 +14,8 @@ units killable
 
 formation movement editor
 -----------------
+    change pivot point for rotations
+
     save list of "keyframes"
     once saved, have clickable in formatinon ui. Optionally infinitely repeatably
 

@@ -14,8 +14,8 @@ class Formation implements MessageListener implements Updateable {
     public var columns = 1;
     public var rows = 1;
     // in gamescene-space
-    public var columnSpacing = 20;
-    public var rowSpacing = 15;
+    public var columnSpacing = 22;
+    public var rowSpacing = 17;
 
     static var maxID = 0;
     public var id: Int;
@@ -90,10 +90,11 @@ class Formation implements MessageListener implements Updateable {
                 u.destination = qs[i];
                 units.push(u);
             }
-        } else if (units.length > qs.length) {
-            for (i in qs.length...units.length)
-                MessageManager.send(new RemoveUnit(units[i]));
-            units.resize(qs.length);
+        }
+        while (units.length > qs.length) {
+            var i = RNGManager.random(units.length);
+            MessageManager.send(new RemoveUnit(units[i]));
+            units.splice(i, 1);
         }
 
         // CASE: formation editing

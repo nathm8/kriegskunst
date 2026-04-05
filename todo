@@ -4,6 +4,9 @@ TODO
 Bugs
 -----------------
 sometimes on restart batch graphics aren't showing
+changing rows\cols by text input causes a large number of bodies to be generated at 0,0 and lots of lag
+    as does by button when col\row is high enough.
+    Need to either spawn in units slightly randomised, or queue them to spawn on different frames
 
 MVP
 -----------------
@@ -14,6 +17,8 @@ units killable
 
 formation movement editor
 -----------------
+    parameterise sendMarchingOrders whether unit-to-position remapping is required. Cache the mapping. To make large formations more orderly for normal movement.
+
     change pivot point for rotations
 
     save list of "keyframes"

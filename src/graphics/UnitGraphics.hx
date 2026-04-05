@@ -1,7 +1,6 @@
 package graphics;
 
 import slide.easing.SmoothStep;
-import slide.TweenManager;
 import h2d.SpriteBatch;
 import h2d.Tile;
 import h2d.col.Circle;

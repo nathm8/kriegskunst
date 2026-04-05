@@ -1,5 +1,6 @@
 package gamelogic;
 
+import haxe.display.Protocol.Timer;
 import utilities.Assert.assert;
 import utilities.RNGManager;
 import utilities.MessageManager;
@@ -17,6 +18,8 @@ class Formation implements MessageListener implements Updateable {
     public var columnSpacing = 22;
     public var rowSpacing = 17;
 
+    var unitToPosition: Array<{p: Int, q: Int}>;
+
     static var maxID = 0;
     public var id: Int;
 
@@ -33,6 +36,7 @@ class Formation implements MessageListener implements Updateable {
             var u = new Unit(p);
             units.push(u);
         }
+        unitToPosition = [for (i in 0...units.length) {p:i, q:i}];
         MessageManager.addListener(this);
         MessageManager.send(new NewFormation(this));
     }
@@ -41,6 +45,7 @@ class Formation implements MessageListener implements Updateable {
         return new Vector2D((columns-1)*columnSpacing, (rows-1)*rowSpacing)*0.5;
     }
 
+    // TODO: what to do with final row when units < positions? align leftmost, or spread evenly? center?
     public function determineRectangularPositions(position: Vector2D, facing: Float) : Array<Vector2D> {
         var out = new Array<Vector2D>();
         var centre = getRectangularCentre();
@@ -84,6 +89,8 @@ class Formation implements MessageListener implements Updateable {
 
     public function sendMarchingOrders() {
         var qs = determineRectangularPositions(destination, targetFacing);
+        // heuristic, should do this with events
+        var unit_count_changed = qs.length != units.length;
         if (qs.length > units.length) {
             for (i in 0...qs.length - units.length) {
                 var u = new Unit(new Vector2D());
@@ -97,45 +104,26 @@ class Formation implements MessageListener implements Updateable {
             units.splice(i, 1);
         }
 
-        // CASE: formation editing
-        // this is sensible for column number changes, not for rows
-        // could parameterised this function to change the determineRectangularPositions ordering
-        // when we're changing rows instead
-
-        // var ps = new Array<Vector2D>();
-        // for (i in 0...units.length)
-        //     ps.push(units[i].body.getPosition());
-
-        // var map = [for (i in 0...ps.length) {p: i, q: i}];
-        // var b = totalMappingDistance(ps, qs, map);
-        // trace(b);
-
-        // for (i in 0...units.length) {
-        //         units[i].destination = qs[i];
-        //         units[i].targetFacing = targetFacing;
-        // }
-        
-        // CASE: casualties
-        // water-fill algo, have new soldiers fill into newly opened spots. If not enough units, prioritise ones
-        // in the same column
-        // what to do with final row? align leftmost, or spread evenly? center?
-
-        // General case: annealing
-        var ps = new Array<Vector2D>();
-        for (i in 0...units.length)
-            ps.push(units[i].body.getPosition());
-        
-        var map = getMinimisedMapping(ps, qs);
-        for ( pq in map ) {
+            
+        if (unit_count_changed) {
+            // General case: annealing
+            var ps = new Array<Vector2D>();
+            for (i in 0...units.length)
+                ps.push(units[i].body.getPosition());
+            
+            unitToPosition = getMinimisedMapping(ps, qs);
+        }
+        for (pq in unitToPosition) {
             units[pq.p].destination = qs[pq.q];
             units[pq.p].targetFacing = targetFacing;
         }
+        
     }
 }
 
 // use simulated annealing to get an approximation of a minimal mapping
 // https://en.wikipedia.org/wiki/Simulated_annealing
-final annealing_iterations = 100000; // maybe do time based instead
+final annealing_iterations = 50000; // maybe do time based instead
 
 function totalMappingDistance(ps: Array<Vector2D>, qs: Array<Vector2D>, map: Array<{p: Int, q: Int}>) : Int {
     var out = 0.0;
@@ -150,19 +138,19 @@ function totalMappingDistance(ps: Array<Vector2D>, qs: Array<Vector2D>, map: Arr
 
 // old and new energies can be any positive value, so we cannot normalise them
 // temp is in [0, 1)
-var hit = 0;
-var miss = 0;
-var rng = 0;
+// var hit = 0;
+// var miss = 0;
+// var rng = 0;
 final energy_threshold = 100;
 function accept(old_energy: Float, new_energy: Float, temp: Float): Bool {
     if (new_energy < old_energy) {
-        hit++;
+        // hit++;
         return true;
     } if (new_energy > old_energy + energy_threshold) {
-        miss++;
+        // miss++;
         return false;
     }
-    rng++;
+    // rng++;
     // r in [0, 1]
     var r = old_energy/new_energy;
     // as temp decreases this trends towards evaluating to false
@@ -183,52 +171,34 @@ function randomNeighbour(ps: Array<Vector2D>, qs: Array<Vector2D>, map: Array<{p
 // simulated annealing to find a mapping from ps to qs minimising the total distance between each p-q
 function getMinimisedMapping(ps: Array<Vector2D>, qs: Array<Vector2D>): Array<{p: Int, q: Int}> {
     assert(ps.length == qs.length);
-    hit = 0;
-    miss = 0;
-    rng = 0;
-
-    var best = new Array<{p: Int, q: Int}>();
-    var ps_indices = [for (i in 0...ps.length) i];
-    var qs_indices = [for (i in 0...ps.length) i];
-    
-    // initialise with random state
-    // RNGManager.shuffle(ps_indices);
-    // RNGManager.shuffle(qs_indices);
+    // hit = 0;
+    // miss = 0;
+    // rng = 0;
 
     // initialise with grid state
-    for (_ in 0...ps.length)
-        best.push({p: ps_indices.pop(), q: qs_indices.pop()});
+    var best = [for (i in 0...ps.length) {p: i, q: i}];
     var best_energy = totalMappingDistance(ps, qs, best);
     // trace('initial best energy:\n $best_energy');
     // anneal
+    var early_exit = 0;
     for (i in 0...annealing_iterations) {
+        if (hxd.Timer.elapsedTime > 0.025 && i > 0)
+            break;
         var temp = 1 - i/annealing_iterations;
         var neighbour = randomNeighbour(ps, qs, best);
         var new_energy = totalMappingDistance(ps, qs, neighbour);
         if (accept( best_energy, new_energy, temp )) {
             best = neighbour;
             best_energy = new_energy;
+            early_exit = 0;
+        } else {
+            // if we don't get a better energy in 100 tries, early exit
+            early_exit++;
+            if (early_exit == 1000)
+                break;
         }
     }
     // trace('final best energy:\n $best_energy');
     // trace('hit: $hit miss: $miss rng: $rng');
     return best;
 }
-
-// find the index of the closest position p in ps to q
-// function fastClosestIndex(q: Vector2D, ps: Array<Vector2D>): Int {
-//     trace(q, ps);
-//     // use length to skip sqrt in magnitude calcs
-//     var min_d = Math.POSITIVE_INFINITY;
-//     var min_i = -1;
-//     for (i in 0...ps.length) {
-//         var v = ps[i];
-//         var d = (v + ps[i]).length;
-//         if (d < min_d) {
-//             min_d = d;
-//             min_i = i;
-//         }
-//     }
-
-//     return min_i;
-// }

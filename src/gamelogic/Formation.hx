@@ -89,8 +89,11 @@ class Formation implements MessageListener implements Updateable {
 
     public function sendMarchingOrders() {
         var qs = determineRectangularPositions(destination, targetFacing);
-        // heuristic, should do this with events
+        // heuristic for if a new unit to position mapping is needed
         var unit_count_changed = qs.length != units.length;
+        if (Math.abs(units[0].facing - targetFacing) > Math.PI/2)
+            unit_count_changed = true;
+        // create new units if needed
         if (qs.length > units.length) {
             for (i in 0...qs.length - units.length) {
                 var u = new Unit(new Vector2D());
@@ -98,21 +101,20 @@ class Formation implements MessageListener implements Updateable {
                 units.push(u);
             }
         }
+        // remove random units if needed
         while (units.length > qs.length) {
             var i = RNGManager.random(units.length);
             MessageManager.send(new RemoveUnit(units[i]));
             units.splice(i, 1);
         }
-
-            
+        // General case: simulated annealing to get unit-position mapping
         if (unit_count_changed) {
-            // General case: annealing
             var ps = new Array<Vector2D>();
             for (i in 0...units.length)
                 ps.push(units[i].body.getPosition());
-            
             unitToPosition = getMinimisedMapping(ps, qs);
         }
+        // set units to move to position
         for (pq in unitToPosition) {
             units[pq.p].destination = qs[pq.q];
             units[pq.p].targetFacing = targetFacing;
@@ -123,7 +125,7 @@ class Formation implements MessageListener implements Updateable {
 
 // use simulated annealing to get an approximation of a minimal mapping
 // https://en.wikipedia.org/wiki/Simulated_annealing
-final annealing_iterations = 50000; // maybe do time based instead
+final annealing_iterations = 50000;
 
 function totalMappingDistance(ps: Array<Vector2D>, qs: Array<Vector2D>, map: Array<{p: Int, q: Int}>) : Int {
     var out = 0.0;

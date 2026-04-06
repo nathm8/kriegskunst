@@ -4,6 +4,7 @@ TODO
 Bugs
 -----------------
 sometimes on restart batch graphics aren't showing
+    I don't even know how to debug that. Something to do with the static sprite batch? but lack of reproducability makes it hard
 changing rows\cols by text input causes a large number of bodies to be generated at 0,0 and lots of lag
     as does by button when col\row is high enough.
     Need to either spawn in units slightly randomised, or queue them to spawn on different frames
@@ -26,6 +27,7 @@ formation movement editor
 
     how to handle casualties?
         have sub-formations be percentage-based, with positions calculated accordingly
+        don't, let the formation collapse
 
 project
 -----------------

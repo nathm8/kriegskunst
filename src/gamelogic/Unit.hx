@@ -21,12 +21,14 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var maxSpeed = 1.0;
 
     // how much random variation is applied destination to noise up movement
-    var jitterMagnitude = 5.0;
+    var jitterMaxMagnitude = 20.0;
     var prevNoises = new Array<Vector2D>();
     // how much top speed can fluctuate
     var speedJitterMagnitude = 1.0;
     var prevSpeedNoises = new Array<Float>();
-    
+    var jitterClock = 0.0;
+    var jitterClockMax = 1.0;
+
     // in radians
     public var facing = 0.0;
     public var targetFacing = 0.0;
@@ -57,6 +59,8 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouseJoint = cast(PhysicalWorld.gameWorld.createJoint(mouse_joint_definition), B2MouseJoint);
 
         destination = p;
+        jitterClock = RNGManager.srand();
+        jitterClockMax += RNGManager.srand(0.5);
 
         MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);
@@ -84,11 +88,20 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
             // apply some jitter if we're not at our destination yet
             // helps get unstuck from other units, and looks kinda nice
-            // TODO: do this periodically instead of every frame
-            var p: Vector2D = body.getPosition();
-            if (p.distanceTo(destination) > 0.1) {
-                var v = RNGManager.srand() * new Vector2D(jitterMagnitude, 0).rotate(2*RNGManager.srand());
-                body.applyImpulse(v, body.getPosition());
+            jitterClock += dt;
+            if (jitterClock > jitterClockMax) {
+                jitterClock = 0;
+                var p: Vector2D = body.getPosition();
+                if (p.distanceTo(destination) > 0.1) {
+                    // jitter orthogonally to our destination, with some random variation in magnitude and angle
+                    // var o = (p - destination).normalize().rotate(Math.PI/2);
+                    // o = RNGManager.random(1) == 0 ? o : -o;
+                    // var v = RNGManager.srand() * jitterMaxMagnitude * o.rotate(RNGManager.srand(Math.PI/4));
+
+                    // jitter in a random direction
+                    var v = RNGManager.srand() * new Vector2D(jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
+                    body.applyImpulse(v, body.getPosition());
+                }
             }
         }
         

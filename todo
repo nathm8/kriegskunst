@@ -9,6 +9,11 @@ changing rows\cols by text input causes a large number of bodies to be generated
     as does by button when col\row is high enough.
     Need to either spawn in units slightly randomised, or queue them to spawn on different frames
 
+Ideas
+-----------------
+Have flocking behaviours
+    unit speed fluctuations spread to closeby units, via sensors
+
 MVP
 -----------------
 do bullets with raycasts

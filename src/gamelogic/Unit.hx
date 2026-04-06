@@ -21,7 +21,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var maxSpeed = 1.0;
 
     // how much random variation is applied destination to noise up movement
-    var jitterMaxMagnitude = 20.0;
+    var jitterMaxMagnitude = 1.0;
     var prevNoises = new Array<Vector2D>();
     // how much top speed can fluctuate
     var speedJitterMagnitude = 1.0;

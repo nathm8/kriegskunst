@@ -1,5 +1,6 @@
 package gamelogic;
 
+import utilities.Utilities.normaliseRadian;
 import haxe.display.Protocol.Timer;
 import utilities.Assert.assert;
 import utilities.RNGManager;
@@ -91,12 +92,15 @@ class Formation implements MessageListener implements Updateable {
         var qs = determineRectangularPositions(destination, targetFacing);
         // heuristic for if a new unit to position mapping is needed
         var unit_count_changed = qs.length != units.length;
-        if (Math.abs(units[0].facing - targetFacing) > Math.PI/2)
+        // if (unit_count_changed) trace("unit_count_changed");
+        if ( Math.abs( normaliseRadian( units[0].facing - targetFacing, true )) > Math.PI/2 ) {
+            // trace("significant facing change");
             unit_count_changed = true;
+        }
         // create new units if needed
         if (qs.length > units.length) {
             for (i in 0...qs.length - units.length) {
-                var u = new Unit(new Vector2D());
+                var u = new Unit(new Vector2D(RNGManager.srand()*50, 0).rotate(RNGManager.srand(Math.PI)));
                 u.destination = qs[i];
                 units.push(u);
             }

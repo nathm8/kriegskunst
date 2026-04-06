@@ -20,15 +20,18 @@ function slerp(p: Float, q: Float, r: Float) {
     return (r*u + (1-r)*v).angle();
 }
 
-function normaliseRadian(t: Float) {
-    while (t < 0)
-        t += 2*Math.PI;
-    while (t > 2*Math.PI)
-        t -= 2*Math.PI;
-    // while (t < -Math.PI)
-    //     t += 2*Math.PI;
-    // while (t > Math.PI)
-    //     t -= 2*Math.PI;
+function normaliseRadian(t: Float, zero_ref = false) {
+    if (zero_ref) {
+        while (t < -Math.PI)
+            t += 2*Math.PI;
+        while (t > Math.PI)
+            t -= 2*Math.PI;
+    } else {
+        while (t < 0)
+            t += 2*Math.PI;
+        while (t > 2*Math.PI)
+            t -= 2*Math.PI;
+    }
     return t;
 }
 

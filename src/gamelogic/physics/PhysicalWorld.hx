@@ -1,7 +1,6 @@
 package gamelogic.physics;
 
 import h2d.Scene;
-import utilities.Vector2D;
 import graphics.HeapsDebugDraw;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2World;

@@ -1,15 +1,14 @@
 package gamelogic;
 
-import graphics.FormationGraphics;
-import utilities.Vector2D;
-import graphics.BulletGraphics;
 import h2d.col.Point;
-import graphics.UnitGraphics;
-import hxd.Window;
 import h2d.Scene;
-import h2d.Text;
+import hxd.Window;
+import graphics.FormationGraphics;
+import graphics.BulletGraphics;
+import graphics.UnitGraphics;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;
+import utilities.Vector2D;
 import utilities.MessageManager;
 
 class GameScene extends Scene implements MessageListener {
@@ -34,13 +33,12 @@ class GameScene extends Scene implements MessageListener {
         defaultSmooth = false;
         camera.anchorX = 0.5;
         camera.anchorY = 0.5;
+        camera.sync(ctx);
 
         MessageManager.addListener(this);
 
-        for (x in 0...1) {
+        for (x in 0...1)
             var f = new Formation(10, 10, new Vector2D(0, 100*x));
-            updateables.push(f);
-        }
     }
     
     public function update(dt:Float) {
@@ -137,6 +135,8 @@ class GameScene extends Scene implements MessageListener {
     }
 
     function newFormation(f: Formation) {
+        updateables.push(f);
+        // formation graphics don't need updating as they're message and interactive-event based
         new FormationGraphics(f, this);
     }
 

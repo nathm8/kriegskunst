@@ -13,22 +13,26 @@ import utilities.Vector2D;
 final UNITRADIUS = 0.2;
 
 class Unit extends CircularPhysicalGameObject implements MessageListener implements Updateable {
+
     ////////////////////
     // Physics
     ////////////////////
     public var destination(default, set): Vector2D;
     var mouseJoint: B2MouseJoint;
-    var maxSpeed = 1.0;
-
-    // how much random variation is applied destination to noise up movement
+    
+    // multiplier on random impulses when moving, used to get unstuck from other units
     var jitterMaxMagnitude = 1.0;
-    var prevNoises = new Array<Vector2D>();
+    var maxSpeed = 1.0;
     // how much top speed can fluctuate
-    var speedJitterMagnitude = 1.0;
-    var prevSpeedNoises = new Array<Float>();
+    var speedVariance = 1.0;
+    var movementForce = 10.0;
+
+    ////////////////////
+    // Simulation
+    ////////////////////
+    var averageSpeedNoise = 0.0;
     var jitterClock = 0.0;
     var jitterClockMax = 1.0;
-
     // in radians
     public var facing = 0.0;
     public var targetFacing = 0.0;
@@ -36,7 +40,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     ////////////////////
     // Combat Stats
     ////////////////////
-    public var healthpoints = 1.0;
+    // public var healthpoints = 1.0;
     // var damage
 
     ////////////////////
@@ -45,6 +49,13 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     public var selectable(default, set) = true;
     public var graphics: UnitGraphics;
 
+    // stats to serialise
+    // just concerned with "unit stats" here, nothing tracking battlefield state
+    // s.serialize(maxSpeed);
+    // s.serialize(jitterMaxMagnitude);
+    // s.serialize(speedVariance);
+    // s.serialize(movementForce);
+  
     public function new(p: Vector2D) {
         super(p, UNITRADIUS, this);
 
@@ -54,7 +65,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         mouse_joint_definition.bodyB = body;
         mouse_joint_definition.collideConnected = false;
         mouse_joint_definition.target = p;
-        mouse_joint_definition.maxForce = 10;
+        mouse_joint_definition.maxForce = movementForce;
         
         mouseJoint = cast(PhysicalWorld.gameWorld.createJoint(mouse_joint_definition), B2MouseJoint);
 
@@ -71,16 +82,10 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
             return false;
         if (body.isAwake()) {
             // impose speed limit
-            var speed_noise = RNGManager.srand(speedJitterMagnitude);
-            prevSpeedNoises.push(speed_noise);
-            var average_speed_noise = 0.0;
-            for (n in prevSpeedNoises)
-                average_speed_noise += n;
-            average_speed_noise /= prevSpeedNoises.length;
-            if (prevSpeedNoises.length > 10)
-                prevSpeedNoises.shift();
+            var speed_noise = RNGManager.srand(speedVariance);
+            averageSpeedNoise = 0.9*averageSpeedNoise + 0.1*speed_noise;
             var vel: Vector2D = body.getLinearVelocity();
-            var speed = maxSpeed + average_speed_noise;
+            var speed = maxSpeed + averageSpeedNoise;
             var mag = vel.magnitude;
             if (mag > maxSpeed)
                 body.setLinearVelocity(speed*vel/mag);

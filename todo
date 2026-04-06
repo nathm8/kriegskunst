@@ -1,14 +1,6 @@
 TODO
 =======================
 
-Bugs
------------------
-sometimes on restart batch graphics aren't showing
-    I don't even know how to debug that. Something to do with the static sprite batch? but lack of reproducability makes it hard
-changing rows\cols by text input causes a large number of bodies to be generated at 0,0 and lots of lag
-    as does by button when col\row is high enough.
-    Need to either spawn in units slightly randomised, or queue them to spawn on different frames
-
 Ideas
 -----------------
 Have flocking behaviours
@@ -23,24 +15,16 @@ units killable
 
 formation movement editor
 -----------------
-    parameterise sendMarchingOrders whether unit-to-position remapping is required. Cache the mapping. To make large formations more orderly for normal movement.
+parameterise sendMarchingOrders whether unit-to-position remapping is required. Cache the mapping. To make large formations more orderly for normal movement.
 
-    change pivot point for rotations
+change pivot point for rotations
 
-    save list of "keyframes"
-    once saved, have clickable in formatinon ui. Optionally infinitely repeatably
+save list of "keyframes"
+once saved, have clickable in formatinon ui. Optionally infinitely repeatably
 
-    how to handle casualties?
-        have sub-formations be percentage-based, with positions calculated accordingly
-        don't, let the formation collapse
-
-project
------------------
-static analysis
-https://github.com/HaxeCheckstyle/haxe-checkstyle
-
-edited the old box2d lib to have a timestep based timestamp in mouse joint
-    b2Max(0.0f, 1.0f - 0.02f * (60.0f * data.step.dt));
+how to handle casualties?
+    have sub-formations be percentage-based, with positions calculated accordingly
+    don't, let the formation collapse
 
 Polish
 -----------------
@@ -94,8 +78,6 @@ Direct Formation Control
 -----------------
 Have a direct mouse based way to change row\column parameters?
 
-Need to have a more clever assignment of units to positions. Pathfinding\distance based
-
 Notes on optimisation
 -----------------
 Make a big list of normal values and work through them instead of numerical\marsaglia method
@@ -112,8 +94,6 @@ If a unit is too disordered (far from where it's meant to be in formation), it s
 Enough disordered units near each other should break from formation completely. Enough of these together, and not under threat, may be able to reform.
 
 Need to calculate the maximum turn rate for a formation of a given width and units of given top speed. Or, y'know, just let the player figure it out.
-
-How to reorder units naturally? Feels like rows should fill from the back, and units removed from columns should form new rows at the back.
 
 Have "macros" for manuevers, where you keyframe several configurations together, activatable as abilities
     goal: design countermarch and caracole this way
@@ -156,8 +136,23 @@ Issues
 -----------------
 InputText doesn't delete the last character correctly (still a bit buggy with Vector2D inputs)
 Do graphics properly, batching sprites
+changing rows\cols by text input causes a large number of bodies to be generated at 0,0 and lots of lag
+    as does by button when col\row is high enough.
+    Need to either spawn in units slightly randomised - done
+        queue them to spawn on different frames
+            this is a problem as constructors expect a B2Body to work with immediately. Can give it without fixtures, but then physics are acting on a fixtureless body which becomes hard to reconcile once the physics sim progresses. If mass unit spawning becomes more of a problem, need to put the "pending" logic into Unit or Formation itself
+
+Bugs
+-----------------
+sometimes on restart batch graphics aren't showing
+    I don't even know how to debug that. Something to do with the static sprite batch? but lack of reproducability makes it hard
+    not batch graphics related, debug draw also does not render
+    noticed that on hashlink target the camera wasn't anchored as expected, whereas on javascript it seemed to fail entirely
+    forcing a camera sync in the GameScene constructor may have fixed it?
 
 Direct Formation Control
 -----------------
 make an interactive, have it control positioning and facing. Have a ghost to indicate future positioning
     add a small timer before setting ChoosingFacing in FormationGraphics, to prevent unintended facing changes 
+
+Need to have a more clever assignment of units to positions. Pathfinding\distance based

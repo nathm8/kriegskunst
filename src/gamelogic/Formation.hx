@@ -1,7 +1,6 @@
 package gamelogic;
 
 import utilities.Utilities.normaliseRadian;
-import haxe.display.Protocol.Timer;
 import utilities.Assert.assert;
 import utilities.RNGManager;
 import utilities.MessageManager;

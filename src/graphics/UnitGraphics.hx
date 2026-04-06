@@ -19,6 +19,9 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     var unit: Unit;
     public var interactive: Interactive;
+
+    static var initialised = false;
+
     var sprite: BasicElement;
     static var spriteTile: Tile = null;
     static var spriteBatch: SpriteBatch = null;
@@ -28,6 +31,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     static var musketBatch: SpriteBatch = null;
 
     private function init() {
+        initialised = true;
         spriteTile = hxd.Res.img.Unit.toTile();
         spriteTile.setCenterRatio(0.5, 0.5);
         spriteBatch = new SpriteBatch(spriteTile, parent);
@@ -40,7 +44,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     public function new(u: Unit, p: Object) {
         super(p);
-        if (spriteTile == null)
+        if (!initialised)
             init();
         unit = u;
         unit.graphics = this;
@@ -83,7 +87,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     public function receive(msg:Message):Bool {
         if (Std.isOfType(msg, Restart))
-            spriteTile = null;
+            initialised = false;
         if (Std.isOfType(msg, RemoveUnit)) {
             var params = cast(msg, RemoveUnit);
             if (params.unit == unit) {

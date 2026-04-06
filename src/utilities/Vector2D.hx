@@ -7,7 +7,7 @@ import gamelogic.physics.PhysicalWorld.PHYSICSCALEINVERT;
 import gamelogic.physics.PhysicalWorld.PHYSICSCALE;
 import box2D.common.math.B2Vec2;
 
-@:dox(show) private typedef Vector2DImpl = {x:Float, y:Float}
+@:dox(show) typedef Vector2DImpl = {x:Float, y:Float}
 
 /**
 	Represents a two dimensional vector.

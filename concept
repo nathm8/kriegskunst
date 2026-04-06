@@ -3,139 +3,148 @@ Pike & Shot Concept
 
 Overall Design Philosophy
 -------------------
-    - early modern battles, with melee and ranged combat
-    - tactical level
-    - creating emergence via the interplay of small, simple quantities
-    - bottom up design
-    - real time
-    - an attempt at changing what the effective strategy is for a given scenario based on the starting conditions
-    - a fun toy to play around in
-    - minimalism, no extraneous mechanics
+- early modern battles, with melee and ranged combat
+- tactical level
+- creating emergence via the interplay of small, simple quantities
+- bottom up design
+- real time
+- an attempt at changing what the effective strategy is for a given scenario based on the starting conditions
+- a fun toy to play around in
+- minimalism, no extraneous mechanics
 
 Physics
 -------------------
-    - box2d 
-    - ball: units, projectiles
-    - rect: pikes (may not be necessary, but fun)
+- box2d 
+- ball: units, projectiles
+- rect: pikes (may not be necessary, but fun)
 
 Unit (soldier) Statisitcs
 -------------------
-    - accuracy, rate of fire, reloading time, range, physical force\density, top speed, morale, directional armour, flat armour, collision masks (have swordsmen move between units\pikes more easily), ammunition\shots till musket fouls
-        - armour as flat damage reduction, damage roll as bell curve, very low HP
-    - musketeers, how deep they can fire from without friendly fire, aiming time (especially in depth)
-    types
-        - pikeman, musketeer, cavalry, artillery
-        - infantry subtypes
-            - dopplesoldner, landsknetch, rodelo
-            - skirmishers, "commanded musketeers"
-            - caliver/arequebusier, musketeer
-        - cavalry subtypes
-            - dragoon (more logistical)
-            - lancer, gensdarmes
-            - pistolier, carabineers, arquebusiers
-            - curiassier, hussar, cossack, irregular
-        - mixed in officers, musicians, flagbearers (stretch goal)
+- accuracy, rate of fire, reloading time, range, physical force\density, top speed, morale, directional armour, flat armour, collision masks (have swordsmen move between units\pikes more easily), ammunition\shots till musket fouls
+    - armour as flat damage reduction, damage roll as bell curve, very low HP
+- musketeers, how deep they can fire from without friendly fire, aiming time (especially in depth)
+types
+    - pikeman, musketeer, cavalry, artillery
+    - infantry subtypes
+        - dopplesoldner, landsknetch, rodelo
+        - skirmishers, "commanded musketeers"
+        - caliver/arequebusier, musketeer
+    - cavalry subtypes
+        - dragoon (more logistical)
+        - lancer, gensdarmes
+        - pistolier, carabineers, arquebusiers
+        - curiassier, hussar, cossack, irregular
+    - mixed in officers, musicians, flagbearers (stretch goal)
 
 Formation (battalion) Statisitcs
 -------------------
-    - parameters
-        - rank depth\width
-        - offset columns and cols
-        - relative distances
-        - potential order for high-skill formations, to dynamically change parameters. E.g. Form square, form line, etc. Similarly to change "stances", i.e. behaviour parameters, based on commands
-    - morale
-        - hystersis, sigmoid function
-        - slower y movement based on size of formation
-        - x axis movement based on "morale ripples" e.g. deaths, charges, breaks, volley fire, cannon fire
-    - facing, position, intended position of units, spacing between units
-    - hetergenous units, put stronger\shorter range ones in front typically. No mixing of ranged, melee; or of foot and cavalry. Or artillery and anything else.
-    - abilities.
-        - countermarch, caracole, volley fire. Bracing? Advancing\retreating fire, or countermarch in place. Change of stance\preset behaviour, as above\below
-        - about face
-    - preset formation behaviours, by default and triggered by orders (trumpet\drum\bagpipe calls, flag waving, no direct RTS style control)
-            - when to fire
-                - how high the hit chance on the enemy
-                - how much risk of friendly fire
-            - how quickly to advance\retreat, what distance to maintain (and against what targets), target priorities, flanking priorities, pursuit\regroup priorities
-                e.g. brace\scatter against cavalry, attempt last-minute volley fire, 
-            - volley fire, how much at once, how quickly, when
-            - charges, when
-            - skirmishers, allow other troops to fire 'through' them. Or have a lower chance of friendly fire. Stay out of the way of main field of fire?
-    - more rules\behaviours causing a loss in inefficiency for all actions - especially temporal\synchronicity and morale. Veterancy offsets this
-    - rallying based on proximity of fleeing units. Possible flocking behaviour as an ability? i.e. cavalry wheels to retreat, recovers in good order. Vs infantry scattering and struggling to rally
+- parameters
+    - rank depth\width
+    - offset columns and cols
+    - relative distances
+    - potential order for high-skill formations, to dynamically change parameters. E.g. Form square, form line, etc. Similarly to change "stances", i.e. behaviour parameters, based on commands
+- morale
+    - hystersis, sigmoid function
+    - slower y movement based on size of formation
+    - x axis movement based on "morale ripples" e.g. deaths, charges, breaks, volley fire, cannon fire
+- facing, position, intended position of units, spacing between units
+- hetergenous units, put stronger\shorter range ones in front typically. No mixing of ranged, melee; or of foot and cavalry. Or artillery and anything else.
+- abilities.
+    - countermarch, caracole, volley fire. Bracing? Advancing\retreating fire, or countermarch in place. Change of stance\preset behaviour, as above\below
+    - about face
+- preset formation behaviours, by default and triggered by orders (trumpet\drum\bagpipe calls, flag waving, no direct RTS style control)
+        - when to fire
+            - how high the hit chance on the enemy
+            - how much risk of friendly fire
+        - how quickly to advance\retreat, what distance to maintain (and against what targets), target priorities, flanking priorities, pursuit\regroup priorities
+            e.g. brace\scatter against cavalry, attempt last-minute volley fire, 
+        - volley fire, how much at once, how quickly, when
+        - charges, when
+        - skirmishers, allow other troops to fire 'through' them. Or have a lower chance of friendly fire. Stay out of the way of main field of fire?
+- more rules\behaviours causing a loss in inefficiency for all actions - especially temporal\synchronicity and morale. Veterancy offsets this
+- rallying based on proximity of fleeing units. Possible flocking behaviour as an ability? i.e. cavalry wheels to retreat, recovers in good order. Vs infantry scattering and struggling to rally
 
 Army Organisation
 -------------------
-    - similar to formations, formations of formations
-    - relative placement, how close they should attempt to stick to their positions
+- similar to formations, formations of formations
+- relative placement, how close they should attempt to stick to their positions
 
 Graphics
 -------------------
-    - hats, weapons, flags
-    - smoke, dust, corpses
-    - elevation maps, terrain (rivers, forests, hedges), fortifications
-        - needs gameplay treatment
-    - "morale ripples"
+- hats, weapons, flags
+- smoke, dust, corpses
+- elevation maps, terrain (rivers, forests, hedges), fortifications
+    - needs gameplay treatment
+- "morale ripples"
 
-    - Tweens
-        https://heaps.io/documentation/demo-of-slide.html
-        https://github.com/AndreiRudenko/slide
+- Tweens
+    https://heaps.io/documentation/demo-of-slide.html
+    https://github.com/AndreiRudenko/slide
 
 
 Command and Control
 -------------------
-    - Ubiquitary mode, usual RTS controls (will be needed for debugging anyway)
-    - Battle Plan mode, setting up initial orders, and conditions for those orders to change
-        - fog of war, lag in information
-        - map-based, need a GUI for paremeterising the conditional orders (will need one for designing units anyway)
+- Ubiquitary mode, usual RTS controls (will be needed for debugging anyway)
+- Battle Plan mode, setting up initial orders, and conditions for those orders to change
+    - fog of war, lag in information
+    - map-based, need a GUI for paremeterising the conditional orders (will need one for designing units anyway)
 
 Technical
 -------------------
-    - data oriented
-        - all unit\formations be save\loadable via json or the like
-        - live save\loading from disk\string
-    async stuff
-    https://github.com/dpomier/haxe-coroutine/
+- data oriented
+    - all unit\formations be save\loadable via json or the like
+    - live save\loading from disk\string
+async stuff
+https://github.com/dpomier/haxe-coroutine/
 
-    clipboard stuff
-    https://api.haxe.org/js/html/Clipboard.html
-    heaps System may be able to do it on js
+clipboard stuff
+https://api.haxe.org/js/html/Clipboard.html
+heaps System may be able to do it on js
 
-    console stuff, for debugging
-    https://heaps.io/api/h2d/Console.html
+console stuff, for debugging
+https://heaps.io/api/h2d/Console.html
+
+static analysis
+https://github.com/HaxeCheckstyle/haxe-checkstyle
+
+edited the old box2d lib to have a timestep based timestamp in mouse joint
+    b2Max(0.0f, 1.0f - 0.02f * (60.0f * data.step.dt));
+
+edited h2d/Scene.hx, as it seems to be preventing my interactives from working correctly
+if( ex < 0 || ey < 0 || ex >= width || ey >= height )
+    return null;
+
+edited out a bunch of newish commits in h3d/impl/GlDriver.hx that were making it not compile
+GL.TIME_ELAPSED
 
 Misc
 -------------------
-    title ideas
-        Kriegskunst
-        principia belli
-        ars belli
-    scenarios
-        - pitched battle
-        - siege
-        - raid, outpost attack, divide and conquer, smash and grab
-        - skirmish against foragers
-        - forced battle (marching order particularly important here) (stretch)
-        Historical
-            1522,  "...if it were necessary to fix an arbitrary date for the first really effective use of small fire-arms in the battlefield, the day of Bicocca might well be selected."
-            https://en.wikipedia.org/wiki/Battle_of_Bicocca
+scenarios
+    - pitched battle
+    - siege
+    - raid, outpost attack, divide and conquer, smash and grab
+    - skirmish against foragers
+    - forced battle (marching order particularly important here) (stretch)
+    Historical
+        1522,  "...if it were necessary to fix an arbitrary date for the first really effective use of small fire-arms in the battlefield, the day of Bicocca might well be selected."
+        https://en.wikipedia.org/wiki/Battle_of_Bicocca
 
-            1524, "The battle of the Sesia, by contrast, featured no constructed defences: the arquebusiers operated in the open, albeit in terrain that was favourable to them."
-            https://en.wikipedia.org/wiki/Battle_of_the_Sesia_(1524)
-    
-    terrain
-        - simple mapgen. Have forced symmetry be an option. Stretch goal to have other "balancing" concerns in a more random generation.
+        1524, "The battle of the Sesia, by contrast, featured no constructed defences: the arquebusiers operated in the open, albeit in terrain that was favourable to them."
+        https://en.wikipedia.org/wiki/Battle_of_the_Sesia_(1524)
+
+terrain
+    - simple mapgen. Have forced symmetry be an option. Stretch goal to have other "balancing" concerns in a more random generation.
 
 Stretch Goals
 -------------------
-    Officers-as-units. Generalise other "officer qualities" into stats of the formations themselves.
+Officers-as-units. Generalise other "officer qualities" into stats of the formations themselves.
 
-    point buy sandbox, auto battles against other user created forces? MMR?
-        actual multiplayer lol
+point buy sandbox, auto battles against other user created forces? MMR?
+    actual multiplayer lol
 
-    Historically based units in terms of hats, stats, abilities. Otherwise just point buy or randomise and draft.
+Historically based units in terms of hats, stats, abilities. Otherwise just point buy or randomise and draft.
 
-    Ships as artillery emplacements in siege
+Ships as artillery emplacements in siege
 
 Ideas Considered Out of Scope
 -------------------

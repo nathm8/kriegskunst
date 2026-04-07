@@ -1,5 +1,6 @@
 package utilities;
 
+import hxd.fs.FileEntry;
 import gamelogic.Bullet;
 import gamelogic.Unit;
 import gamelogic.Formation;
@@ -25,6 +26,10 @@ class RemoveUnit extends Message {
 class UnitClicked extends Message {
     public var unit: Unit;
     public function new(u: Unit) {super(); unit = u;}
+}
+class UpdateUnit extends Message {
+    public var json: FileEntry;
+    public function new(j: FileEntry) {super(); json = j;}
 }
 class FormationUpdate extends Message {
     public var formation: Formation;

@@ -21,8 +21,17 @@ class Main extends UIApp implements MessageListener {
     }
 
     override private function init() {
-        // boilerplate
+        // initialise resources
+        #if js
         hxd.Res.initEmbed();
+        #else
+        hxd.Res.initLocal();
+        #end
+
+        hxd.Res.data.DefaultUnit.watch(() -> {
+            MessageManager.send(new UpdateUnit(hxd.Res.data.DefaultUnit.entry));
+        });
+
         RNGManager.initialise();
         SoundManager.initialise();
         // background

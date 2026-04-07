@@ -1,5 +1,6 @@
 package gamelogic;
 
+import hxd.fs.FileEntry;
 import haxe.Json;
 import utilities.Utilities.slerp;
 import graphics.UnitGraphics;
@@ -11,15 +12,18 @@ import box2D.dynamics.joints.B2MouseJoint;
 import box2D.dynamics.joints.B2MouseJointDef;
 import utilities.Vector2D;
 
-final UNITRADIUS = 0.2;
-
 typedef UnitJson = {
     var maxSpeed: Float;
+    // how much top speed can fluctuate
     var speedVariance: Float;
+    // multiplier on random impulses when moving, used to get unstuck from other units
     var jitterMaxMagnitude: Float;
     var movementForce: Float;
+    // how much unit's destination can vary from orders
     var destinationVariance: Float;
+    // how much averageSpeedNoise is weighted towards it's previous value
     var averageSpeedNoiseRatio: Float;
+    // box2d params
     var linearDamping: Float;
     var friction: Float;
     var restitution: Float;
@@ -38,16 +42,8 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     ////////////////////
     // hot-loadable parameters
     ////////////////////
-    // multiplier on random impulses when moving, used to get unstuck from other units
-    var jitterMaxMagnitude = 1.0;
-    var maxSpeed = 1.0;
-    // how much top speed can fluctuate
-    var speedVariance = 1.0;
-    // how much unit's destination can vary from orders
-    var destinationVariance = 1.0;
-    var movementForce = 10.0;
-    // how much averageSpeedNoise is weighted towards it's previous value
-    var averageSpeedNoiseRatio = 0.9;
+    var json: FileEntry;
+    public var params: UnitJson;
 
     ////////////////////
     // Simulation
@@ -71,32 +67,31 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     public var selectable(default, set) = true;
     public var graphics: UnitGraphics;
 
-    public function fromJson(str: String) {
-        var out: UnitJson = Json.parse(str);
-        maxSpeed = out.maxSpeed;
-        speedVariance = out.speedVariance;
-        jitterMaxMagnitude = out.jitterMaxMagnitude;
-        movementForce = out.movementForce;
-        destinationVariance = out.destinationVariance;
-        averageSpeedNoiseRatio = out.averageSpeedNoiseRatio;
-        body.setLinearDamping(out.linearDamping);
+    function fromJson(j: FileEntry) {
+        json = j;
+        params = Json.parse(json.getText());
+    }
+
+    function initialisePhysics() {
+        body.setLinearDamping(params.linearDamping);
         var f = body.getFixtureList();
-        f.setFriction(out.friction);
-        f.setRestitution(out.restitution);
-        f.setDensity(out.density);
-        f.getShape().m_radius = out.radius;
+        f.setFriction(params.friction);
+        f.setRestitution(params.restitution);
+        f.setDensity(params.density);
+        f.getShape().m_radius = params.radius;
         body.resetMassData();
+        body.setAwake(true);
     }
 
     public function toJson(): String {
         var f = body.getFixtureList();
         var input: UnitJson = {
-            maxSpeed: maxSpeed,
-            speedVariance: speedVariance,
-            jitterMaxMagnitude: jitterMaxMagnitude,
-            movementForce: movementForce,
-            destinationVariance: destinationVariance,
-            averageSpeedNoiseRatio: averageSpeedNoiseRatio,
+            maxSpeed: params.maxSpeed,
+            speedVariance: params.speedVariance,
+            jitterMaxMagnitude: params.jitterMaxMagnitude,
+            movementForce: params.movementForce,
+            destinationVariance: params.destinationVariance,
+            averageSpeedNoiseRatio: params.averageSpeedNoiseRatio,
             linearDamping: body.getLinearDamping(),
             friction: f.getFriction(),
             restitution: f.getRestitution(),
@@ -106,8 +101,12 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return Json.stringify(input, null, "  ");
     }
   
-    public function new(p: Vector2D, json: String=null) {
-        super(p, UNITRADIUS, this);
+    public function new(p: Vector2D, j: FileEntry=null) {
+        if (j == null)
+            j = hxd.Res.data.DefaultUnit.entry;
+        fromJson(j);
+        super(p, params.radius, this);
+        initialisePhysics();
 
         // init physical movement
         var mouse_joint_definition = new B2MouseJointDef();
@@ -122,10 +121,6 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         jitterClock = RNGManager.srand();
         jitterClockMax += RNGManager.srand(0.5);
 
-        if (json == null)
-            json = hxd.Res.data.DefaultUnit.entry.getText();
-        fromJson(json);
-
         MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);
     }
@@ -135,14 +130,14 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
             return false;
         if (body.isAwake()) {
             // impose speed limit
-            var speed_noise = RNGManager.srand(speedVariance);
-            averageSpeedNoise = averageSpeedNoiseRatio*averageSpeedNoise + (1-averageSpeedNoiseRatio)*speed_noise;
+            var speed_noise = RNGManager.srand(params.speedVariance);
+            averageSpeedNoise = params.averageSpeedNoiseRatio*averageSpeedNoise + (1-params.averageSpeedNoiseRatio)*speed_noise;
             var vel: Vector2D = body.getLinearVelocity();
-            var speed = maxSpeed + averageSpeedNoise;
+            var speed = params.maxSpeed + averageSpeedNoise;
             var mag = vel.magnitude;
-            if (mag > maxSpeed)
+            if (mag > params.maxSpeed)
                 body.setLinearVelocity(speed*vel/mag);
-            mouseJoint.setMaxForce(movementForce*speed);
+            mouseJoint.setMaxForce(params.movementForce*speed);
 
             // apply some jitter if we're not at our destination yet
             // helps get unstuck from other units, and looks kinda nice
@@ -157,7 +152,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
                     // var v = RNGManager.srand() * jitterMaxMagnitude * o.rotate(RNGManager.srand(Math.PI/4));
 
                     // jitter in a random direction
-                    var v = RNGManager.srand() * new Vector2D(jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
+                    var v = RNGManager.srand() * new Vector2D(params.jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
                     body.applyImpulse(v, body.getPosition());
                 }
             }
@@ -171,6 +166,13 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     public function receive(msg:Message):Bool {
+        if (Std.isOfType(msg, UpdateUnit)) {
+            var params = cast(msg, UpdateUnit);
+            if (params.json == json) {
+                fromJson(json);
+                initialisePhysics();
+            }
+        }
         if (Std.isOfType(msg, RemoveUnit)) {
             var params = cast(msg, RemoveUnit);
             if (params.unit == this) {
@@ -186,7 +188,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         // our position
         var p = body.getPosition();
         // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
-        var q = new Vector2D(0, -2*UNITRADIUS*PHYSICSCALE).rotate(facing).toBox2DVec();
+        var q = new Vector2D(0, -2*params.radius*PHYSICSCALE).rotate(facing).toBox2DVec();
         p.add(q);
         new Bullet(p, facing);
     }
@@ -198,7 +200,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     function set_destination(value:Vector2D):Vector2D {
-        destination = value + destinationVariance*(new Vector2D(1, 0)).rotate(RNGManager.randomAngle());
+        destination = value + params.destinationVariance*(new Vector2D(1, 0)).rotate(RNGManager.randomAngle());
         mouseJoint.setTarget(destination);
         return destination;
     }

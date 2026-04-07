@@ -63,7 +63,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         musket.b = 0.6;
         musketBatch.add(musket);
 
-        interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*UNITRADIUS*PHYSICSCALE));
+        interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*unit.params.radius*PHYSICSCALE));
         interactive.onClick = (_) -> {MessageManager.send(new UnitClicked(this.unit));}
 
         MessageManager.addListener(this);

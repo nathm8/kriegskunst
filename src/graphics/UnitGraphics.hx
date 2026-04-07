@@ -19,6 +19,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     var unit: Unit;
     public var interactive: Interactive;
+    var toCleanup = false;
 
     static var initialised = false;
 
@@ -71,7 +72,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     public function update(dt:Float) {
         if (unit.body == null)
-            return false;
+            return toCleanup;
         var p: Vector2D = unit.body.getPosition();
         x = p.x; y = p.y;
         sprite.x = p.x; sprite.y = p.y;
@@ -82,7 +83,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         else
             musket.scaleX = 0.75;
 
-        return false;
+        return toCleanup;
     }
 
     public function receive(msg:Message):Bool {
@@ -103,6 +104,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         musket.remove();
         interactive.remove();
         remove();
+        toCleanup = true;
     }
 
 }

@@ -27,7 +27,7 @@ class Main extends UIApp implements MessageListener {
         #else
         hxd.Res.initLocal();
         #end
-
+        
         hxd.Res.data.DefaultUnit.watch(() -> {
             MessageManager.send(new UpdateUnit(hxd.Res.data.DefaultUnit.entry));
         });

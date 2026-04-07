@@ -58,6 +58,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     ////////////////////
     // Combat Stats
     ////////////////////
+    public var dead = false;
     // public var healthpoints = 1.0;
     // var damage
 
@@ -127,7 +128,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
 
     public function update(dt:Float) {
         if (body == null)
-            return false;
+            return dead;
         if (body.isAwake()) {
             // impose speed limit
             var speed_noise = RNGManager.srand(params.speedVariance);
@@ -162,7 +163,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         // TODO impose more strict timeline
         facing = slerp(facing, targetFacing, 0.95);
 
-        return false;
+        return dead;
     }
 
     public function receive(msg:Message):Bool {
@@ -178,6 +179,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
             if (params.unit == this) {
                 MessageManager.removeListener(this);
                 removePhysics();
+                dead = true;
             }
         }
         return false;

@@ -1,15 +1,8 @@
 TODO
 =======================
 
-Ideas
------------------
-Have flocking behaviours
-    unit speed fluctuations spread to closeby units, via sensors
-
 MVP
 -----------------
-load unit\formation stats from json
-    allow hot reloading
 do bullets with raycasts
 smoke particles when firing
 Have a separate formation to fight
@@ -37,14 +30,15 @@ slerp taking ages to do 180, figure out a constant turn rate and do it that way 
 
 To think about
 -----------------
+Have flocking behaviours
+    unit speed fluctuations spread to closeby units, via sensors
+
 verticality. 
     How to represent?
         terrain, units crouching, prone
     
     Mechanics?
         collision masks
-
-raycasts instead of physically simulated bullets
 
 multithread stuff
 https://code.haxe.org/category/javascript/javascript-inline-workers.html
@@ -56,12 +50,8 @@ scrollability, for when it gets too big
 have separate field for unit facing
 have import\export
 
-Need to prevent clicks on UI from affecting gamescene
-    Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
-
-    see discord screengrab, have a dummy interactive layer under the UI. Still kinda hacky
-
 Issues
+-----------------
     UI min width\height will never decrease. Once an element pushes the max it will stay that way.
         Extra UI to shrink down? Kinda a PITA, UI for UI's sake
         Need to have more dynamic inputWidth for TextInputs, destination in particular gets hidden quickly
@@ -87,9 +77,6 @@ https://code.haxe.org/category/beginner/declare-classes-with-structinit.html
 
 Make a big list of normal values and work through them instead of numerical\marsaglia method
 
-Might be worth having a go at porting box2d v3.
-    that was a waste of time, but instructive
-
 Why is this more performant on js?
     slightly better on native with -O flag, FPS all over the place though
 
@@ -110,14 +97,12 @@ Three rank fire:
 
     Each "line" be a separate formation then?
 
-Have a formation's destination be another formation, friendly or enemy.
-    have formations break into sub-formations? I.e counter march by having front row break into sub formation, then move back through the original formation, rejoining it.
-    Similarly with forming square.
-
 Completed
 =======================
 MVP
 -----------------
+load unit\formation stats from json
+    allow hot reloading
 Have units moving about in formation
 Be able to dynamically change formation
 Have units firing
@@ -147,6 +132,9 @@ changing rows\cols by text input causes a large number of bodies to be generated
         queue them to spawn on different frames
             this is a problem as constructors expect a B2Body to work with immediately. Can give it without fixtures, but then physics are acting on a fixtureless body which becomes hard to reconcile once the physics sim progresses. If mass unit spawning becomes more of a problem, need to put the "pending" logic into Unit or Formation itself
 
+Need to prevent clicks on UI from affecting gamescene
+    Having gamescene only "active" when instructed from the UI is a very clunky way to do it. Need to figure out how to have UI interactives suppress events flowing through to GS (this may just be default Heaps behaviour, need to test by having units be interactives)
+
 Bugs
 -----------------
 sometimes on restart batch graphics aren't showing
@@ -161,3 +149,6 @@ make an interactive, have it control positioning and facing. Have a ghost to ind
     add a small timer before setting ChoosingFacing in FormationGraphics, to prevent unintended facing changes 
 
 Need to have a more clever assignment of units to positions. Pathfinding\distance based
+
+Might be worth having a go at porting box2d v3.
+    that was a waste of time, but instructive

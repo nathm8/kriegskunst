@@ -24,7 +24,7 @@ class CircularPhysicalGameObject {
             body_definition.fixedRotation = true;
         }
         body = PhysicalWorld.gameWorld.createBody(body_definition);
-
+        
         var fixture_definition: B2FixtureDef;
         if (fd != null)
             fixture_definition = fd;

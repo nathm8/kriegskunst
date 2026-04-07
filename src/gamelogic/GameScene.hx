@@ -37,8 +37,12 @@ class GameScene extends Scene implements MessageListener {
 
         MessageManager.addListener(this);
 
-        for (x in 0...1)
-            var f = new Formation(10, 10, new Vector2D(0, 100*x));
+        // for (x in 0...1)
+        //     var f = new Formation(10, 10, new Vector2D(0, 100*x));
+        var u = new Unit(new Vector2D());
+        var j = u.toJson();
+        u.fromJson(j);
+
     }
     
     public function update(dt:Float) {

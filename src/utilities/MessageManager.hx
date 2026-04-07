@@ -1,5 +1,6 @@
 package utilities;
 
+import graphics.SmokeGraphics;
 import hxd.fs.FileEntry;
 import gamelogic.Bullet;
 import gamelogic.Unit;
@@ -14,6 +15,10 @@ class Fire extends Message {}
 class NewBullet extends Message {
     public var bullet: Bullet;
     public function new(b: Bullet) {super(); bullet = b;}
+}
+class NewSmoke extends Message {
+    public var smoke: SmokeGraphics;
+    public function new(s: SmokeGraphics) {super(); smoke = s;}
 }
 class NewUnit extends Message {
     public var unit: Unit;

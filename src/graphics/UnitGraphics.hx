@@ -1,5 +1,6 @@
 package graphics;
 
+import utilities.RNGManager;
 import slide.easing.SmoothStep;
 import h2d.SpriteBatch;
 import h2d.Tile;
@@ -97,6 +98,26 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
             }
         }
         return false;
+    }
+
+    public function fire() {
+        // our position
+        var p: Vector2D = unit.body.getPosition();
+        // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
+        var q = new Vector2D(0, -20).rotate(unit.facing) + p;
+        var dirc = new Vector2D(0, -1).rotate(unit.facing);
+        // make a cone in front of the musket barrel, spawn in some smoke particles, with further away ones being
+        // slightly larger
+        var r = new Vector2D(0, -70).rotate(unit.facing+0.3) + p;
+        var s = new Vector2D(0, -70).rotate(unit.facing-0.3) + p;
+
+        for (_ in 0...50 + RNGManager.random(25)) {
+            var r1 = RNGManager.srand(1, true);
+            var r2 = RNGManager.srand(1, true);
+            var pos = r1 * q + (1 - r1)*(r2*r + (1-r2)*s);
+            var s = new SmokeGraphics(pos, dirc, r1, parent);
+            MessageManager.send(new NewSmoke(s));
+        }
     }
 
     function cleanup() {

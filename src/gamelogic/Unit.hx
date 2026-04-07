@@ -186,13 +186,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
     
     public function fire() {
-        body.setAwake(true);
-        // our position
-        var p = body.getPosition();
-        // position of the end of our musket, bit clunky, we'll need to generalise this for weapons later
-        var q = new Vector2D(0, -2*params.radius*PHYSICSCALE).rotate(facing).toBox2DVec();
-        p.add(q);
-        new Bullet(p, facing);
+        graphics.fire();
     }
 
     function set_selectable(value) {

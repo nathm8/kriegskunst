@@ -37,8 +37,11 @@ class RNGManager {
 		return rand.shuffle(a);
 	}
 
-	public static inline function srand(scale=1.0) {
+	public static inline function srand(scale=1.0, positive=false) {
         if (!init) initialise();
+        if (positive) {
+            return scale/2 + rand.srand(scale/2);
+        }
 		return rand.srand(scale);
 	}
 

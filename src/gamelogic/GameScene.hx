@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.SmokeGraphics;
 import h2d.col.Point;
 import h2d.Scene;
 import hxd.Window;
@@ -38,7 +39,8 @@ class GameScene extends Scene implements MessageListener {
         MessageManager.addListener(this);
 
         for (x in 0...1)
-            var f = new Formation(10, 10, new Vector2D(0, 100*x));
+            var f = new Formation(30, 3, new Vector2D(0, 100*x));
+            // var f = new Formation(10, 10, new Vector2D(0, 100*x));
         // var u = new Unit(new Vector2D());
     }
     
@@ -118,14 +120,15 @@ class GameScene extends Scene implements MessageListener {
         if (Std.isOfType(msg, NewUnit)) {
             var params = cast(msg, NewUnit);
             newUnit(params.unit);
-        }
-        if (Std.isOfType(msg, NewFormation)) {
+        } if (Std.isOfType(msg, NewFormation)) {
             var params = cast(msg, NewFormation);
             newFormation(params.formation);
-        }
-        if (Std.isOfType(msg, NewBullet)) {
+        } if (Std.isOfType(msg, NewBullet)) {
             var params = cast(msg, NewBullet);
             newBullet(params.bullet);
+        } if (Std.isOfType(msg, NewSmoke)) {
+            var params = cast(msg, NewSmoke);
+            newSmoke(params.smoke);
         }
         return false;
     }
@@ -144,6 +147,10 @@ class GameScene extends Scene implements MessageListener {
     function newBullet(b: Bullet) {
         updateables.push(b);
         updateables.push(new BulletGraphics(b, this));
+    }
+
+    function newSmoke(s: SmokeGraphics) {
+        updateables.push(s);
     }
     
     function cameraControl() {

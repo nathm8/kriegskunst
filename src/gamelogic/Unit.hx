@@ -106,7 +106,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return Json.stringify(input, null, "  ");
     }
   
-    public function new(p: Vector2D) {
+    public function new(p: Vector2D, json: String=null) {
         super(p, UNITRADIUS, this);
 
         // init physical movement
@@ -121,6 +121,10 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         destination = p;
         jitterClock = RNGManager.srand();
         jitterClockMax += RNGManager.srand(0.5);
+
+        if (json == null)
+            json = hxd.Res.data.DefaultUnit.entry.getText();
+        fromJson(json);
 
         MessageManager.send(new NewUnit(this));
         MessageManager.addListener(this);

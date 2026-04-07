@@ -1,0 +1,13 @@
+{
+  "maxSpeed": 1,
+  "speedVariance": 1,
+  "jitterMaxMagnitude": 1,
+  "movementForce": 10,
+  "destinationVariance": 1,
+  "averageSpeedNoiseRatio": 0.9,
+  "linearDamping": 0.1,
+  "friction": 0.5,
+  "restitution": 0.5,
+  "density": 1,
+  "radius": 0.2
+}

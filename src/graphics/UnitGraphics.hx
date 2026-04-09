@@ -24,11 +24,12 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
 
     static var initialised = false;
 
-    var sprite: BasicElement;
+    var sprite: BatchElement;
     static var spriteTile: Tile = null;
     static var spriteBatch: SpriteBatch = null;
     
-    var musket: BasicElement;
+    var musket: BatchElement;
+    var musketOffset = new Vector2D(); // for animation
     static var musketTile: Tile = null;
     static var musketBatch: SpriteBatch = null;
 
@@ -52,13 +53,13 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         unit = u;
         unit.graphics = this;
 
-        sprite = new BasicElement(spriteTile);
+        sprite = new BatchElement(spriteTile);
         sprite.r = 0;
         sprite.g = 0;
         sprite.b = 0.66;
         spriteBatch.add(sprite);
 
-        musket = new BasicElement(musketTile);
+        musket = new BatchElement(musketTile);
         musket.scaleX = 0.75;
         musket.scaleY = 0.75;
         musket.r = 0.6;
@@ -78,7 +79,8 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         var p: Vector2D = unit.body.getPosition();
         x = p.x; y = p.y;
         sprite.x = p.x; sprite.y = p.y;
-        musket.x = p.x; musket.y = p.y;
+        musket.x = p.x + musketOffset.x;
+        musket.y = p.y + musketOffset.y;
         musket.rotation = unit.facing;
         if (musket.rotation < 0)
             musket.scaleX = -0.75;
@@ -106,6 +108,9 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         var m = musket.rotation < 0 ? 1 : -1;
         var pos = new Vector2D(m, -20).rotate(unit.facing) + unit.body.getPosition();
         SmokeGraphics.newSmokeParticle(pos, unit.facing);
+        // recoil
+        musketOffset = new Vector2D(RNGManager.srand(0.5), 2+RNGManager.srand(0.5)).rotate(unit.facing);
+        Main.tweenManager.animateTo(musketOffset, {x: 0, y: 0}, 1, SmoothStep.easeIn).start();
     }
 
     function cleanup() {

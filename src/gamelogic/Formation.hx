@@ -1,5 +1,6 @@
 package gamelogic;
 
+import slide.TweenManager;
 import graphics.SmokeGraphics;
 import utilities.Utilities.normaliseRadian;
 import utilities.Assert.assert;
@@ -18,6 +19,8 @@ class Formation implements MessageListener implements Updateable {
     // in gamescene-space
     public var columnSpacing = 22;
     public var rowSpacing = 17;
+
+    var fire_delay: Float = 1;
 
     var unitToPosition: Array<{p: Int, q: Int}>;
 
@@ -78,7 +81,7 @@ class Formation implements MessageListener implements Updateable {
             var params = cast(msg, KeyUp);
             if (params.keycode == hxd.Key.SPACE) {
                 for (i in 0...rows*columns)
-                    units[i].fire();
+                    Main.tweenManager.delay(RNGManager.srand(fire_delay, true), units[i].fire).start();
                 // TODO: get a handle on this
                 // trace(SmokeGraphics.num);
                 // 32x32 particle

@@ -49,7 +49,7 @@ class Main extends UIApp implements MessageListener {
     }
 
     function newGame() {
-        tweenManager?.stopAll();
+        tweenManager?.completeAll();
         tweenManager = new TweenManager();
         RNGManager.reset();
         MessageManager.reset();

@@ -51,7 +51,7 @@ class RNGManager {
     }
 
     // maybe just make a big list of this and pick a random one
-    public static inline function normal(mu=0, sigma=1): Float {
+    public static inline function normal(mu:Float=0, sigma:Float=1): Float {
         if (!init) initialise();
         function marsaglia() : Float {
             var x = 0.0;

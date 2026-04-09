@@ -1,5 +1,6 @@
 package graphics;
 
+import utilities.Noisemap;
 import utilities.RNGManager;
 import utilities.Vector2D;
 import utilities.MessageManager;
@@ -32,6 +33,7 @@ class SmokeParticle extends BatchElement {
     var initialScale: Float;
     var finalScale: Float;
     var grey: Float;
+    var windMod: Float;
 
     public function new(pos: Vector2D, dirc: Vector2D, bur: Float, vel: Float, dist: Float, t: Tile) {
         super(t);
@@ -47,9 +49,13 @@ class SmokeParticle extends BatchElement {
         // have nearby smoke particles fade quickly, starting small and without expanding too much
         initialScale = 0.05 + 0.25*distance;
         // let further away particles linger and drift while expanding
-        dist = dist > 0.7 ? 1.5*dist : dist;
+        dist = dist > 0.6 ? 3*dist : dist;
         finalScale = initialScale + dist*(0.5 + RNGManager.srand(0.5, true));
         totalLifetime = dist*RNGManager.normal(15, 5);
+
+        windMod = RNGManager.normal(1, 0.3);
+        if (windMod <= 0.1) windMod = 0.1;
+        if (windMod >= 3) windMod = 3;
 
         // grey = 0.9 - RNGManager.srand(0.35, true);
         grey = 1;
@@ -64,12 +70,11 @@ class SmokeParticle extends BatchElement {
     // It uses the opposite of the Updateable Bool return convention, true = keep alive
     override function update(dt:Float): Bool {
         lifetime += dt;
-        var s = lifetime/totalLifetime;
+        
         // todo, gusts
-        var wind_mod = 0.5 + RNGManager.srand(0.5);
-        x += wind_mod*10*dt*SmokeGraphics.windDirection.x;
-        wind_mod = 0.5 + RNGManager.srand(0.5);
-        y += wind_mod*10*dt*SmokeGraphics.windDirection.y;
+        var wind = SmokeGraphics.windDirection(new Vector2D(x, y));
+        x += windMod*dt*wind.x;
+        y += windMod*dt*wind.y;
         
         // initial fade to grey
         if (lifetime < muzzle_flash_time) {
@@ -86,9 +91,11 @@ class SmokeParticle extends BatchElement {
             y += initialVelocity*10*d*dt*direction.y;
         }
 
-        // var scale_ratio = Math.pow(s, 2.7);
+        // scale size exponentially
+        var s = lifetime/totalLifetime;
         var scale_ratio = 1 - Math.pow(2, -10*s);
         scale = initialScale*(1-scale_ratio) + finalScale*scale_ratio;
+        // scale opacity linearly
         a = 1 - s;
         if (lifetime >= totalLifetime)
             SmokeGraphics.num--;
@@ -102,8 +109,9 @@ class SmokeGraphics extends Object implements Updateable implements MessageListe
     static var spriteTile: Tile = null;
     static var tileAreas: Array<Tile> = null;
     static var spriteBatch: SpriteBatch = null;
-    public static var windDirection: Vector2D;
     public static var num = 0;
+    static var totalTime = 0.0;
+    static var windDirc = 0.0;
 
     private function init() {
         spriteTile = hxd.Res.img.FourSmoke.toTile();
@@ -113,8 +121,13 @@ class SmokeGraphics extends Object implements Updateable implements MessageListe
         spriteBatch.smooth = true;
         spriteBatch.hasRotationScale = true;
         spriteBatch.hasUpdate = true;
-        windDirection = new Vector2D(1,0).rotate(RNGManager.srand(Math.PI));
-        // TODO have wind speed\direction change via some coherent noise function
+        
+        // TODO some more coherent noise function for wind
+        windDirc = RNGManager.randomAngle();
+    }
+
+    static public function windDirection(p: Vector2D): Vector2D {
+        return new Vector2D(Math.sin(totalTime) + 5, 0).rotate(windDirc);
     }
 
     public function new(p: Object) {
@@ -148,6 +161,7 @@ class SmokeGraphics extends Object implements Updateable implements MessageListe
     }
 
     public function update(dt:Float):Bool {
+        totalTime += dt;
         return false;
     }
 }

@@ -1,5 +1,6 @@
 package gamelogic;
 
+import graphics.SmokeGraphics;
 import utilities.Utilities.normaliseRadian;
 import utilities.Assert.assert;
 import utilities.RNGManager;
@@ -75,9 +76,19 @@ class Formation implements MessageListener implements Updateable {
         }
         if (Std.isOfType(msg, KeyUp)) {
             var params = cast(msg, KeyUp);
-            if (params.keycode == hxd.Key.SPACE)
+            if (params.keycode == hxd.Key.SPACE) {
                 for (i in 0...rows*columns)
                     units[i].fire();
+                // TODO: get a handle on this
+                // trace(SmokeGraphics.num);
+                // 32x32 particle
+                // 22101 before gl error with 32x32
+                // GL_INVALID_OPERATION: glDrawElements: Insufficient buffer size.
+                // gets to about twice that before it starts getting weird with hashlink, some particles not rendering, or not for a few frames
+                // 25089 before similar issues on native build
+                // same result with 128x128 particle, so it isn't a GPU memory thing per se, but a buffer allocation
+
+            }
         }
         return false;
     }

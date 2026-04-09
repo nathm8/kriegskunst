@@ -3,14 +3,11 @@ package utilities;
 import hxd.Perlin;
 
 class Noisemap {
-    var noise = new Perlin();
-    var seed = RNGManager.rand.random(0xFFFFFF);
+    static var noise = new Perlin();
+    static var seed = RNGManager.random(0xFFFFFF);
     
-    public function new() {
+    static public function getNoiseAtTheta(theta: Float) : Float {
         noise.normalize = true;
-    }
-
-    public function getNoiseAtTheta(theta: Float) : Float {
         var n = 0.0;
         for (s in [1, 2, 3]) {
             var x = Math.cos(theta)/s + 1;

@@ -39,9 +39,12 @@ class GameScene extends Scene implements MessageListener {
         MessageManager.addListener(this);
 
         for (x in 0...1)
-            var f = new Formation(30, 3, new Vector2D(0, 100*x));
+            var f = new Formation(1, 1, new Vector2D(0, 100*x));
             // var f = new Formation(10, 10, new Vector2D(0, 100*x));
         // var u = new Unit(new Vector2D());
+
+        // initialise smoke particle manager, do it last so smoke is above units
+        updateables.push(new SmokeGraphics(this));
     }
     
     public function update(dt:Float) {
@@ -123,12 +126,9 @@ class GameScene extends Scene implements MessageListener {
         } if (Std.isOfType(msg, NewFormation)) {
             var params = cast(msg, NewFormation);
             newFormation(params.formation);
-        } if (Std.isOfType(msg, NewBullet)) {
-            var params = cast(msg, NewBullet);
-            newBullet(params.bullet);
-        } if (Std.isOfType(msg, NewSmoke)) {
-            var params = cast(msg, NewSmoke);
-            newSmoke(params.smoke);
+        // } if (Std.isOfType(msg, NewBullet)) {
+        //     var params = cast(msg, NewBullet);
+        //     newBullet(params.bullet);
         }
         return false;
     }
@@ -144,15 +144,11 @@ class GameScene extends Scene implements MessageListener {
         new FormationGraphics(f, this);
     }
 
-    function newBullet(b: Bullet) {
-        updateables.push(b);
-        updateables.push(new BulletGraphics(b, this));
-    }
+    // function newBullet(b: Bullet) {
+    //     updateables.push(b);
+    //     updateables.push(new BulletGraphics(b, this));
+    // }
 
-    function newSmoke(s: SmokeGraphics) {
-        updateables.push(s);
-    }
-    
     function cameraControl() {
         if (cameraMovingUp)
             camera.y -= 10/cameraScale;

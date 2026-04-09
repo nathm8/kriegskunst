@@ -28,8 +28,8 @@ class SmokeParticle extends BatchElement {
     var initialVelocity: Float;
     var direction: Vector2D;
     var distance: Float;
-    var initialScale = 0.05;
     var smoke_range = 30.0;
+    var initialScale: Float;
     var finalScale: Float;
     var grey: Float;
 
@@ -37,16 +37,19 @@ class SmokeParticle extends BatchElement {
         super(t);
 
         direction = dirc;
-        totalLifetime = RNGManager.normal(15, 5);
         initialBurst = bur;
         initialVelocity = vel;
         distance = dist;
         x = pos.x + distance*smoke_range*dirc.x;
         y = pos.y + distance*smoke_range*dirc.y;
         rotation = RNGManager.randomAngle();
-
-        initialScale += 0.25*dist;
-        finalScale = 1 + RNGManager.srand(0.5, true);
+        
+        // have nearby smoke particles fade quickly, starting small and without expanding too much
+        initialScale = 0.05 + 0.25*distance;
+        // let further away particles linger and drift while expanding
+        dist = dist > 0.7 ? 1.5*dist : dist;
+        finalScale = initialScale + dist*(0.5 + RNGManager.srand(0.5, true));
+        totalLifetime = dist*RNGManager.normal(15, 5);
 
         // grey = 0.9 - RNGManager.srand(0.35, true);
         grey = 1;
@@ -63,10 +66,10 @@ class SmokeParticle extends BatchElement {
         lifetime += dt;
         var s = lifetime/totalLifetime;
         // todo, gusts
-        // var wind_mod = 0.5 + RNGManager.srand(1);
-        // x += wind_mod*10*dt*SmokeGraphics.windDirection.x;
-        // wind_mod = 0.5 + RNGManager.srand(1);
-        // y += wind_mod*10*dt*SmokeGraphics.windDirection.y;
+        var wind_mod = 0.5 + RNGManager.srand(0.5);
+        x += wind_mod*10*dt*SmokeGraphics.windDirection.x;
+        wind_mod = 0.5 + RNGManager.srand(0.5);
+        y += wind_mod*10*dt*SmokeGraphics.windDirection.y;
         
         // initial fade to grey
         if (lifetime < muzzle_flash_time) {
@@ -76,13 +79,15 @@ class SmokeParticle extends BatchElement {
             b = (1 - d)*b + d*grey;
         }
         // initial velocity from gun
-        // if (lifetime < initialBurst) {
-        //     var d = lifetime / initialBurst;
-            // d = -d*d + 1;
-            // x += initialVelocity*100*d*dt*direction.x;
-            // y += initialVelocity*100*d*dt*direction.y;
-        // }
-        var scale_ratio = Math.pow(s, 2.7);
+        if (lifetime < initialBurst) {
+            var d = lifetime / initialBurst;
+            d = -d*d + 1;
+            x += initialVelocity*10*d*dt*direction.x;
+            y += initialVelocity*10*d*dt*direction.y;
+        }
+
+        // var scale_ratio = Math.pow(s, 2.7);
+        var scale_ratio = 1 - Math.pow(2, -10*s);
         scale = initialScale*(1-scale_ratio) + finalScale*scale_ratio;
         a = 1 - s;
         if (lifetime >= totalLifetime)
@@ -122,9 +127,8 @@ class SmokeGraphics extends Object implements Updateable implements MessageListe
     }
 
     static public function newSmokeParticle(pos: Vector2D, facing: Float) {
-        var bur = RNGManager.srand(0.1, true);
+        var bur = RNGManager.srand(0.5, true);
         var total = 5+RNGManager.random(10);
-        // total = 1;
         num += total;
         for (i in 0...total) {
             var vel = 3 + RNGManager.srand(1);
@@ -132,24 +136,9 @@ class SmokeGraphics extends Object implements Updateable implements MessageListe
             var dist = i/total;
             var t = tileAreas[RNGManager.random(tileAreas.length)];
             var particle = new SmokeParticle(pos, dirc, bur, vel, dist, t);
-            // need to do some checks and culling\stealing here to prevent buffer overflow
+            // TODO: need to do some checks and culling\stealing here to prevent buffer overflow
             spriteBatch.add(particle);
         }
-
-        // gettysburg 3:52:54
-        // have a very brief moment of orange before going to white
-
-        // have nearby smoke particles fade quickly, without expanding too much
-        // let further away particles linger and drift while expanding
-        // alternatively
-        // have all particles start at musket spout, with velocity such to move
-        // forward into the drifty "cloud". This makes more sense than discriminating
-        // between particles
-
-        // consider a single\few particles for the flashpan. Kinda expensive and probs
-        // won't look that good
-
-        // consider different particle textures (in an atlas)
     }
 
     public function receive(msg:Message):Bool {

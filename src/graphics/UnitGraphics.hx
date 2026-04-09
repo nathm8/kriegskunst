@@ -45,7 +45,8 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     }
 
     public function new(u: Unit, p: Object) {
-        super(p);
+        super();
+        p.addChildAt(this, 0);
         if (!initialised)
             init();
         unit = u;
@@ -103,7 +104,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     public function fire() {
         // position of the end of our musket
         var m = musket.rotation < 0 ? 1 : -1;
-        var pos = new Vector2D(m, -21).rotate(unit.facing) + unit.body.getPosition();
+        var pos = new Vector2D(m, -20).rotate(unit.facing) + unit.body.getPosition();
         SmokeGraphics.newSmokeParticle(pos, unit.facing);
     }
 

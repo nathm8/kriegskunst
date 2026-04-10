@@ -17,7 +17,7 @@ function normaliseArray(arr: Array<Float>): Array<Float> {
 function slerp(p: Float, q: Float, r: Float) {
     var u = new Vector2D(1, 0).rotate(p);
     var v = new Vector2D(1, 0).rotate(q);
-    return (r*u + (1-r)*v).angle();
+    return ((1-r)*u + r*v).angle();
 }
 
 function normaliseRadian(t: Float, zero_ref = false) {

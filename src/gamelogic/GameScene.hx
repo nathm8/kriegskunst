@@ -1,11 +1,10 @@
 package gamelogic;
 
-import graphics.SmokeGraphics;
 import h2d.col.Point;
 import h2d.Scene;
 import hxd.Window;
+import graphics.SmokeGraphics;
 import graphics.FormationGraphics;
-import graphics.BulletGraphics;
 import graphics.UnitGraphics;
 import gamelogic.Updateable;
 import gamelogic.physics.PhysicalWorld;

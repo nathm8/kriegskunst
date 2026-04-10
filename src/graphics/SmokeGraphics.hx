@@ -34,6 +34,7 @@ class SmokeParticle extends BatchElement {
     var finalScale: Float;
     var grey: Float;
     var windMod: Float;
+    var muzzleFlashTime = 1.0;
 
     public function new(pos: Vector2D, dirc: Vector2D, bur: Float, vel: Float, dist: Float, t: Tile) {
         super(t);
@@ -64,8 +65,6 @@ class SmokeParticle extends BatchElement {
         b =                    grey*distance;
     }
 
-
-    final muzzle_flash_time = 1.0;
     // note this is using Heaps' update loop, not our GameScene one.
     // It uses the opposite of the Updateable Bool return convention, true = keep alive
     override function update(dt:Float): Bool {
@@ -77,8 +76,8 @@ class SmokeParticle extends BatchElement {
         y += windMod*dt*wind.y;
         
         // initial fade to grey
-        if (lifetime < muzzle_flash_time) {
-            var d = lifetime/muzzle_flash_time;
+        if (lifetime < muzzleFlashTime) {
+            var d = lifetime/muzzleFlashTime;
             r = (1 - d)*r + d*grey;
             g = (1 - d)*g + d*grey;
             b = (1 - d)*b + d*grey;

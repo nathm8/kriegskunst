@@ -4,7 +4,6 @@ TODO
 MVP
 -----------------
 do bullets with raycasts
-smoke particles when firing
 Have a separate formation to fight
 units killable
 
@@ -106,6 +105,7 @@ load unit\formation stats from json
 Have units moving about in formation
 Be able to dynamically change formation
 Have units firing
+smoke particles when firing
 
 FormationUI
 -----------------

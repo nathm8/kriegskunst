@@ -141,19 +141,26 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
                 body.setLinearVelocity(speed*vel/mag);
             mouseJoint.setMaxForce(params.movementForce*speed);
 
-            // apply some jitter if we're not at our destination yet
-            // helps get unstuck from other units, and looks kinda nice
-            jitterClock += dt;
-            if (jitterClock > jitterClockMax) {
-                jitterClock = 0;
-                if (isMoving) {
+
+            
+            if (isMoving) {
+                // add a sine bounce
+                var mag = Math.sin(2*Math.PI*jitterClock - Math.PI/2);
+                var v = new Vector2D(0, 50 * dt * mag);
+                body.applyImpulse(v, body.getPosition());                
+
+                // apply some jitter if we're not at our destination yet
+                // helps get unstuck from other units, and looks kinda nice
+                jitterClock += dt*speed;
+                if (jitterClock > jitterClockMax) {
+                    jitterClock = 0;
                     // jitter orthogonally to our destination, with some random variation in magnitude and angle
                     // var o = (p - destination).normalize().rotate(Math.PI/2);
                     // o = RNGManager.random(1) == 0 ? o : -o;
                     // var v = RNGManager.srand() * jitterMaxMagnitude * o.rotate(RNGManager.srand(Math.PI/4));
 
                     // jitter in a random direction
-                    var v = RNGManager.srand() * new Vector2D(params.jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
+                    v = RNGManager.srand() * new Vector2D(params.jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
                     body.applyImpulse(v, body.getPosition());
                 }
             }

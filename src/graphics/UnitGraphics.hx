@@ -38,7 +38,6 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     static var initialised = false;
 
     var sprite: BatchElement;
-    public var bounceTween: Tween;
     var spriteOffset = new Vector2D(); // for animation
     static var spriteTile: Tile = null;
     static var spriteBatch: SpriteBatch = null;
@@ -61,22 +60,24 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         initialised = true;
         spriteTile = hxd.Res.img.Unit.toTile();
         spriteTile.setCenterRatio(0.5, 0.5);
-        spriteBatch = new SpriteBatch(spriteTile, parent);
+        spriteBatch = new SpriteBatch(spriteTile);
         
         hatTile = hxd.Res.img.Hat2.toTile();
         hatTile.setCenterRatio(0.5, 0.5);
-        hatBatch = new SpriteBatch(hatTile, parent);
+        hatBatch = new SpriteBatch(hatTile);
         hatBatch.hasRotationScale = true;
-
+        
         musketTile = hxd.Res.img.Musket.toTile();
         musketTile.setCenterRatio(0.5, 0.8);
         musketBatch = new SpriteBatch(musketTile, parent);
         musketBatch.hasRotationScale = true;
+        parent.addChildAt(musketBatch, 0);
+        parent.addChildAt(hatBatch, 0);
+        parent.addChildAt(spriteBatch, 0);
     }
 
     public function new(u: Unit, p: Object) {
-        super();
-        p.addChildAt(this, 0);
+        super(p);
         if (!initialised)
             init();
         unit = u;
@@ -87,10 +88,6 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         sprite.g = 0;
         sprite.b = 0.66;
         spriteBatch.add(sprite);
-
-        // consider putting this in the unit body physics while moving, so it interacts with the hat joints
-        // bounceTween = Main.tweenManager.animateTo(spriteOffset, { y: 1 }, 1, (t) -> {return 0.5*Math.sin(2*Math.PI*t - Math.PI/2) + 0.5;}).repeat();
-        // bounceTween.start();
 
         musket = new BatchElement(musketTile);
         musket.scaleX = 0.75;
@@ -144,8 +141,6 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         x = p.x; y = p.y;
         sprite.x = p.x + spriteOffset.x;
         sprite.y = p.y + spriteOffset.y;
-        // hat.x = p.x + hatOffset.x;
-        // hat.y = p.y + hatOffset.y + hatYOffset + spriteOffset.y;
         var h_p: Vector2D = hatBody.body.getPosition();
         hat.x = h_p.x;
         hat.y = h_p.y;
@@ -160,11 +155,6 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
             hat.scaleX = 1;
             musket.scaleX = 0.75;
         }
-
-        // if (unit.isMoving)
-        //     bounceTween.resume();
-        // else
-        //     bounceTween.pause();
 
         return toCleanup;
     }

@@ -97,6 +97,9 @@ Technical
 async stuff
 https://github.com/dpomier/haxe-coroutine/
 
+multithread stuff
+https://code.haxe.org/category/javascript/javascript-inline-workers.html
+
 clipboard stuff
 https://api.haxe.org/js/html/Clipboard.html
 heaps System may be able to do it on js

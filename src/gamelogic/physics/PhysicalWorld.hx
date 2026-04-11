@@ -11,6 +11,8 @@ var PHYSICSCALEINVERT = 1/PHYSICSCALE;
 class PhysicalWorld {
     public static var gameWorld: B2World;
     static var debugDraw: HeapsDebugDraw;
+    static var time = 0.0;
+    static final timestep = 1/60;
 
     public static function reset() {
         gameWorld = new B2World(new B2Vec2(0, 0), true);
@@ -24,8 +26,12 @@ class PhysicalWorld {
     }
 
     public static function update(dt: Float) {
-        gameWorld.step(dt, 1, 1);
-        gameWorld.clearForces();
+        time += dt;
+        while(time > timestep) {
+            time -= timestep;
+            gameWorld.step(timestep, 1, 1);
+            gameWorld.clearForces();
+        }
         gameWorld.drawDebugData();
     }
 }

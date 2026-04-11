@@ -13,6 +13,8 @@ parameterise sendMarchingOrders whether unit-to-position remapping is required. 
 
 change pivot point for rotations
 
+drag-select, box2d AABB query
+
 save list of "keyframes"
 once saved, have clickable in formatinon ui. Optionally infinitely repeatably
 
@@ -23,9 +25,7 @@ how to handle casualties?
 Polish
 -----------------
 add some hystersis to xflip of musket
-
-slerp taking ages to do 180, figure out a constant turn rate and do it that way instead
-    or rather a "time to turn X amount" and slerp it with strict time limits. The slerp is still visually nice.
+180 slerp looking weird
 
 To think about
 -----------------
@@ -35,18 +35,13 @@ Have flocking behaviours
 verticality. 
     How to represent?
         terrain, units crouching, prone
-    
     Mechanics?
         collision masks
-
-multithread stuff
-https://code.haxe.org/category/javascript/javascript-inline-workers.html
 
 FormationUI
 -----------------
 resizeablility
 scrollability, for when it gets too big
-have separate field for unit facing
 have import\export
 
 Issues
@@ -63,7 +58,6 @@ Issues
         return null;
     it's intention seems to be to prevent checking against interactives that aren't in the viewport, but I must be misunderstanding something because very clearly it's preventing me from interacting with units that are on screen.
         verified that this is a problem with my particular setup, somehow. Need to do a fresh install, perhaps
-
 
 Direct Formation Control
 -----------------
@@ -116,6 +110,11 @@ Automatically have minimum width\height for all flows be equal to the largest, t
 have holding down mouse repeat button activation
 add buttons for destination and facing
 make the data text directly editable
+
+Polish
+-----------------
+slerp taking ages to do 180, figure out a constant turn rate and do it that way instead
+    or rather a "time to turn X amount" and slerp it with strict time limits. The slerp is still visually nice.
 
 GameScene
 -----------------

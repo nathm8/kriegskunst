@@ -15,6 +15,7 @@ import gamelogic.Updateable;
 
 // increase hit-circle of unit by this much
 final INTERACTIVERADIUSMOD = 1.5;
+final hatYOffset = -12.0;
 
 class UnitGraphics extends Object implements Updateable implements MessageListener {
 
@@ -25,6 +26,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     static var initialised = false;
 
     var sprite: BatchElement;
+    var spriteOffset = new Vector2D(); // for animation
     static var spriteTile: Tile = null;
     static var spriteBatch: SpriteBatch = null;
     
@@ -33,12 +35,22 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     static var musketTile: Tile = null;
     static var musketBatch: SpriteBatch = null;
 
+    var hat: BatchElement;
+    var hatOffset = new Vector2D(); // for animation
+    static var hatTile: Tile = null;
+    static var hatBatch: SpriteBatch = null;
+
     private function init() {
         initialised = true;
         spriteTile = hxd.Res.img.Unit.toTile();
         spriteTile.setCenterRatio(0.5, 0.5);
         spriteBatch = new SpriteBatch(spriteTile, parent);
         
+        hatTile = hxd.Res.img.Hat1.toTile();
+        hatTile.setCenterRatio(0.5, 0.5);
+        hatBatch = new SpriteBatch(hatTile, parent);
+        hatBatch.hasRotationScale = true;
+
         musketTile = hxd.Res.img.Musket.toTile();
         musketTile.setCenterRatio(0.5, 0.8);
         musketBatch = new SpriteBatch(musketTile, parent);
@@ -67,6 +79,9 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         musket.b = 0.6;
         musketBatch.add(musket);
 
+        hat = new BatchElement(hatTile);
+        hatBatch.add(hat);
+
         interactive = new Interactive(0, 0, this, new Circle(0, 0, INTERACTIVERADIUSMOD*unit.params.radius*PHYSICSCALE));
         interactive.onClick = (_) -> {MessageManager.send(new UnitClicked(this.unit));}
 
@@ -78,14 +93,20 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
             return toCleanup;
         var p: Vector2D = unit.body.getPosition();
         x = p.x; y = p.y;
-        sprite.x = p.x; sprite.y = p.y;
+        sprite.x = p.x + spriteOffset.x;
+        sprite.y = p.y + spriteOffset.y;
+        hat.x = p.x + hatOffset.x;
+        hat.y = p.y + hatOffset.y + hatYOffset;
         musket.x = p.x + musketOffset.x;
         musket.y = p.y + musketOffset.y;
         musket.rotation = unit.facing;
-        if (musket.rotation < 0)
+        if (unit.facing < 0) {
+            hat.scaleX = 1;
             musket.scaleX = -0.75;
-        else
+        } else {
+            hat.scaleX = -1;
             musket.scaleX = 0.75;
+        }
 
         return toCleanup;
     }
@@ -97,6 +118,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
             var params = cast(msg, RemoveUnit);
             if (params.unit == unit) {
                 Main.tweenManager.animateTo(sprite, {alpha: 0}, 1, SmoothStep.easeIn).start();
+                Main.tweenManager.animateTo(hat, {alpha: 0}, 1, SmoothStep.easeIn).start();
                 Main.tweenManager.animateTo(musket, {alpha: 0}, 1, SmoothStep.easeIn, () -> {cleanup();}).start();
             }
         }
@@ -104,9 +126,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     }
 
     public function fire() {
-        // position of the end of our musket
-        var m = musket.rotation < 0 ? 1 : -1;
-        var pos = new Vector2D(m, -20).rotate(unit.facing) + unit.body.getPosition();
+        var pos = unit.getMusketMuzzle();
         SmokeGraphics.newSmokeParticle(pos, unit.facing);
         // recoil
         musketOffset = new Vector2D(RNGManager.srand(0.5), 2+RNGManager.srand(0.5)).rotate(unit.facing);
@@ -116,6 +136,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     function cleanup() {
         sprite.remove();
         musket.remove();
+        hat.remove();
         interactive.remove();
         remove();
         toCleanup = true;

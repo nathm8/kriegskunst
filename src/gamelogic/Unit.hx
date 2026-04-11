@@ -215,8 +215,28 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return false;
     }
     
+    public function getMusketMuzzle(): Vector2D {
+        // position of the end of our musket
+        var m = facing < 0 ? 1 : -1;
+        return new Vector2D(m, -20).rotate(facing) + body.getPosition();
+    }
+
+    public function getRaycastEndpoint(range:Float=1): Vector2D {
+        var m = facing < 0 ? 1 : -1;
+        return new Vector2D(m, -20).rotate(facing) + body.getPosition();
+    }
+
     public function fire() {
         graphics.fire();
+        var p = getMusketMuzzle();
+        var q = getRaycastEndpoint(10);
+        var fixtures = PhysicalWorld.gameWorld.rayCastAll(p, q);
+        for (f in fixtures) {
+            var ud = f.getBody().getUserData();
+            if (Std.isOfType(ud, Unit)) {
+                
+            }
+        }
     }
 
     function set_selectable(value) {
@@ -232,7 +252,8 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     }
 
     function set_targetFacing(value) {
-        var time = 2*Math.abs(normaliseRadian(facing - value, true) / (Math.PI));
+        var time = 2*Math.abs(normaliseRadian(facing - value, true) / (2*Math.PI));
+        time = 2*Math.pow(time, 2);
         facingTween = new RotationTween(this, value, time);
         targetFacing = value;
         return value;

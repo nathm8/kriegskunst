@@ -39,8 +39,7 @@ class CircularPhysicalGameObject {
             fixture_definition.userData = userdata;
         }
 
-        var fix = body.createFixture(fixture_definition);
-        fix.setUserData(userdata);
+        body.createFixture(fixture_definition);
     }
 
     public function removePhysics() {

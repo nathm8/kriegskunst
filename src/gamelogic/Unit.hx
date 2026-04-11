@@ -32,33 +32,6 @@ typedef UnitJson = {
     var radius: Float;
 }
 
-class RotationTween {
-
-    var target: Unit;
-    var start: Float;
-    var end: Float;
-    var timeElapsed: Float;
-    var timeTotal: Float;
-    public var active = false;
-
-    public function new(t: Unit, e: Float, tt: Float) {
-        target = t;
-        start = t.facing;
-        end = e;
-        timeTotal = tt;
-        timeElapsed = 0;
-        active = true;
-    }
-
-    public function update(dt: Float) {
-        if (!active) return;
-        timeElapsed += dt;
-        var r = timeElapsed/timeTotal;
-        target.facing = slerp(start, end, r);
-        active = timeElapsed < timeTotal;
-    }
-}
-
 class Unit extends CircularPhysicalGameObject implements MessageListener implements Updateable {
 
     ////////////////////
@@ -81,10 +54,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     var jitterClockMax = 1.0;
     // in radians
     public var facing = 0.0;
-    public var targetFacing(default, set) = 0.0;
-
-    // PitA to do this manually but slide doesn't seem to support it easily
-    public var facingTween: RotationTween;
+    public var targetFacing = 0.0;
 
     ////////////////////
     // Combat Stats
@@ -191,7 +161,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         }
         
         // facing
-        facingTween?.update(dt);
+        facing = slerp(facing, targetFacing, 0.2);
 
         return dead;
     }
@@ -251,11 +221,4 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return destination;
     }
 
-    function set_targetFacing(value) {
-        var time = 2*Math.abs(normaliseRadian(facing - value, true) / (2*Math.PI));
-        time = 2*Math.pow(time, 2);
-        facingTween = new RotationTween(this, value, time);
-        targetFacing = value;
-        return value;
-    }
 }

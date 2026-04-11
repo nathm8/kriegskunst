@@ -61,7 +61,7 @@ class SmokeParticle extends BatchElement {
         // grey = 0.9 - RNGManager.srand(0.35, true);
         grey = 1;
         r =     (1-distance) + grey*distance;
-        g = 0.5*(1-distance) + grey*distance;
+        g = 0.6*(1-distance) + grey*distance;
         b =                    grey*distance;
     }
 
@@ -81,6 +81,7 @@ class SmokeParticle extends BatchElement {
             r = (1 - d)*r + d*grey;
             g = (1 - d)*g + d*grey;
             b = (1 - d)*b + d*grey;
+
         }
         // initial velocity from gun
         if (lifetime < initialBurst) {
@@ -90,12 +91,17 @@ class SmokeParticle extends BatchElement {
             y += initialVelocity*10*d*dt*direction.y;
         }
 
-        // scale size exponentially
         var s = lifetime/totalLifetime;
+        if (s < 0.49)
+            // scale opacity exponentially
+            // such that it meets the line at s = 0.6
+            a = 1 - 2.8285*Math.pow(s, 1.9);
+        else 
+            // scale opacity linearly
+            a = 0.5 - 0.5*s;
+        // scale size exponentially
         var scale_ratio = 1 - Math.pow(2, -10*s);
         scale = initialScale*(1-scale_ratio) + finalScale*scale_ratio;
-        // scale opacity linearly
-        a = 1 - s;
         if (lifetime >= totalLifetime)
             SmokeGraphics.num--;
         return lifetime < totalLifetime;

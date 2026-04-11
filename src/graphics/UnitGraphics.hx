@@ -154,10 +154,10 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         musket.y = p.y + musketOffset.y;
         musket.rotation = unit.facing;
         if (unit.facing < 0) {
-            hat.scaleX = 1;
+            hat.scaleX = -1;
             musket.scaleX = -0.75;
         } else {
-            hat.scaleX = -1;
+            hat.scaleX = 1;
             musket.scaleX = 0.75;
         }
 

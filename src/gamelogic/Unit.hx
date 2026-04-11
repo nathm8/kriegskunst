@@ -1,6 +1,5 @@
 package gamelogic;
 
-import utilities.Utilities.normaliseRadian;
 import hxd.fs.FileEntry;
 import haxe.Json;
 import utilities.Utilities.slerp;
@@ -39,6 +38,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
     ////////////////////
     public var destination(default, set): Vector2D;
     var mouseJoint: B2MouseJoint;
+    public var isMoving(get, null) = false;
     
     ////////////////////
     // hot-loadable parameters
@@ -146,8 +146,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
             jitterClock += dt;
             if (jitterClock > jitterClockMax) {
                 jitterClock = 0;
-                var p: Vector2D = body.getPosition();
-                if (p.distanceTo(destination) > 0.1) {
+                if (isMoving) {
                     // jitter orthogonally to our destination, with some random variation in magnitude and angle
                     // var o = (p - destination).normalize().rotate(Math.PI/2);
                     // o = RNGManager.random(1) == 0 ? o : -o;
@@ -191,7 +190,7 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return new Vector2D(m, -20).rotate(facing) + body.getPosition();
     }
 
-    public function getRaycastEndpoint(range:Float=1): Vector2D {
+    public function getRaycastEndpoint(range: Float): Vector2D {
         var m = facing < 0 ? 1 : -1;
         return new Vector2D(m, -20).rotate(facing) + body.getPosition();
     }
@@ -221,4 +220,9 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
         return destination;
     }
 
+
+    function get_isMoving() {
+        var p: Vector2D = body.getPosition();
+        return p.distanceTo(destination) > 0.1;
+    }
 }

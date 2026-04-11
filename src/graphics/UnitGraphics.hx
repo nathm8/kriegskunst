@@ -1,5 +1,6 @@
 package graphics;
 
+import slide.Tween;
 import utilities.RNGManager;
 import slide.easing.SmoothStep;
 import h2d.SpriteBatch;
@@ -26,6 +27,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
     static var initialised = false;
 
     var sprite: BatchElement;
+    public var bounceTween: Tween;
     var spriteOffset = new Vector2D(); // for animation
     static var spriteTile: Tile = null;
     static var spriteBatch: SpriteBatch = null;
@@ -71,6 +73,9 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         sprite.b = 0.66;
         spriteBatch.add(sprite);
 
+        bounceTween = Main.tweenManager.animateTo(spriteOffset, { y: 1 }, 1, (t) -> {return 0.5*Math.sin(2*Math.PI*t - Math.PI/2) + 0.5;}).repeat();
+        bounceTween.start();
+
         musket = new BatchElement(musketTile);
         musket.scaleX = 0.75;
         musket.scaleY = 0.75;
@@ -92,6 +97,8 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         if (unit.body == null)
             return toCleanup;
         var p: Vector2D = unit.body.getPosition();
+        var prev_x = x;
+        var prev_y = y;
         x = p.x; y = p.y;
         sprite.x = p.x + spriteOffset.x;
         sprite.y = p.y + spriteOffset.y;
@@ -107,6 +114,11 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
             hat.scaleX = -1;
             musket.scaleX = 0.75;
         }
+
+        if (unit.isMoving)
+            bounceTween.resume();
+        else
+            bounceTween.pause();
 
         return toCleanup;
     }

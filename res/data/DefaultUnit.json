@@ -1,7 +1,7 @@
 {
   "maxSpeed": 1,
   "speedVariance": 1,
-  "jitterMaxMagnitude": 2.0,
+  "jitterMaxMagnitude": 5.0,
   "movementForce": 10,
   "destinationVariance": 1,
   "averageSpeedNoiseRatio": 0.9,

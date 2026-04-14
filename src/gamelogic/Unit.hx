@@ -154,14 +154,18 @@ class Unit extends CircularPhysicalGameObject implements MessageListener impleme
                 jitterClock += dt*speed;
                 if (jitterClock > jitterClockMax) {
                     jitterClock = 0;
-                    // jitter orthogonally to our destination, with some random variation in magnitude and angle
-                    // var o = (p - destination).normalize().rotate(Math.PI/2);
-                    // o = RNGManager.random(1) == 0 ? o : -o;
-                    // var v = RNGManager.srand() * jitterMaxMagnitude * o.rotate(RNGManager.srand(Math.PI/4));
+                    // jitter back and orthogonally to our destination
+                    var d = (body.getPosition() - destination).normalize();
+                    var o = d.rotate(Math.PI/2);
+                    o = RNGManager.random(1) == 0 ? o : -o;
+                    var v = params.jitterMaxMagnitude * o;
+                    var v2 = params.jitterMaxMagnitude * -d;
+                    body.applyImpulse(v, body.getPosition());
+                    body.applyImpulse(v2, body.getPosition());
 
                     // jitter in a random direction
-                    v = RNGManager.srand() * new Vector2D(params.jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
-                    body.applyImpulse(v, body.getPosition());
+                    // v = RNGManager.srand() * new Vector2D(params.jitterMaxMagnitude, 0).rotate(RNGManager.srand(Math.PI));
+                    // body.applyImpulse(v, body.getPosition());
                 }
             }
         }

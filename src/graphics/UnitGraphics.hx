@@ -114,7 +114,7 @@ class UnitGraphics extends Object implements Updateable implements MessageListen
         fixture_definition.filter.maskBits = 0;
         fixture_definition.density = 0.1;
         fixture_definition.userData = this;
-        hatBody = new CircularPhysicalGameObject(null, null, null, body_definition, fixture_definition);
+        hatBody = new CircularPhysicalGameObject(null, 0, null, body_definition, fixture_definition);
     
         var revolute_joint_definition = new B2RevoluteJointDef();
         revolute_joint_definition.enableMotor = true;
